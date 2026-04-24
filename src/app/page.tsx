@@ -1,356 +1,385 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Environment, ContactShadows, Stars, PerspectiveCamera } from '@react-three/drei';
-import { Marmita3D } from '@/components/Marmita3D';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useSpring, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Logo } from '@/components/Logo';
+import { WhatsAppWidget } from '@/components/WhatsAppWidget';
+import { AIObserver } from '@/components/AIObserver';
 import { 
-  ChefHat, Code2, Zap, Rocket, CheckCircle2, 
-  MessageSquare, Star, ArrowRight, ChevronLeft, 
-  ChevronRight, ShoppingCart, ShieldCheck, Clock
+  Zap, Code2, Rocket, CheckCircle2, 
+  ArrowRight, Search, LayoutPanelLeft, Box, ShoppingBag, 
+  Settings, Layers, MousePointer2, ShieldAlert, Cpu, Lock, Globe,
+  HelpCircle, Sparkles, Terminal, ChevronRight, Activity, CpuChip
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const PLANS = [
-  { id: 'site-modelo', title: "Site Modelo", price: 300, monthly: 75, features: ["Design Pré-aprovado", "Responsivo", "Suporte Mensal"] },
-  { id: 'estoque-simples', title: "Controle de Estoque", price: 620, monthly: 120, features: ["Painel Administrativo", "Gestão de Items", "Relatórios"], recommended: true },
-  { id: 'ecommerce', title: "E-commerce Full", price: 700, monthly: 140, features: ["Loja Completa", "Checkout Integrado", "Gestão de Pedidos"] },
-  { id: 'kit-pro', title: "Kit Personalizado Pro", price: 1100, monthly: 140, features: ["Site + Estoque", "Compra Automática", "Integração Total"] },
-  { id: 'automacao', title: "Automação", price: 350, features: ["WhatsApp Bots", "Integração API", "Redução de Tempo"] }
+// Optimized Product List
+const PRODUCTS = [
+    { cat: 'SITES', title: "Site Personalizado", price: 400, monthly: 75, desc: "Sua visão, nosso código. Identidade exclusiva projetada para converter.", type: 'personalizado', tag: 'Top Vendas' },
+    { cat: 'SITES', title: "Site Modelo", price: 300, monthly: 75, desc: "Estrutura ágil e refinada. O ponto de partida ideal para o seu sucesso.", type: 'modelo', tag: 'Econômico' },
+    { cat: 'ESTOQUE', title: "Estoque Personalizado", price: 620, monthly: 120, desc: "Gestão inteligente de inventário desenhada para o seu fluxo logístico.", type: 'personalizado' },
+    { cat: 'ESTOQUE', title: "Estoque + Automação", price: 800, monthly: 140, desc: "O sistema que pensa: reposição automática quando o item atinge o limite.", type: 'personalizado', tag: 'Escala' },
+    { cat: 'ESTOQUE', title: "Estoque Modelo", price: 450, monthly: 120, desc: "Organização padrão de alto nível. Simplicidade que funciona.", type: 'modelo' },
+    { cat: 'ESTOQUE', title: "Estoque Modelo + Auto", price: 600, monthly: 140, desc: "Reposição automática em um pacote acessível e estável.", type: 'modelo' },
+    { cat: 'KITS', title: "Kit Total Personalizado", price: 900, monthly: 125, desc: "A união definitiva: Site + Gestão sem automações externas.", type: 'personalizado' },
+    { cat: 'KITS', title: "Kit Total + Automação", price: 1100, monthly: 125, desc: "O auge da engenharia: Tudo integrado com automação industrial.", type: 'personalizado', tag: 'Premium' },
+    { cat: 'KITS', title: "Kit Total Modelo", price: 620, monthly: 125, desc: "Combo padrão otimizado. Profissionalismo instantâneo.", type: 'modelo' },
+    { cat: 'KITS', title: "Kit Total Modelo + Auto", price: 820, monthly: 125, desc: "Combo padrão com o poder da reposição inteligente.", type: 'modelo' },
+    { cat: 'ESPECIAL', title: "E-commerce Pro", price: 700, monthly: 140, desc: "Plataforma de vendas robusta com catálogo e checkout integrado.", type: 'especial' },
+    { cat: 'ESPECIAL', title: "Automações", price: 200, monthly: 0, desc: "Micro-engenharia sob demanda. Resolva problemas via Zap.", type: 'especial', prefix: 'a partir de' },
+    { cat: 'ESPECIAL', title: "Kit Necessidades", price: 'Variável', monthly: 'Consultar', desc: "Consultoria pura. Construímos o que você imaginar.", type: 'especial' }
+];
+
+const MENSALIDADES = [
+    { title: "Kits", price: 125 },
+    { title: "Sites Simples", price: 75 },
+    { title: "Estoque s/ Auto", price: 120 },
+    { title: "Estoque c/ Auto", price: 140 },
+    { title: "E-commerce", price: 140 }
 ];
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<typeof PLANS[0] | null>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
-
-  const [progress, setProgress] = useState(0);
+  const [filter, setFilter] = useState<'todos' | 'personalizado' | 'modelo'>('todos');
+  const [mounted, setMounted] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
   useEffect(() => {
-    return smoothProgress.onChange(v => setProgress(v));
-  }, [smoothProgress]);
+    setMounted(true);
+    const handleMouseMove = (e: MouseEvent) => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
-  const heroOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
-  const heroScale = useTransform(smoothProgress, [0, 0.1], [1, 0.8]);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleOpenCheckout = (plan: typeof PLANS[0]) => {
-    setSelectedPlan(plan);
-    setIsCheckoutOpen(true);
-  };
+  const filteredProducts = PRODUCTS.filter(p => filter === 'todos' || p.type === filter || p.type === 'especial');
 
   return (
-    <main ref={containerRef} className="relative bg-[#050505] text-white selection:bg-[#FF8C00] selection:text-black">
-      {/* Premium 3D Stage */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <Canvas shadows camera={{ position: [0, 0.5, 6], fov: 35 }}>
-          <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-          <Environment preset="studio" />
-          <ambientLight intensity={0.2} />
-          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={2} castShadow color="#FF8C00" />
-          <pointLight position={[-10, -10, -10]} color="#444" intensity={1} />
-          
-          <Marmita3D scrollProgress={progress} />
-          
-          <ContactShadows 
-            position={[0, -1.8, 0]} 
-            opacity={0.6} 
-            scale={15} 
-            blur={2.5} 
-            far={5} 
-            color="#FF8C00"
+    <main className="relative bg-[#000] text-white min-h-screen selection:bg-[#FF8C00] selection:text-black font-sans leading-relaxed active-cursor-none overflow-x-hidden">
+      <AIObserver />
+      <WhatsAppWidget />
+      
+      {/* Custom Magnetic Cursor */}
+      {mounted && (
+          <motion.div 
+            className="fixed top-0 left-0 w-8 h-8 rounded-full border border-[#FF8C00] pointer-events-none z-[999] mix-blend-difference hidden md:block"
+            style={{ x: mouseX, y: mouseY, translateX: '-50%', translateY: '-50%' }}
+            transition={{ type: 'spring', damping: 20, stiffness: 250, mass: 0.5 }}
           />
-        </Canvas>
+      )}
+
+      {/* Cinematic Environmental Effects */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.08] contrast-200" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+          <motion.div 
+            className="absolute inset-0 opacity-20"
+            style={{ 
+                background: `radial-gradient(1200px circle at var(--x) var(--y), rgba(255,140,0,0.1), transparent 70%)`,
+                // @ts-ignore
+                '--x': useTransform(mouseX, x => `${x}px`),
+                '--y': useTransform(mouseY, y => `${y}px`)
+            } as any}
+          />
       </div>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center transition-all">
-        <div className="backdrop-blur-xl bg-black/40 border border-white/10 rounded-3xl px-6 py-3 flex items-center gap-12">
-          <Logo className="cursor-pointer" />
-          <div className="hidden md:flex gap-8 text-sm font-semibold tracking-wide text-white/50">
-            <button onClick={() => scrollTo('hero')} className="hover:text-[#FF8C00] transition-colors">Home</button>
-            <button onClick={() => scrollTo('servicos')} className="hover:text-[#FF8C00] transition-colors">Diferenciais</button>
-            <button onClick={() => scrollTo('precos')} className="hover:text-[#FF8C00] transition-colors">Cardápio</button>
-          </div>
-        </div>
-        <button 
-          onClick={() => scrollTo('precos')}
-          className="group relative px-8 py-4 bg-white text-black font-black rounded-2xl overflow-hidden hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,140,0,0.3)]"
-        >
-          <span className="relative z-10 flex items-center gap-2">
-            PEDIR AGORA <ShoppingCart size={18} />
-          </span>
-          <div className="absolute inset-0 bg-[#FF8C00] translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-        </button>
-      </nav>
-
-      {/* Hero Section */}
-      <section id="hero" className="relative h-[120vh] flex flex-col items-center justify-center text-center z-10 px-4">
-        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="max-w-5xl">
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
+      {/* Hero Section: The "Wow" Opener */}
+      <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-4 py-1.5 rounded-full border border-[#FF8C00]/30 bg-[#FF8C00]/10 text-[#FF8C00] text-xs font-black tracking-widest mb-8"
+            className="relative z-10 text-center flex flex-col items-center"
           >
-            SOFTWARE AS A SERVICE • PREMIUM HOT DELIVERY
-          </motion.span>
-          <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter mb-8 leading-[0.8] mix-blend-difference">
-            SERVINDO A<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C00] via-[#FFA500] to-white bg-[length:200%_auto] animate-gradient">SOLUÇÃO</span>
-          </h1>
-          <p className="text-xl md:text-3xl text-white/40 max-w-3xl mx-auto font-medium leading-tight mb-12">
-            Tecnologia personalizada e pronta para consumo. <br className="hidden md:block" />
-            Sua empresa merece um sistema entregue quentinho.
-          </p>
-          <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-            <button 
-              onClick={() => scrollTo('precos')}
-              className="px-12 py-6 bg-[#FF8C00] text-black font-black text-xl rounded-3xl flex items-center gap-3 hover:shadow-[0_0_50px_rgba(255,140,0,0.5)] hover:scale-105 transition-all"
-            >
-              Começar Degustação <ArrowRight />
-            </button>
-            <p className="text-white/30 text-sm font-bold flex items-center gap-2">
-              <ShieldCheck className="text-[#FF8C00]" size={16} /> Sem mensalidade no 1º mês
-            </p>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Differential Section */}
-      <section id="servicos" className="relative z-10 py-40 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-            <div className="max-w-2xl">
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">O QUE NOS TORNA<br /><span className="text-[#FF8C00]">ELEGÍVEIS?</span></h2>
-              <p className="text-white/40 text-xl font-medium">Não entregamos apenas código. Entregamos o sistema servido pronto para resolver os gargalos do seu negócio.</p>
-            </div>
-            <div className="flex gap-4">
-              <div className="p-4 border border-white/10 rounded-2xl bg-white/5">
-                <span className="block text-3xl font-black text-[#FF8C00]">100%</span>
-                <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Funcional</span>
+              <div className="mb-20 scale-125 drop-shadow-[0_0_30px_rgba(255,140,0,0.4)]">
+                 <Logo />
               </div>
-              <div className="p-4 border border-white/10 rounded-2xl bg-white/5">
-                <span className="block text-3xl font-black text-[#FF8C00]">0.0</span>
-                <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">Setup Cost</span>
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <FeatureCard 
-              icon={<Zap />}
-              title="Velocidade de Entrega"
-              description="Seu negócio não pode esperar. Nossos sistemas personalizados chegam mais rápido que uma entrega de marmita."
-            />
-            <FeatureCard 
-              icon={<Code2 />}
-              title="Código Sob Medida"
-              description="Automatização de estoques, integração de softwares e dashboards financeiros. Nós fazemos o que você precisa."
-            />
-            <FeatureCard 
-              icon={<ChefHat />}
-              title="Primeiro Mês Grátis"
-              description="Acreditamos tanto na nossa solução que o tempero inicial é por nossa conta. Só pague se realmente gostar."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Product Carousel Section */}
-      <section id="precos" className="relative z-10 py-40 bg-white/5 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 mb-20 flex justify-between items-center">
-          <div>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">NOSSO<br /><span className="text-[#FF8C00]">CARDÁPIO</span></h2>
-            <p className="text-white/40">Selecione o combo que mais combina com seu momento.</p>
-          </div>
-          <div className="flex gap-4">
-            <button 
-              onClick={() => setCarouselIndex(Math.max(0, carouselIndex - 1))}
-              className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#FF8C00] hover:text-black transition-all"
-            >
-              <ChevronLeft size={32} />
-            </button>
-            <button 
-              onClick={() => setCarouselIndex(Math.min(PLANS.length - 1, carouselIndex + 1))}
-              className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#FF8C00] hover:text-black transition-all"
-            >
-              <ChevronRight size={32} />
-            </button>
-          </div>
-        </div>
-
-        <div className="relative">
-          <motion.div 
-            animate={{ x: `calc(-${carouselIndex * 400}px)` }}
-            transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-            className="flex gap-12 px-[10%] cursor-grab active:cursor-grabbing"
-          >
-            {PLANS.map((plan) => (
-              <PriceCard 
-                key={plan.id}
-                plan={plan}
-                onSelect={() => handleOpenCheckout(plan)}
-              />
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative z-10 py-32 px-6 border-t border-white/5">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-20">
-          <div className="md:col-span-2">
-            <Logo className="mb-12" />
-            <h3 className="text-4xl font-black mb-8 leading-none">O Futuro do seu negócio está sendo cozinhado.</h3>
-            <p className="text-white/30 text-lg max-w-md italic">"A gente cuida do software enquanto você cuida do que importa: crescer."</p>
-          </div>
-          <div>
-            <h4 className="text-[#FF8C00] font-black tracking-widest text-xs mb-8 uppercase">Acesso Rápido</h4>
-            <ul className="space-y-4 font-bold text-white/50">
-              <li><button onClick={() => scrollTo('hero')} className="hover:text-white">Home</button></li>
-              <li><button onClick={() => scrollTo('servicos')} className="hover:text-white">Diferenciais</button></li>
-              <li><button onClick={() => scrollTo('precos')} className="hover:text-white">Produtos</button></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[#FF8C00] font-black tracking-widest text-xs mb-8 uppercase">Contato</h4>
-            <ul className="space-y-4 font-bold text-white/50">
-              <li><a href="https://wa.me/..." target="_blank" className="hover:text-white flex items-center gap-2 underline">WhatsApp Atendimento</a></li>
-              <li><a href="mailto:..." className="hover:text-white">suporte@marmitacode.com</a></li>
-            </ul>
-          </div>
-        </div>
-      </footer>
-
-      {/* Checkout Modal Overlay */}
-      <AnimatePresence>
-        {isCheckoutOpen && selectedPlan && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6"
-          >
-            <div className="absolute inset-0 bg-black/90 backdrop-blur-3xl" onClick={() => setIsCheckoutOpen(false)} />
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 50 }}
-              className="relative w-full max-w-4xl bg-[#111] border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,1)]"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="p-12 bg-gradient-to-br from-[#1a1a1a] to-black">
-                  <Logo className="mb-12" />
-                  <h3 className="text-4xl font-black mb-4">{selectedPlan.title}</h3>
-                  <div className="flex items-baseline gap-2 mb-8">
-                    <span className="text-5xl font-black text-[#FF8C00]">R$ {selectedPlan.price}</span>
-                    <span className="text-white/30 font-bold">Investimento Único</span>
-                  </div>
-                  <ul className="space-y-4 mb-12">
-                    {selectedPlan.features.map((f, i) => (
-                      <li key={i} className="flex items-center gap-3 text-white/70 font-medium">
-                        <CheckCircle2 size={20} className="text-[#FF8C00]" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="p-6 bg-white/5 rounded-3xl border border-white/5 flex items-center gap-4">
-                    <Clock className="text-[#FF8C00]" />
-                    <p className="text-xs text-white/50 leading-relaxed">
-                      Entrega estimada em até <span className="text-white font-bold">7 dias úteis</span> após o preenchimento do formulário técnico.
-                    </p>
-                  </div>
-                </div>
-                <div className="p-12 border-l border-white/5 flex flex-col justify-center">
-                  <h4 className="text-2xl font-black mb-8 italic">Quase lá!</h4>
-                  <p className="text-white/50 mb-12 font-medium">Para garantir sua vaga e iniciar o desenvolvimento, finalize o pagamento via <span className="text-[#005fb8] font-black">Asaas (Pix/Cartão)</span>.</p>
-                  
-                  <button 
-                    disabled
-                    className="w-full py-6 bg-white text-black font-black text-xl rounded-full flex items-center justify-center gap-3 mb-6 opacity-80 cursor-not-allowed"
+              <div className="relative">
+                  <motion.h1 
+                    className="text-[10vw] md:text-[9rem] font-black tracking-tighter leading-[0.8] uppercase italic mb-8"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 1, ease: 'easeOut' }}
                   >
-                    FINALIZAR PEDIDO <ShoppingCart size={24} />
-                  </button>
-                  <p className="text-center text-[10px] text-white/20 uppercase tracking-widest font-black">Aguardando integração com API Asaas</p>
-                </div>
+                    Marmita<span className="text-transparent stroke-white" style={{ WebkitTextStroke: '1.5px white' }}>Code</span>
+                  </motion.h1>
+                  <motion.div 
+                    initial={{ w: 0 }}
+                    animate={{ w: '100%' }}
+                    className="h-1 bg-gradient-to-r from-transparent via-[#FF8C00] to-transparent mb-16" 
+                  />
               </div>
-              <button 
-                onClick={() => setIsCheckoutOpen(false)}
-                className="absolute top-8 right-8 text-white/30 hover:text-white transition-colors"
-              >
-                ✕ Fechar
-              </button>
-            </motion.div>
+
+              <div className="flex flex-col md:flex-row gap-12 items-center">
+                  <p className="text-white/40 text-xl font-black uppercase tracking-[0.4em] max-w-xl">
+                      Engenharia Digital <span className="text-[#FF8C00]">Sem Precedentes.</span>
+                  </p>
+                  <div className="flex gap-4">
+                      <div className="w-12 h-[1px] bg-white/20 mt-3" />
+                      <div className="text-left">
+                          <span className="block text-[10px] font-black text-white/20 uppercase tracking-widest">Status: Ready</span>
+                          <span className="text-[#FF8C00] font-mono text-sm leading-none tracking-tighter">SOLUÇÃO ENTREGUE QUENTINHA</span>
+                      </div>
+                  </div>
+              </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+
+          {/* Decorative Floating Elements */}
+          <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#FF8C00]/5 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] animate-pulse delay-700" />
+      </section>
+
+      {/* Feature Section: The AI Sentience */}
+      <section className="relative py-60 px-6 z-10">
+          <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col lg:flex-row items-center gap-32">
+                  <div className="flex-1 space-y-12">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF8C00]/10 border border-[#FF8C00]/20 text-[#FF8C00] text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+                        <ShieldAlert size={14} /> Exclusividade MarmitaCode
+                    </div>
+                    <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-10 uppercase leading-none">A IA QUE <br /> <span className="text-[#FF8C00]">NUNCA DORME.</span></h2>
+                    <p className="text-white/50 text-xl font-medium leading-relaxed mb-12">
+                          Nossos sistemas são vivos. Implementamos uma camada de inteligência que monitora, analisa e executa correções em tempo real. Você não compra apenas software, você adquire uma <span className="text-white underline decoration-[#FF8C00] decoration-8">sentinela digital.</span>
+                      </p>
+                      <div className="grid grid-cols-2 gap-8">
+                          <FeatureMini icon={<ShieldAlert />} label="IMUNE A FALHAS" />
+                          <FeatureMini icon={<Cpu />} label="CORE ATIVO" />
+                      </div>
+                  </div>
+                  <div className="flex-1 w-full relative">
+                      <div className="absolute -inset-10 bg-[#FF8C00]/20 blur-[100px] rounded-full" />
+                      <div className="relative bg-white/[0.03] border border-white/5 backdrop-blur-3xl rounded-[4rem] p-16 shadow-2xl overflow-hidden">
+                          <div className="absolute top-0 right-0 p-12 opacity-5"><Activity size={180} /></div>
+                          <div className="relative z-10 space-y-12">
+                              <div className="flex items-center gap-4">
+                                  <div className="w-4 h-4 bg-green-500 rounded-full animate-ping" />
+                                  <span className="font-mono text-xs tracking-widest uppercase">Guard Status: Pulsing</span>
+                              </div>
+                              <TerminalText />
+                              <div className="pt-12 border-t border-white/5 flex gap-8">
+                                  <div>
+                                      <span className="block text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">Fixes (24h)</span>
+                                      <span className="text-4xl font-black text-[#FF8C00]">12.4k</span>
+                                  </div>
+                                  <div>
+                                      <span className="block text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">Latency</span>
+                                      <span className="text-4xl font-black text-[#FF8C00]">0.4ms</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* Decision Wizard: Model vs Custom */}
+      <section className="relative py-40 px-6 z-10 bg-white/[0.01]">
+        <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-20 text-center uppercase italic">Qual Marmita <span className="text-[#FF8C00]">Escolher?</span></h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <DecisionPanel 
+                    title="PERSONALIZADO" 
+                    type="premium"
+                    desc="Para marcas que buscam soberania. Um sistema forjado exclusivamente para suas regras de negócio."
+                    features={["Design Único sob-medida", "Lógica de negócio complexa", "Consultoria de arquitetura"]}
+                />
+                <DecisionPanel 
+                    title="MODELO" 
+                    type="standard"
+                    desc="Para negócios que buscam agilidade. Nossa infraestrutura premium pronta para escala imediata."
+                    features={["Implementação em tempo recorde", "Estrutura validada pelo mercado", "Custo-benefício otimizado"]}
+                />
+            </div>
+        </div>
+      </section>
+
+      {/* Monthly Structure (Above Menu) */}
+      <section className="relative py-40 px-6 z-10 bg-[#050505]">
+          <div className="max-w-7xl mx-auto text-center">
+              <h3 className="text-[10px] font-black tracking-[0.8em] text-[#FF8C00] uppercase mb-8">Base de Manutenção Mensal</h3>
+              <div className="flex flex-wrap justify-center gap-12">
+                  {MENSALIDADES.map(m => (
+                      <motion.div 
+                        key={m.title}
+                        whileHover={{ scale: 1.05 }}
+                        className="text-center group"
+                      >
+                          <span className="block text-[9px] font-black text-white/20 uppercase tracking-widest mb-3 group-hover:text-white transition-colors">{m.title}</span>
+                          <div className="text-5xl font-black tabular-nums">R${m.price}<span className="text-[10px] text-white/10 uppercase font-black ml-2 tracking-tighter">/mês</span></div>
+                      </motion.div>
+                  ))}
+              </div>
+          </div>
+      </section>
+
+      {/* The Menu (Cardápio) */}
+      <section id="menu" className="relative py-60 px-6 z-10">
+        <div className="max-w-[1600px] mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 px-4">
+                <div className="max-w-3xl">
+                    <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none italic uppercase">O <span className="text-[#FF8C00]">MENU.</span></h2>
+                    <p className="text-white/40 text-lg font-bold mt-4">Soluções tecnológicas prontas para servir.</p>
+                </div>
+                <div className="flex p-3 bg-white/5 rounded-[2rem] border border-white/5 backdrop-blur-xl">
+                    {['todos', 'personalizado', 'modelo'].map((t) => (
+                        <button key={t} onClick={() => setFilter(t as any)} className={cn("px-10 py-5 rounded-3xl text-xs font-black uppercase tracking-widest transition-all", filter === t ? "bg-[#FF8C00] text-black shadow-2xl shadow-[#FF8C00]/40" : "text-white/30 hover:text-white/60")}>
+                            {t}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <AnimatePresence mode="popLayout">
+                    {filteredProducts.map((p, i) => (
+                        <ModuleCard key={p.title} product={p} i={i} />
+                    ))}
+                </AnimatePresence>
+            </div>
+        </div>
+      </section>
+
+      {/* Footer: The Last Impression */}
+      <footer className="relative py-40 px-6 z-10 border-t border-white/5 bg-black">
+          <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col items-center gap-20">
+                  <Logo className="scale-[2] grayscale brightness-50 hover:grayscale-0 hover:brightness-100 transition-all duration-1000 cursor-pointer" />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-20 w-full pt-20 border-t border-white/5">
+                      <div className="md:col-span-2 space-y-8">
+                          <h4 className="text-xs font-black tracking-[0.4em] uppercase text-[#FF8C00]">MarmitaCode • Sede Brasil</h4>
+                          <p className="text-white/30 text-lg font-medium leading-relaxed italic max-w-sm">
+                              "Nossa missão é simples: tornar sua empresa inquebrável através de engenharia digital de alta performance."
+                          </p>
+                      </div>
+                      <div className="space-y-6">
+                           <h4 className="text-xs font-black tracking-widest uppercase text-white/20">Contato</h4>
+                           <span className="block text-xl font-black">Fernando Sousa</span>
+                           <span className="block text-white/40 font-bold">+55 (83) 99653-2203</span>
+                      </div>
+                      <div className="space-y-6">
+                           <h4 className="text-xs font-black tracking-widest uppercase text-white/20">Sociais</h4>
+                           <div className="flex flex-col gap-2 font-bold text-sm text-[#FF8C00]">
+                               <a href="#" className="hover:underline">INSTAGRAM</a>
+                               <a href="#" className="hover:underline">LINKEDIN</a>
+                               <a href="#" className="hover:underline">REPOSITÓRIO</a>
+                           </div>
+                      </div>
+                  </div>
+
+                  <div className="w-full flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.5em] text-white/10 mt-20">
+                      <span>SOLUÇÃO ENTREGUE QUENTINHA © 2026</span>
+                      <div className="flex gap-4">
+                          <span className="text-green-500/30">IA GUARD ACTIVE</span>
+                          <span className="text-blue-500/30">NEXTJS ENGINE</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </footer>
     </main>
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <motion.div 
-      whileHover={{ y: -10 }}
-      className="p-12 rounded-[3rem] bg-white/[0.02] border border-white/5 hover:border-[#FF8C00]/30 transition-all group"
-    >
-      <div className="mb-8 w-16 h-16 bg-[#FF8C00]/10 rounded-2xl flex items-center justify-center text-[#FF8C00] group-hover:scale-110 transition-transform">
-        {React.cloneElement(icon as React.ReactElement, { size: 32 })}
-      </div>
-      <h3 className="text-3xl font-black mb-6 tracking-tighter">{title}</h3>
-      <p className="text-white/40 text-lg leading-relaxed font-medium">{description}</p>
-    </motion.div>
-  );
+function FeatureMini({ icon, label }: { icon: React.ReactNode, label: string }) {
+    return (
+        <div className="p-8 bg-white/[0.02] border border-white/5 rounded-3xl flex flex-col gap-6 group hover:border-[#FF8C00]/30 transition-all">
+            <div className="text-[#FF8C00] group-hover:scale-110 transition-transform">{icon}</div>
+            <span className="text-[10px] font-black tracking-widest text-white/60">{label}</span>
+        </div>
+    );
 }
 
-function PriceCard({ plan, onSelect }: { plan: typeof PLANS[0], onSelect: () => void }) {
-  return (
-    <div className="w-[350px] flex-shrink-0">
-      <div className={cn(
-        "h-full p-10 rounded-[3.5rem] flex flex-col border transition-all duration-500",
-        plan.recommended 
-          ? "bg-[#FF8C00] text-black border-transparent scale-105 shadow-[0_30px_60px_rgba(255,140,0,0.3)] shadow-inner" 
-          : "bg-white/[0.03] text-white border-white/10 hover:border-white/20"
-      )}>
-        {plan.recommended && <span className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 text-black/50">Cozinha Recomenda</span>}
-        <h3 className="text-3xl font-black tracking-tighter mb-4">{plan.title}</h3>
-        <div className="mb-12">
-          <span className="text-5xl font-black">R${plan.price}</span>
-          {plan.monthly && <span className={cn("text-xs font-bold block", plan.recommended ? "text-black/60" : "text-white/40")}>+ R${plan.monthly}/mês suporte</span>}
+function TerminalText() {
+    return (
+        <div className="font-mono text-sm text-white/30 space-y-1">
+            <p><span className="text-[#FF8C00]">➜</span> system_integrity: [SCANNING...]</p>
+            <p><span className="text-[#FF8C00]">➜</span> code_analysis: COMPLETED</p>
+            <p><span className="text-green-500 font-bold">➜ [SUCCESS] No leaks detected.</span></p>
+            <p><span className="text-[#FF8C00]">➜</span> latency_check: [OPTIMIZING...]</p>
         </div>
-        <ul className="space-y-6 flex-1 mb-12">
-          {plan.features.map((f, i) => (
-            <li key={i} className="flex items-center gap-3 text-sm font-bold">
-              <CheckCircle2 size={18} className={plan.recommended ? "text-black" : "text-[#FF8C00]"} /> {f}
-            </li>
-          ))}
-        </ul>
-        <button 
-          onClick={onSelect}
-          className={cn(
-            "w-full py-5 rounded-2xl font-black transition-all active:scale-95",
-            plan.recommended ? "bg-black text-white hover:bg-black/80" : "bg-white text-black hover:bg-white/90"
-          )}
+    );
+}
+
+function DecisionPanel({ title, type, desc, features }: { title: string, type: 'premium' | 'standard', desc: string, features: string[] }) {
+    return (
+        <div className={cn(
+            "p-16 flex flex-col justify-center gap-12 group transition-all duration-700",
+            type === 'premium' ? "hover:bg-[#FF8C00]/10" : "hover:bg-blue-500/10"
+        )}>
+            <h3 className="text-5xl font-black italic tracking-tighter uppercase">{title}</h3>
+            <p className="text-white/40 text-xl font-bold leading-relaxed">{desc}</p>
+            <ul className="space-y-6">
+                {features.map(f => (
+                    <li key={f} className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-white/80">
+                        <div className={cn("w-2 h-2 rounded-full", type === 'premium' ? "bg-[#FF8C00]" : "bg-blue-500")} /> {f}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+function ModuleCard({ product, i }: { product: typeof PRODUCTS[0], i: number }) {
+    return (
+        <motion.div 
+            layout
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.03 }}
+            className="group relative flex flex-col bg-white/[0.02] border border-white/5 rounded-[4rem] p-12 hover:bg-white/[0.05] hover:border-[#FF8C00]/30 transition-all duration-500 overflow-hidden min-h-[620px]"
         >
-          PEDIR COMBO
-        </button>
-      </div>
-    </div>
-  );
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF8C00]/5 blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity" />
+            
+            <div className="flex justify-between items-start mb-12">
+                <span className="text-[10px] font-black text-[#FF8C00] uppercase tracking-[0.4em]">{product.cat}</span>
+                {product.tag && (
+                    <span className="bg-[#FF8C00] text-black px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(255,140,0,0.2)]">
+                        {product.tag}
+                    </span>
+                )}
+            </div>
+
+            <div className="flex-1 flex flex-col justify-center space-y-8">
+                <h3 className="text-3xl font-black tracking-tighter leading-[0.9] uppercase italic group-hover:text-[#FF8C00] transition-colors">
+                    {product.title}
+                </h3>
+                <p className="text-white/30 text-sm font-bold leading-relaxed">{product.desc}</p>
+            </div>
+
+            <div className="mt-auto space-y-8 pt-12 border-t border-white/5">
+                <div className="flex flex-col gap-6">
+                    <div className="flex justify-between items-end">
+                        <div className="flex flex-col">
+                            <span className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">Setup Único</span>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-lg font-black text-white/40 italic">R$</span>
+                                <span className="text-5xl font-black tabular-nums">{typeof product.price === 'number' ? `${product.price}` : product.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {product.monthly !== 0 && (
+                        <div className="p-6 bg-[#FF8C00]/10 border border-[#FF8C00]/20 rounded-[2rem] flex flex-col gap-1">
+                            <span className="text-[10px] font-black text-[#FF8C00] uppercase tracking-[0.2em]">Mensalidade do Sistema</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-3xl font-black text-[#FF8C00]">R${product.monthly}</span>
+                                <span className="text-[8px] font-black text-[#FF8C00]/60 uppercase italic">Suporte Vitalício</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <button 
+                    onClick={() => window.open(`https://wa.me/5583996532203?text=Olá equipe! Gostaria de encomendar o ${product.title}`, '_blank')}
+                    className="w-full py-6 bg-white text-black font-black text-xs rounded-3xl flex items-center justify-center gap-3 hover:gap-8 transition-all hover:bg-[#FF8C00] active:scale-95 shadow-2xl"
+                >
+                    ENCOMENDAR SISTEMA <ChevronRight size={20} />
+                </button>
+            </div>
+        </motion.div>
+    );
 }

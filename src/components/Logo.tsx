@@ -2,32 +2,40 @@ import React from 'react';
 
 export const Logo = ({ className = "" }: { className?: string }) => {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="relative w-12 h-12">
-        {/* SVG Pan Icon based on user uploaded image */}
-        <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_8px_rgba(255,140,0,0.5)]">
-          {/* Steam */}
-          <path d="M60,10 Q65,20 60,30 T60,45" stroke="#FF8C00" strokeWidth="4" fill="none" className="animate-pulse" />
-          <path d="M75,15 Q80,25 75,35 T75,50" stroke="#FF8C00" strokeWidth="4" fill="none" className="animate-pulse delay-75" />
-          <path d="M50,15 Q55,25 50,35 T50,50" stroke="#FF8C00" strokeWidth="4" fill="none" className="animate-pulse delay-150" />
+    <div className={`flex items-center gap-4 ${className}`}>
+      {/* Icon based on user provided image */}
+      <div className="relative w-14 h-14 shrink-0">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_12px_rgba(255,140,0,0.4)]">
+          {/* Steam (Orange Waves) */}
+          <path d="M70 10C75 18 70 24 75 32" stroke="#FF8C00" strokeWidth="5" strokeLinecap="round" className="animate-pulse" />
+          <path d="M85 15C90 23 85 29 90 37" stroke="#FF8C00" strokeWidth="5" strokeLinecap="round" className="animate-pulse delay-100" />
+          <path d="M100 20C105 28 100 34 105 42" stroke="#FF8C00" strokeWidth="5" strokeLinecap="round" className="animate-pulse delay-200" />
           
-          {/* Lid (slightly open) */}
-          <path d="M20,40 L65,30 L65,40 L20,50 Z" fill="white" stroke="#333" strokeWidth="1" />
-          <rect x="35" y="30" width="12" height="5" transform="rotate(-15 35 30)" fill="#DDD" />
+          {/* Lid (Slightly tilted up) */}
+          <path d="M25 55L90 40C92 39 94 40 94 42L94 52L25 65V55Z" fill="white" />
+          <rect x="50" y="40" width="15" height="6" rx="2" transform="rotate(-13 50 40)" fill="#E0E0E0" />
           
-          {/* Pan Body */}
-          <path d="M35,45 L85,45 L80,80 Q78,85 70,85 L45,85 Q37,85 35,80 Z" fill="none" stroke="white" strokeWidth="5" />
-          <path d="M45,60 L55,75 L65,60" stroke="#FF8C00" strokeWidth="3" fill="none" />
-          <line x1="55" y1="65" x2="55" y2="78" stroke="#FF8C00" strokeWidth="3" />
+          {/* Pan Body (Rounded base) */}
+          <path d="M35 65H110L102 95C100 102 94 107 86 107H59C51 107 45 102 43 95L35 65Z" stroke="white" strokeWidth="7" strokeLinejoin="round" />
+          
+          {/* Code Symbol (Center of pan) */}
+          <path d="M58 75L50 85L58 95" stroke="#FF8C00" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M82 75L90 85L82 95" stroke="#FF8C00" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M74 72L66 98" stroke="#FF8C00" strokeWidth="4" strokeLinecap="round" />
         </svg>
       </div>
-      <div className="flex flex-col leading-none">
-        <span className="text-2xl font-black tracking-tighter text-white">
+      
+      <div className="flex flex-col -space-y-1">
+        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white flex items-center">
           Marmita<span className="text-[#FF8C00]">Code</span>
-        </span>
-        <span className="text-[9px] font-bold tracking-[0.2em] text-white/50 uppercase">
-          Solução entregue quentinha
-        </span>
+        </h2>
+        <div className="flex items-center gap-2">
+          <div className="h-[2px] w-4 bg-[#FF8C00]"></div>
+          <span className="text-[10px] md:text-[11px] font-bold tracking-[0.2em] text-white/60 uppercase">
+            Solução entregue quentinha
+          </span>
+          <div className="h-[2px] w-4 bg-[#FF8C00]"></div>
+        </div>
       </div>
     </div>
   );
