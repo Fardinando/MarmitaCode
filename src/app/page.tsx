@@ -106,8 +106,8 @@ export default function Home() {
                     Marmita<span className="text-transparent stroke-white" style={{ WebkitTextStroke: '1.5px white' }}>Code</span>
                   </motion.h1>
                   <motion.div 
-                    initial={{ w: 0 }}
-                    animate={{ w: '100%' }}
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
                     className="h-1 bg-gradient-to-r from-transparent via-[#FF8C00] to-transparent mb-16" 
                   />
               </div>
