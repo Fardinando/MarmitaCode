@@ -9,7 +9,7 @@ import {
   Zap, Code2, Rocket, CheckCircle2, 
   ArrowRight, Search, LayoutPanelLeft, Box, ShoppingBag, 
   Settings, Layers, MousePointer2, ShieldAlert, Cpu, Lock, Globe,
-  HelpCircle, Sparkles, Terminal, ChevronRight, Activity, CpuChip
+  HelpCircle, Sparkles, Terminal, ChevronRight, Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
