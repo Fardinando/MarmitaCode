@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, User, Bot, Phone, MoreVertical, CheckCheck } from 'lucide-react';
+import { X, Send, Bot, MoreVertical, CheckCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const AI_KNOWLEDGE = [
@@ -13,6 +13,8 @@ const AI_KNOWLEDGE = [
   { keywords: ['ia', 'guarda', 'erro'], answer: 'Sim! Nosso sistema conta com a Marmita Guard IA, assistindo 24/7. Ela detecta e corrige erros automaticamente para garantir 100% de estabilidade.' }
 ];
 
+const emptySubscribe = () => () => {};
+
 export const WhatsAppWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -20,10 +22,9 @@ export const WhatsAppWidget = () => {
   ]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
-    setMounted(true);
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 

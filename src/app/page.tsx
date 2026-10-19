@@ -1,20 +1,26 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useSpring, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
+import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
 import { AIObserver } from '@/components/AIObserver';
-import { 
-  Zap, Code2, Rocket, CheckCircle2, 
-  ArrowRight, Search, LayoutPanelLeft, Box, ShoppingBag, 
-  Settings, Layers, MousePointer2, ShieldAlert, Cpu, Lock, Globe,
-  HelpCircle, Sparkles, Terminal, ChevronRight, Activity
-} from 'lucide-react';
+import { ShieldAlert, Cpu, ChevronRight, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+type Product = {
+    cat: string;
+    title: string;
+    price: number | string;
+    monthly: number | string;
+    desc: string;
+    type: string;
+    tag?: string;
+    prefix?: string;
+};
+
 // Optimized Product List
-const PRODUCTS = [
+const PRODUCTS: Product[] = [
     { cat: 'SITES', title: "Site Personalizado", price: 400, monthly: 75, desc: "Sua visão, nosso código. Identidade exclusiva projetada para converter.", type: 'personalizado', tag: 'Top Vendas' },
     { cat: 'SITES', title: "Site Modelo", price: 300, monthly: 75, desc: "Estrutura ágil e refinada. O ponto de partida ideal para o seu sucesso.", type: 'modelo', tag: 'Econômico' },
     { cat: 'ESTOQUE', title: "Estoque Personalizado", price: 620, monthly: 120, desc: "Gestão inteligente de inventário desenhada para o seu fluxo logístico.", type: 'personalizado' },
@@ -38,21 +44,24 @@ const MENSALIDADES = [
     { title: "E-commerce", price: 140 }
 ];
 
+const emptySubscribe = () => () => {};
+
 export default function Home() {
   const [filter, setFilter] = useState<'todos' | 'personalizado' | 'modelo'>('todos');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
+  const spotlight = useMotionTemplate`radial-gradient(1200px circle at ${mouseX}px ${mouseY}px, rgba(255,140,0,0.1), transparent 70%)`;
+
   useEffect(() => {
-    setMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
         mouseX.set(e.clientX);
         mouseY.set(e.clientY);
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   const filteredProducts = PRODUCTS.filter(p => filter === 'todos' || p.type === filter || p.type === 'especial');
 
@@ -76,12 +85,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
           <motion.div 
             className="absolute inset-0 opacity-20"
-            style={{ 
-                background: `radial-gradient(1200px circle at var(--x) var(--y), rgba(255,140,0,0.1), transparent 70%)`,
-                // @ts-ignore
-                '--x': useTransform(mouseX, x => `${x}px`),
-                '--y': useTransform(mouseY, y => `${y}px`)
-            } as any}
+            style={{ background: spotlight }}
           />
       </div>
 
@@ -224,8 +228,8 @@ export default function Home() {
                     <p className="text-white/40 text-lg font-bold mt-4">Soluções tecnológicas prontas para servir.</p>
                 </div>
                 <div className="flex p-3 bg-white/5 rounded-[2rem] border border-white/5 backdrop-blur-xl">
-                    {['todos', 'personalizado', 'modelo'].map((t) => (
-                        <button key={t} onClick={() => setFilter(t as any)} className={cn("px-10 py-5 rounded-3xl text-xs font-black uppercase tracking-widest transition-all", filter === t ? "bg-[#FF8C00] text-black shadow-2xl shadow-[#FF8C00]/40" : "text-white/30 hover:text-white/60")}>
+                    {(['todos', 'personalizado', 'modelo'] as const).map((t) => (
+                        <button key={t} onClick={() => setFilter(t)} className={cn("px-10 py-5 rounded-3xl text-xs font-black uppercase tracking-widest transition-all", filter === t ? "bg-[#FF8C00] text-black shadow-2xl shadow-[#FF8C00]/40" : "text-white/30 hover:text-white/60")}>
                             {t}
                         </button>
                     ))}
@@ -252,7 +256,7 @@ export default function Home() {
                       <div className="md:col-span-2 space-y-8">
                           <h4 className="text-xs font-black tracking-[0.4em] uppercase text-[#FF8C00]">MarmitaCode • Sede Brasil</h4>
                           <p className="text-white/30 text-lg font-medium leading-relaxed italic max-w-sm">
-                              "Nossa missão é simples: tornar sua empresa inquebrável através de engenharia digital de alta performance."
+                              &ldquo;Nossa missão é simples: tornar sua empresa inquebrável através de engenharia digital de alta performance.&rdquo;
                           </p>
                       </div>
                       <div className="space-y-6">
@@ -323,7 +327,7 @@ function DecisionPanel({ title, type, desc, features }: { title: string, type: '
     );
 }
 
-function ModuleCard({ product, i }: { product: typeof PRODUCTS[0], i: number }) {
+function ModuleCard({ product, i }: { product: Product, i: number }) {
     return (
         <motion.div 
             layout

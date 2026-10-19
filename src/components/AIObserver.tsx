@@ -1,17 +1,22 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Terminal, AlertTriangle, Cpu, CheckCircle2, ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react';
+import { Terminal, Eye, EyeOff } from 'lucide-react';
+
+const emptySubscribe = () => () => {};
 
 export const AIObserver = () => {
     const [status, setStatus] = useState<'monitoring' | 'analyzing' | 'fixed'>('monitoring');
     const [logs, setLogs] = useState<string[]>(['AI Guard initialized...', 'Kernel monitoring active.']);
     const [isMinimized, setIsMinimized] = useState(false);
-    const [mounted, setMounted] = useState(false);
+    const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+
+    const addLog = useCallback((msg: string) => {
+        setLogs(prev => [msg, ...prev].slice(0, 5));
+    }, []);
 
     useEffect(() => {
-        setMounted(true);
         const handleError = (event: ErrorEvent | PromiseRejectionEvent) => {
             const errorMsg = 'message' in event ? event.message : 'Unknown Promise Rejection';
             setStatus('analyzing');
@@ -48,11 +53,7 @@ export const AIObserver = () => {
             window.removeEventListener('unhandledrejection', handleError);
             clearInterval(interval);
         };
-    }, []);
-
-    const addLog = (msg: string) => {
-        setLogs(prev => [msg, ...prev].slice(0, 5));
-    };
+    }, [addLog]);
 
     if (!mounted) return null;
 
