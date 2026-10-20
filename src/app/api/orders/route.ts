@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendOrderEmails } from '@/lib/notifications/email';
 import { appendOrderToSheet } from '@/lib/notifications/sheets';
+import { DEFAULT_DOMAIN_PRICING } from '@/lib/data';
 import type { Briefing, Tier } from '@/lib/types';
 
 interface OrderBody {
@@ -17,6 +18,9 @@ interface OrderBody {
   };
   domainYears?: number | null;
   discountCode?: string | null;
+  setupPrice?: number;
+  monthlyPrice?: number;
+  domainTotal?: number;
 }
 
 export async function POST(req: Request) {
@@ -30,8 +34,8 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
 
     let template: { id: string; slug: string } | null = null;
-    let setupPrice = 0;
-    let monthlyPrice = 0;
+    let setupPrice = Number(body.setupPrice ?? 0);
+    let monthlyPrice = Number(body.monthlyPrice ?? 0);
 
     if (body.templateSlug) {
       const { data: t } = await admin
@@ -64,6 +68,11 @@ export async function POST(req: Request) {
         .single();
       if (dp) {
         domainTotal = Number(dp.registry_price) + Number(dp.labor_fee);
+      } else {
+        const fallback = DEFAULT_DOMAIN_PRICING.find((d) => d.years === body.domainYears);
+        domainTotal = fallback
+          ? Number(fallback.registry_price) + Number(fallback.labor_fee)
+          : Number(body.domainTotal ?? 0);
       }
     }
 

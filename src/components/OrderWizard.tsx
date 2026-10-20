@@ -21,10 +21,12 @@ const LAYOUTS = ['Clássico', 'Moderno', 'Minimalista', 'Ousado', 'Corporativo']
 
 export function OrderWizard({
   template,
+  isCustom = false,
   domainPricing,
   initialTier,
 }: {
-  template: WizardTemplate | null;
+  template: WizardTemplate;
+  isCustom?: boolean;
   domainPricing: DomainPricing[];
   initialTier: Tier;
 }) {
@@ -51,7 +53,7 @@ export function OrderWizard({
   const [discountCode, setDiscountCode] = useState('');
 
   const selectedTierRow = useMemo(
-    () => template?.tiers.find((t) => t.tier === tier) ?? null,
+    () => template.tiers.find((t) => t.tier === tier) ?? null,
     [template, tier]
   );
 
@@ -81,7 +83,7 @@ export function OrderWizard({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          templateSlug: template?.slug ?? null,
+          templateSlug: isCustom ? null : template.slug,
           tier,
           briefing: {
             business_name: business,
@@ -95,6 +97,9 @@ export function OrderWizard({
           contact: { name, email, phone, company },
           domainYears,
           discountCode: discountCode || null,
+          setupPrice,
+          monthlyPrice,
+          domainTotal: domainCost,
         }),
       });
       const data = await res.json();
@@ -135,7 +140,7 @@ export function OrderWizard({
           <div>
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Escolha o plano</h2>
             <div className="space-y-4">
-              {(template ? template.tiers : []).map((t) => (
+              {template.tiers.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => setTier(t.tier)}
@@ -153,14 +158,6 @@ export function OrderWizard({
                   </div>
                 </button>
               ))}
-              {tier === 'personalizado' && (
-                <div className="p-6 rounded-3xl border border-[#FF8C00] bg-[#FF8C00]/10">
-                  <span className="font-black uppercase text-sm">100% Personalizado</span>
-                  <p className="text-white/40 text-xs font-bold mt-2">
-                    Projeto do zero, feito sob medida. Orçamento definido após o briefing.
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         )}

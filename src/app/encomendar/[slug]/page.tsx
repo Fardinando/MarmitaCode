@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getTemplateBySlug, getDomainPricing } from '@/lib/data';
+import { getTemplateBySlug, getDomainPricing, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
 import type { Tier } from '@/lib/types';
 
@@ -25,6 +25,14 @@ export default async function EncomendarPage({
   const initialTier: Tier =
     (tier as Tier) ?? (isCustom ? 'personalizado' : 'basico');
 
+  const wizardTemplate = template
+    ? { slug: template.slug, name: template.name, tiers: template.tiers }
+    : {
+        slug: 'personalizado',
+        name: 'Projeto 100% Personalizado',
+        tiers: defaultCustomTiers(),
+      };
+
   return (
     <main className="relative min-h-screen bg-black text-white px-6 py-16">
       <div className="max-w-7xl mx-auto">
@@ -45,11 +53,8 @@ export default async function EncomendarPage({
         </div>
 
         <OrderWizard
-          template={
-            template
-              ? { slug: template.slug, name: template.name, tiers: template.tiers }
-              : null
-          }
+          template={wizardTemplate}
+          isCustom={isCustom}
           domainPricing={domainPricing}
           initialTier={initialTier}
         />

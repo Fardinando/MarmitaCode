@@ -7,6 +7,58 @@ export interface TemplateWithTiers extends Template {
   tiers: TemplateTier[];
 }
 
+// Used when the domain_pricing table is empty or unreachable, so the domain
+// step in the order wizard always works (Registro.br annual + one-time labor).
+export const DEFAULT_DOMAIN_PRICING: DomainPricing[] = [
+  { id: 'default-1', years: 1, registry_price: 40, labor_fee: 10, active: true, sort_order: 1 },
+  { id: 'default-2', years: 2, registry_price: 80, labor_fee: 10, active: true, sort_order: 2 },
+  { id: 'default-3', years: 3, registry_price: 120, labor_fee: 10, active: true, sort_order: 3 },
+  { id: 'default-5', years: 5, registry_price: 200, labor_fee: 10, active: true, sort_order: 5 },
+  { id: 'default-10', years: 10, registry_price: 400, labor_fee: 10, active: true, sort_order: 10 },
+];
+
+// Fallback plans for the 100% custom order flow (no template selected).
+export function defaultCustomTiers(): TemplateTier[] {
+  return [
+    {
+      id: 'custom-basico',
+      template_id: 'custom',
+      tier: 'basico',
+      setup_price: 800,
+      monthly_price: 75,
+      features: [],
+      active: true,
+    },
+    {
+      id: 'custom-intermediario',
+      template_id: 'custom',
+      tier: 'intermediario',
+      setup_price: 1200,
+      monthly_price: 100,
+      features: [],
+      active: true,
+    },
+    {
+      id: 'custom-premium',
+      template_id: 'custom',
+      tier: 'premium',
+      setup_price: 1800,
+      monthly_price: 125,
+      features: [],
+      active: true,
+    },
+    {
+      id: 'custom-personalizado',
+      template_id: 'custom',
+      tier: 'personalizado',
+      setup_price: 2500,
+      monthly_price: 150,
+      features: [],
+      active: true,
+    },
+  ];
+}
+
 export async function getTemplates(): Promise<Template[]> {
   try {
     const supabase = await createClient();
@@ -46,8 +98,10 @@ export async function getDomainPricing(): Promise<DomainPricing[]> {
       .select('*')
       .eq('active', true)
       .order('sort_order', { ascending: true });
-    return (data as DomainPricing[]) ?? [];
+
+    if (!data || data.length === 0) return DEFAULT_DOMAIN_PRICING;
+    return data as DomainPricing[];
   } catch {
-    return [];
+    return DEFAULT_DOMAIN_PRICING;
   }
 }
