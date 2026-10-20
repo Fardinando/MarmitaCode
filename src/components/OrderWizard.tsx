@@ -1,0 +1,394 @@
+'use client';
+
+import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Check, ChevronLeft, ChevronRight, Loader2, Globe, Palette, LayoutGrid, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  TIER_LABELS,
+  type DomainPricing,
+  type TemplateTier,
+  type Tier,
+} from '@/lib/types';
+
+interface WizardTemplate {
+  slug: string;
+  name: string;
+  tiers: TemplateTier[];
+}
+
+const LAYOUTS = ['Clássico', 'Moderno', 'Minimalista', 'Ousado', 'Corporativo'];
+
+export function OrderWizard({
+  template,
+  domainPricing,
+  initialTier,
+}: {
+  template: WizardTemplate | null;
+  domainPricing: DomainPricing[];
+  initialTier: Tier;
+}) {
+  const router = useRouter();
+  const [step, setStep] = useState(0);
+  const [tier, setTier] = useState<Tier>(initialTier);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [business, setBusiness] = useState('');
+  const [segment, setSegment] = useState('');
+  const [primary, setPrimary] = useState('#FF8C00');
+  const [secondary, setSecondary] = useState('#FFFFFF');
+  const [layout, setLayout] = useState(LAYOUTS[0]);
+  const [about, setAbout] = useState('');
+  const [references, setReferences] = useState('');
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState('');
+
+  const [domainYears, setDomainYears] = useState<number | null>(null);
+  const [discountCode, setDiscountCode] = useState('');
+
+  const selectedTierRow = useMemo(
+    () => template?.tiers.find((t) => t.tier === tier) ?? null,
+    [template, tier]
+  );
+
+  const setupPrice = selectedTierRow ? Number(selectedTierRow.setup_price) : 0;
+  const monthlyPrice = selectedTierRow ? Number(selectedTierRow.monthly_price) : 0;
+
+  const domainRow = domainPricing.find((d) => d.years === domainYears) ?? null;
+  const domainCost = domainRow
+    ? Number(domainRow.registry_price) + Number(domainRow.labor_fee)
+    : 0;
+
+  const total = Math.max(0, setupPrice + domainCost);
+
+  const steps = ['Plano', 'Briefing', 'Domínio', 'Contato', 'Revisão'];
+
+  const canAdvance = () => {
+    if (step === 1) return business.trim().length > 0;
+    if (step === 3) return name.trim() && email.trim();
+    return true;
+  };
+
+  const submit = async () => {
+    setSaving(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          templateSlug: template?.slug ?? null,
+          tier,
+          briefing: {
+            business_name: business,
+            segment,
+            primary_color: primary,
+            secondary_color: secondary,
+            layout,
+            about,
+            references,
+          },
+          contact: { name, email, phone, company },
+          domainYears,
+          discountCode: discountCode || null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Erro ao enviar pedido.');
+      router.push(`/checkout/sucesso?order=${data.order.id}`);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Erro inesperado.');
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Progress */}
+      <div className="flex items-center gap-2 mb-12">
+        {steps.map((s, i) => (
+          <React.Fragment key={s}>
+            <div className="flex items-center gap-2">
+              <div
+                className={cn(
+                  'w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black',
+                  i < step ? 'bg-[#FF8C00] text-black' : i === step ? 'bg-[#FF8C00] text-black' : 'bg-white/10 text-white/40'
+                )}
+              >
+                {i < step ? <Check size={14} /> : i + 1}
+              </div>
+              <span className={cn('text-[10px] font-black uppercase tracking-widest hidden md:block', i === step ? 'text-white' : 'text-white/30')}>
+                {s}
+              </span>
+            </div>
+            {i < steps.length - 1 && <div className="flex-1 h-[1px] bg-white/10" />}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5">
+        {step === 0 && (
+          <div>
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Escolha o plano</h2>
+            <div className="space-y-4">
+              {(template ? template.tiers : []).map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTier(t.tier)}
+                  className={cn(
+                    'w-full text-left p-6 rounded-3xl border transition-all',
+                    tier === t.tier ? 'border-[#FF8C00] bg-[#FF8C00]/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'
+                  )}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-black uppercase text-sm">{TIER_LABELS[t.tier]}</span>
+                    <span className="text-[#FF8C00] font-black">
+                      R${Number(t.setup_price).toFixed(0)}{' '}
+                      <span className="text-white/30 text-xs">+ R${Number(t.monthly_price).toFixed(0)}/mês</span>
+                    </span>
+                  </div>
+                </button>
+              ))}
+              {tier === 'personalizado' && (
+                <div className="p-6 rounded-3xl border border-[#FF8C00] bg-[#FF8C00]/10">
+                  <span className="font-black uppercase text-sm">100% Personalizado</span>
+                  <p className="text-white/40 text-xs font-bold mt-2">
+                    Projeto do zero, feito sob medida. Orçamento definido após o briefing.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2 flex items-center gap-3">
+              <Palette size={28} className="text-[#FF8C00]" /> Briefing
+            </h2>
+            <Field label="Nome do negócio" value={business} onChange={setBusiness} placeholder="Ex: Pizzaria do Zé" />
+            <Field label="Segmento" value={segment} onChange={setSegment} placeholder="Ex: Restaurante, E-commerce, Curso..." />
+
+            <div className="grid grid-cols-2 gap-6">
+              <ColorField label="Cor primária" value={primary} onChange={setPrimary} />
+              <ColorField label="Cor secundária" value={secondary} onChange={setSecondary} />
+            </div>
+
+            <div>
+              <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">
+                Disposição / estilo do site
+              </span>
+              <div className="flex flex-wrap gap-3">
+                {LAYOUTS.map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLayout(l)}
+                    className={cn(
+                      'px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2',
+                      layout === l ? 'bg-[#FF8C00] text-black' : 'bg-white/5 text-white/40 hover:text-white'
+                    )}
+                  >
+                    <LayoutGrid size={12} /> {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <TextArea label="Sobre o negócio / o que deve ter no site" value={about} onChange={setAbout} />
+            <Field label="Referências (links, sites que gosta)" value={references} onChange={setReferences} placeholder="https://..." />
+          </div>
+        )}
+
+        {step === 2 && (
+          <div>
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2 flex items-center gap-3">
+              <Globe size={28} className="text-[#FF8C00]" /> Domínio (opcional)
+            </h2>
+            <div className="p-5 rounded-2xl bg-[#FF8C00]/5 border border-[#FF8C00]/20 mb-8 text-xs font-bold text-white/60 leading-relaxed">
+              Quer que a gente cuide do seu domínio? Nós registramos no <b className="text-white">Registro.br</b> com
+              as <b className="text-white">nossas credenciais como administrador</b> — você permanece o
+              <b className="text-white"> dono</b> do domínio. A taxa do Registro.br é <b className="text-white">anual</b> e
+              controlada por eles; cobramos uma pequena taxa de mão de obra única.
+              <br /><br />
+              <span className="text-white/40">
+                * Você ainda precisará acessar o Registro.br para efetivar a compra do domínio escolhido.
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              <button
+                onClick={() => setDomainYears(null)}
+                className={cn(
+                  'w-full text-left p-5 rounded-2xl border transition-all',
+                  domainYears === null ? 'border-[#FF8C00] bg-[#FF8C00]/10' : 'border-white/5 bg-white/[0.02]'
+                )}
+              >
+                <span className="font-black text-sm uppercase">Não preciso</span>
+                <span className="float-right text-white/40 text-xs font-bold">—</span>
+              </button>
+
+              {domainPricing.map((d) => (
+                <button
+                  key={d.id}
+                  onClick={() => setDomainYears(d.years)}
+                  className={cn(
+                    'w-full text-left p-5 rounded-2xl border transition-all flex justify-between items-center',
+                    domainYears === d.years ? 'border-[#FF8C00] bg-[#FF8C00]/10' : 'border-white/5 bg-white/[0.02] hover:border-white/20'
+                  )}
+                >
+                  <span className="font-black text-sm uppercase">{d.years} ano{d.years > 1 ? 's' : ''}</span>
+                  <span className="text-[#FF8C00] font-black">
+                    R${(Number(d.registry_price) + Number(d.labor_fee)).toFixed(0)}
+                    <span className="text-white/30 text-[10px] ml-2">
+                      (R${Number(d.registry_price).toFixed(0)} + R${Number(d.labor_fee).toFixed(0)} mão de obra)
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2 flex items-center gap-3">
+              <User size={28} className="text-[#FF8C00]" /> Seus dados
+            </h2>
+            <Field label="Nome completo" value={name} onChange={setName} placeholder="Seu nome" />
+            <Field label="E-mail" value={email} onChange={setEmail} placeholder="voce@email.com" />
+            <Field label="Telefone / WhatsApp" value={phone} onChange={setPhone} placeholder="(83) 9..." />
+            <Field label="Empresa" value={company} onChange={setCompany} placeholder="Opcional" />
+          </div>
+        )}
+
+        {step === 4 && (
+          <div>
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Revisão do pedido</h2>
+            <div className="space-y-3 text-sm mb-8">
+              <Row label="Template" value={template?.name ?? '100% Personalizado'} />
+              <Row label="Plano" value={TIER_LABELS[tier]} />
+              <Row label="Setup" value={`R$ ${setupPrice.toFixed(2)}`} />
+              <Row label="Mensalidade" value={`R$ ${monthlyPrice.toFixed(2)}/mês`} />
+              <Row label="Domínio" value={domainRow ? `${domainRow.years} ano(s) — R$ ${domainCost.toFixed(2)}` : 'Não'} />
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 mb-6">
+              <input
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+                placeholder="Código de desconto (opcional)"
+                className="w-full bg-transparent outline-none text-sm"
+              />
+            </div>
+
+            <div className="flex items-baseline justify-between p-6 rounded-3xl bg-[#FF8C00]/10 border border-[#FF8C00]/20 mb-6">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00]">Total a pagar (mock)</span>
+              <span className="text-4xl font-black text-[#FF8C00]">R$ {total.toFixed(2)}</span>
+            </div>
+
+            <p className="text-[10px] text-white/30 font-bold mb-6">
+              * Pagamento simulado (mockup). Nenhuma cobrança real será feita neste momento.
+            </p>
+
+            {error && (
+              <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">
+                {error}
+              </div>
+            )}
+
+            <button
+              onClick={submit}
+              disabled={saving}
+              className="w-full py-6 bg-white text-black font-black text-xs uppercase tracking-widest rounded-3xl hover:bg-[#FF8C00] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+            >
+              {saving ? <Loader2 className="animate-spin" size={18} /> : <Check size={18} />}
+              {saving ? 'Enviando pedido...' : 'Finalizar pedido (mock)'}
+            </button>
+          </div>
+        )}
+
+        {/* Nav */}
+        <div className="flex justify-between mt-10">
+          <button
+            onClick={() => setStep((s) => Math.max(0, s - 1))}
+            disabled={step === 0}
+            className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white/40 hover:text-white disabled:opacity-0"
+          >
+            <ChevronLeft size={16} /> Voltar
+          </button>
+          {step < steps.length - 1 && (
+            <button
+              onClick={() => canAdvance() && setStep((s) => s + 1)}
+              disabled={!canAdvance()}
+              className="flex items-center gap-2 px-8 py-4 rounded-full bg-[#FF8C00] text-black text-[11px] font-black uppercase tracking-widest disabled:opacity-30"
+            >
+              Continuar <ChevronRight size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">{label}</span>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm outline-none focus:border-[#FF8C00]/50"
+      />
+    </label>
+  );
+}
+
+function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">{label}</span>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm outline-none focus:border-[#FF8C00]/50 resize-none"
+      />
+    </label>
+  );
+}
+
+function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <label className="block">
+      <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">{label}</span>
+      <div className="flex items-center gap-3 px-4 py-3 bg-white/5 border border-white/10 rounded-2xl">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-10 h-10 rounded-lg bg-transparent cursor-pointer"
+        />
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 bg-transparent outline-none text-sm font-mono"
+        />
+      </div>
+    </label>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between py-2 border-b border-white/5">
+      <span className="text-white/40 font-bold">{label}</span>
+      <span className="font-black">{value}</span>
+    </div>
+  );
+}
