@@ -2,7 +2,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import type { Discount } from '@/lib/types';
 import { saveDiscount, deleteDiscount } from '@/app/admin/actions';
 
-export const metadata = { title: 'Descontos | Admin MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDiscountsPage() {
   const admin = createAdminClient();

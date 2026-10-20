@@ -2,7 +2,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { TEMPLATE_CATEGORIES, type Template, type TemplateTier, type Tier } from '@/lib/types';
 import { saveTemplate, deleteTemplate } from '@/app/admin/actions';
 
-export const metadata = { title: 'Templates | Admin MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminTemplatesPage() {
   const admin = createAdminClient();

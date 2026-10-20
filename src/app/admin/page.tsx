@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { STATUS_LABELS, type Order, type OrderStatus } from '@/lib/types';
 
-export const metadata = { title: 'Admin | MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
   const admin = createAdminClient();

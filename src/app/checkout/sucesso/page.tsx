@@ -3,7 +3,9 @@ import { CheckCircle2 } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { STATUS_LABELS, TIER_LABELS, type Order } from '@/lib/types';
 
-export const metadata = { title: 'Pedido confirmado | MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function SuccessPage({
   searchParams,

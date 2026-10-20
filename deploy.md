@@ -156,3 +156,35 @@ Basta dar `git push` na branch `main`. A Vercel rebuilda automaticamente.
 - **WhatsApp automático**: integração via WhatsApp Cloud API da Meta.
 - **Sub-templates reais**: cada template publicado em `marmitacode.vercel.app/<slug>`.
 - **Fatura/mensalidade**: emissão automática de cobranças recorrentes.
+
+---
+
+## 10. Solução de problemas (troubleshooting)
+
+### O site dá erro 500 (`Internal Server Error`)
+A causa mais comum é **variável de ambiente faltando ou vazia** na Vercel.
+
+1. Confirme que `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e
+   `SUPABASE_SERVICE_ROLE_KEY` estão cadastradas em **Vercel → Settings → Environment Variables**
+   para o ambiente **Production** (e Preview).
+2. Importante: variáveis `NEXT_PUBLIC_*` são **embutidas no build**. Se você adicionou depois do
+   deploy, é preciso **fazer um novo deploy** (`Deployments → … → Redeploy`, sem cache).
+3. O código foi feito para **não quebrar** o site público quando o Supabase não está configurado:
+   páginas públicas continuam abrindo e as áreas logadas redirecionam para `/login`.
+
+### Página fica em branco / catálogo vazio
+- Você rodou o `supabase/schema.sql`? Sem as tabelas, o catálogo retorna vazio.
+- Verifique se as políticas de RLS foram criadas (fazem parte do `schema.sql`).
+
+### Pedido não chega por e-mail nem na planilha
+- **E-mail**: confira `RESEND_API_KEY`, `ORDER_EMAIL_FROM` e `ORDER_EMAIL_TO`. Em testes, use
+  `onboarding@resend.dev` como remetente.
+- **Planilha**: confirme que a planilha foi **compartilhada como Editor** com o
+  `GOOGLE_SERVICE_ACCOUNT_EMAIL`, e que `GOOGLE_PRIVATE_KEY` foi colado corretamente (com os `\n`).
+- Essas integrações falham de forma silenciosa: o pedido continua salvo no banco mesmo que o
+  e-mail/planilha falhem.
+
+### Não consigo acessar `/admin`
+- Faça login em `/login`.
+- No Supabase → **Table Editor → profiles**, mude a coluna `role` do seu usuário para `admin`.
+- Faça logout e login novamente para atualizar a sessão.

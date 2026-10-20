@@ -2,7 +2,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import type { DomainPricing } from '@/lib/types';
 import { saveDomainPricing, deleteDomainPricing } from '@/app/admin/actions';
 
-export const metadata = { title: 'Domínio | Admin MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDomainPage() {
   const admin = createAdminClient();

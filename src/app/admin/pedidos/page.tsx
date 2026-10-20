@@ -2,7 +2,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { STATUS_LABELS, TIER_LABELS, type Order, type OrderStatus } from '@/lib/types';
 import { updateOrderStatus } from '@/app/admin/actions';
 
-export const metadata = { title: 'Pedidos | Admin MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 const STATUSES: OrderStatus[] = [
   'aguardando_pagamento',

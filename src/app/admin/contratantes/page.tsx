@@ -2,7 +2,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import type { Profile } from '@/lib/types';
 import { updateClient } from '@/app/admin/actions';
 
-export const metadata = { title: 'Contratantes | Admin MarmitaCode' };
+export const metadata = { title: '' };
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminClientsPage() {
   const admin = createAdminClient();

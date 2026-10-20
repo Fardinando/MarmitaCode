@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 const NAV = [
   { href: '/admin', label: 'Dashboard' },
   { href: '/admin/templates', label: 'Templates' },
