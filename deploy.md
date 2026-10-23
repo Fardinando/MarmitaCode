@@ -57,7 +57,10 @@ Sem essas variáveis, o envio de e-mail é simplesmente ignorado (o pedido conti
 3. Crie uma **Service Account** (Contas de serviço) e gere uma **chave JSON**.
 4. Do JSON, copie:
    - `client_email` → `GOOGLE_SERVICE_ACCOUNT_EMAIL`
-   - `private_key` → `GOOGLE_PRIVATE_KEY` (cole com os `\n`; na Vercel, cole o valor inteiro entre aspas).
+   - `private_key` → `GOOGLE_PRIVATE_KEY`. Cole o valor **exatamente como está no JSON**,
+     numa linha só, incluindo os `\n` literais e sem as aspas. O código converte os `\n`
+     em quebras de linha reais automaticamente. Exemplo do valor:
+     `-----BEGIN PRIVATE KEY-----\nMIIEvQ...\n-----END PRIVATE KEY-----\n`
 5. Crie uma planilha no Google Sheets e copie o ID da URL:
    `https://docs.google.com/spreadsheets/d/`**`ESTE_É_O_ID`**`/edit` → `GOOGLE_SHEETS_ID`.
 6. **Compartilhe a planilha** com o `client_email` da service account (permissão de **Editor**).
@@ -88,7 +91,8 @@ GOOGLE_SHEETS_ID=
 NEXT_PUBLIC_WHATSAPP_NUMBER=5583996532203
 ```
 
-> `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `GOOGLE_PRIVATE_KEY` são **secretas** — nunca commite nem exponha no cliente.
+> `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `GOOGLE_PRIVATE_KEY` são **secretas** — nunca commite nem exponha no cliente.  
+> **Atenção:** se você já colou o JSON em algum chat, **rotacione essa chave** no Google Cloud (Service Account → Keys → delete/regenere) por segurança.
 
 ---
 
