@@ -4,7 +4,11 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendOrderEmails } from '@/lib/notifications/email';
 import { appendOrderToSheet } from '@/lib/notifications/sheets';
 import { DEFAULT_DOMAIN_PRICING } from '@/lib/data';
+import { rateLimit } from '@/lib/rate-limit';
+import { isValidEmail, isValidPhoneBR } from '@/lib/validation';
 import type { Briefing, Tier } from '@/lib/types';
+
+const ALLOWED_TIERS: Tier[] = ['basico', 'intermediario', 'premium', 'personalizado'];
 
 interface OrderBody {
   templateSlug?: string | null;
@@ -23,12 +27,52 @@ interface OrderBody {
   domainTotal?: number;
 }
 
+function clientIp(req: Request) {
+  return (
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown'
+  );
+}
+
+function validate(body: OrderBody): string | null {
+  if (!body || typeof body !== 'object') return 'Dados inválidos.';
+  if (!body.tier || !ALLOWED_TIERS.includes(body.tier)) return 'Plano inválido.';
+  if (!body.contact || typeof body.contact !== 'object') return 'Contato ausente.';
+  const name = (body.contact.name ?? '').trim();
+  const email = (body.contact.email ?? '').trim();
+  if (name.length < 2 || name.length > 120) return 'Nome inválido.';
+  if (!isValidEmail(email)) return 'E-mail inválido.';
+  if (body.contact.phone && !isValidPhoneBR(body.contact.phone)) {
+    return 'Telefone inválido. Use DDD + número.';
+  }
+  if (body.domainYears != null && ![1, 2, 3, 5, 10].includes(Number(body.domainYears))) {
+    return 'Plano de domínio inválido.';
+  }
+  if (body.discountCode && String(body.discountCode).length > 60) {
+    return 'Cupom inválido.';
+  }
+  const briefing = body.briefing ?? {};
+  const briefingSize = JSON.stringify(briefing).length;
+  if (briefingSize > 20_000) return 'Briefing muito grande.';
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
-    const body = (await req.json()) as OrderBody;
+    const ip = clientIp(req);
+    const rl = rateLimit(`orders:${ip}`, 5, 60_000);
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: `Muitas tentativas. Tente em ${rl.retryAfter}s.` },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } }
+      );
+    }
 
-    if (!body?.tier || !body?.contact?.name || !body?.contact?.email) {
-      return NextResponse.json({ error: 'Dados incompletos.' }, { status: 400 });
+    const body = (await req.json()) as OrderBody;
+    const validationError = validate(body);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const admin = createAdminClient();
@@ -97,9 +141,6 @@ export async function POST(req: Request) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null;
-
     const { data: order, error } = await admin
       .from('orders')
       .insert({
@@ -109,10 +150,10 @@ export async function POST(req: Request) {
         tier: body.tier,
         status: 'pago',
         briefing: body.briefing ?? {},
-        contact_name: body.contact.name,
-        contact_email: body.contact.email,
-        contact_phone: body.contact.phone ?? null,
-        company_name: body.contact.company ?? null,
+        contact_name: body.contact.name.trim(),
+        contact_email: body.contact.email.trim(),
+        contact_phone: body.contact.phone?.trim() ?? null,
+        company_name: body.contact.company?.trim() ?? null,
         setup_price: setupPrice,
         monthly_price: monthlyPrice,
         discount_code: body.discountCode ?? null,
@@ -121,7 +162,7 @@ export async function POST(req: Request) {
         domain_total: domainTotal,
         total_paid: total,
         payment_mock: true,
-        client_ip: ip,
+        client_ip: ip === 'unknown' ? null : ip,
       })
       .select('*')
       .single();

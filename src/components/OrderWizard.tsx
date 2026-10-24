@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, ChevronLeft, ChevronRight, Loader2, Globe, Palette, LayoutGrid, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { isValidEmail, isValidPhoneBR, formatPhoneBR } from '@/lib/validation';
 import {
   TIER_LABELS,
   type DomainPricing,
@@ -69,9 +70,13 @@ export function OrderWizard({
 
   const steps = ['Plano', 'Briefing', 'Domínio', 'Contato', 'Revisão'];
 
+  const nameValid = name.trim().length >= 2;
+  const emailValid = isValidEmail(email);
+  const phoneValid = !phone || isValidPhoneBR(phone);
+
   const canAdvance = () => {
     if (step === 1) return business.trim().length > 0;
-    if (step === 3) return name.trim() && email.trim();
+    if (step === 3) return nameValid && emailValid && phoneValid;
     return true;
   };
 
@@ -255,9 +260,29 @@ export function OrderWizard({
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2 flex items-center gap-3">
               <User size={28} className="text-[#FF8C00]" /> Seus dados
             </h2>
-            <Field label="Nome completo" value={name} onChange={setName} placeholder="Seu nome" />
-            <Field label="E-mail" value={email} onChange={setEmail} placeholder="voce@email.com" />
-            <Field label="Telefone / WhatsApp" value={phone} onChange={setPhone} placeholder="(83) 9..." />
+            <Field
+              label="Nome completo"
+              value={name}
+              onChange={setName}
+              placeholder="Seu nome"
+              error={name.length > 0 && !nameValid ? 'Informe um nome válido.' : undefined}
+            />
+            <Field
+              label="E-mail"
+              value={email}
+              onChange={setEmail}
+              type="email"
+              placeholder="voce@email.com"
+              error={email.length > 0 && !emailValid ? 'E-mail inválido.' : undefined}
+            />
+            <Field
+              label="Telefone / WhatsApp"
+              value={phone}
+              onChange={(v) => setPhone(formatPhoneBR(v))}
+              type="tel"
+              placeholder="(83) 99999-9999"
+              error={phone.length > 0 && !phoneValid ? 'Telefone inválido.' : undefined}
+            />
             <Field label="Empresa" value={company} onChange={setCompany} placeholder="Opcional" />
           </div>
         )}
@@ -332,16 +357,36 @@ export function OrderWizard({
   );
 }
 
-function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type,
+  error,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
+  error?: string;
+}) {
   return (
     <label className="block">
       <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">{label}</span>
       <input
+        type={type ?? 'text'}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm outline-none focus:border-[#FF8C00]/50"
+        aria-invalid={!!error}
+        className={cn(
+          'w-full px-5 py-4 bg-white/5 border rounded-2xl text-sm outline-none transition-colors',
+          error ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-[#FF8C00]/50'
+        )}
       />
+      {error && <span className="block mt-2 text-[10px] font-bold text-red-400">{error}</span>}
     </label>
   );
 }
