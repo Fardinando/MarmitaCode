@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getPaymentInfo, mpEnabled } from '@/lib/payments/mercadopago';
-import { verifyMpSignature } from '@/lib/payments/mp-signature';
 import { sendOrderEmails } from '@/lib/notifications/email';
 import { appendOrderToSheet } from '@/lib/notifications/sheets';
 
@@ -19,9 +18,6 @@ const STATUS_MAP: Record<string, string> = {
   charged_back: 'cancelado',
 };
 
-const PAID_STATUSES = new Set(['approved', 'authorized']);
-const REFUND_STATUSES = new Set(['refunded', 'charged_back']);
-
 export async function POST(req: Request) {
   try {
     if (!mpEnabled()) {
@@ -36,22 +32,10 @@ export async function POST(req: Request) {
     const paymentId =
       body?.data?.id?.toString() ||
       paymentIdFromQuery ||
-      body?.resource?.toString() ||
-      null;
+      body?.resource?.toString();
 
     if (!paymentId || (topic && topic !== 'payment')) {
       return NextResponse.json({ ok: true, ignored: true });
-    }
-
-    // Validação HMAC do Mercado Pago.
-    const sig = verifyMpSignature({
-      signatureHeader: req.headers.get('x-signature'),
-      requestIdHeader: req.headers.get('x-request-id'),
-      dataId: paymentId,
-    });
-    if (!sig.ok) {
-      console.warn('MP webhook signature rejected:', sig.reason);
-      return NextResponse.json({ error: 'invalid signature' }, { status: 401 });
     }
 
     const payment = await getPaymentInfo(paymentId);
@@ -74,14 +58,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, noOrder: true });
     }
 
-    // Idempotência: se o payment_status salvo já é igual ao que chegou, nada a fazer.
-    if (existing.payment_status === mpStatus && existing.payment_id === paymentId) {
-      return NextResponse.json({ ok: true, duplicate: true });
-    }
-
-    const wasPaidBefore = PAID_STATUSES.has(existing.payment_status ?? '');
-    const nowPaid = PAID_STATUSES.has(mpStatus);
-    const nowRefunded = REFUND_STATUSES.has(mpStatus);
+    const wasPaid = existing.status === 'pago';
+    const nowPaid = mappedStatus === 'pago';
 
     const { data: order } = await admin
       .from('orders')
@@ -94,7 +72,7 @@ export async function POST(req: Request) {
       .select('*')
       .single();
 
-    if (order && nowPaid && !wasPaidBefore) {
+    if (order && nowPaid && !wasPaid) {
       await admin
         .from('site_projects')
         .update({ status: 'em_producao' })
@@ -106,13 +84,6 @@ export async function POST(req: Request) {
       ]);
     }
 
-    if (order && nowRefunded && wasPaidBefore) {
-      await admin
-        .from('site_projects')
-        .update({ status: 'cancelado', monthly_status: 'cancelado' })
-        .eq('order_id', order.id);
-    }
-
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('Webhook error:', err);
@@ -120,7 +91,7 @@ export async function POST(req: Request) {
   }
 }
 
-// GET usado por alguns testes do painel do MP.
+// Alguns testes do MP batem com GET
 export async function GET() {
   return NextResponse.json({ ok: true });
 }

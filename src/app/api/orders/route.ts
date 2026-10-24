@@ -173,7 +173,18 @@ export async function POST(req: Request) {
       .single();
 
     if (error || !order) {
-      return NextResponse.json({ error: error?.message ?? 'Erro ao criar pedido.' }, { status: 500 });
+      console.error('Order insert error:', error);
+      return NextResponse.json(
+        {
+          error: error?.message ?? 'Erro ao criar pedido.',
+          hint: error?.code === '42703'
+            ? 'Alguma coluna do schema não existe. Rode o schema.sql atualizado no Supabase.'
+            : error?.code === '42P01'
+            ? 'Tabela orders não existe. Rode o schema.sql no Supabase.'
+            : undefined,
+        },
+        { status: 500 }
+      );
     }
 
     await admin.from('site_projects').insert({
@@ -210,6 +221,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, order, checkoutUrl });
   } catch (err) {
     console.error('Order error:', err);
-    return NextResponse.json({ error: 'Erro interno.' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Erro interno.';
+    return NextResponse.json(
+      {
+        error: 'Erro interno ao criar pedido.',
+        detail: process.env.NODE_ENV === 'production' ? undefined : message,
+      },
+      { status: 500 }
+    );
   }
 }
