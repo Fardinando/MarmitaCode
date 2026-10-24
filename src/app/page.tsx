@@ -55,10 +55,14 @@ const STEPS = [
 
 export default function Home() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
-  const [slogan, setSlogan] = useState<string>(SLOGANS[0]);
+  const [sloganIndex, setSloganIndex] = useState(0);
   useEffect(() => {
-    setSlogan(SLOGANS[Math.floor(Math.random() * SLOGANS.length)]);
+    // Picking the random slogan client-side avoids SSR/hydration mismatch;
+    // we only run it once per visit so the choice is stable within a session.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSloganIndex(Math.floor(Math.random() * SLOGANS.length));
   }, []);
+  const slogan = SLOGANS[sloganIndex];
 
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);

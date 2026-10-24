@@ -4,6 +4,9 @@ import { BarbeariaTemplate } from './barbearia';
 import { CursoTemplate } from './curso';
 import { PortfolioTemplate } from './portfolio';
 import { LojaTemplate } from './loja';
+import { SaasTemplate } from './saas';
+import { FitnessTemplate } from './fitness';
+import { ImobiliariaTemplate } from './imobiliaria';
 
 export interface DemoTemplate {
   slug: string;
@@ -48,6 +51,27 @@ export const DEMO_TEMPLATES: Record<string, DemoTemplate> = {
     category: 'E-commerce',
     description: 'Vitrine de produtos com pedido via WhatsApp — ideal para pequenos lojistas.',
     Component: LojaTemplate,
+  },
+  saas: {
+    slug: 'saas',
+    name: 'Linear SaaS',
+    category: 'SaaS',
+    description: 'Landing page de produto SaaS — hero com screenshot, features, planos e social proof.',
+    Component: SaasTemplate,
+  },
+  fitness: {
+    slug: 'fitness',
+    name: 'Forge Fitness',
+    category: 'Fitness',
+    description: 'Site de academia e studio fitness — aulas, estrutura, planos e matrícula.',
+    Component: FitnessTemplate,
+  },
+  imobiliaria: {
+    slug: 'imobiliaria',
+    name: 'Horizonte Imóveis',
+    category: 'Imobiliária',
+    description: 'Site de imobiliária com busca, catálogo de imóveis, filtros e agendamento de visita.',
+    Component: ImobiliariaTemplate,
   },
 };
 

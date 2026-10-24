@@ -10,9 +10,18 @@ const SERVICOS = [
 ];
 
 const EQUIPE = [
-  { name: 'Rafael Costa', role: 'Barbeiro master', initial: 'R' },
-  { name: 'Lucas Dias', role: 'Especialista em barba', initial: 'L' },
-  { name: 'Diego Souza', role: 'Pigmentação & coloração', initial: 'D' },
+  { name: 'Rafael Costa', role: 'Barbeiro master', img: 'https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?w=600&auto=format&fit=crop' },
+  { name: 'Lucas Dias', role: 'Especialista em barba', img: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=600&auto=format&fit=crop' },
+  { name: 'Diego Souza', role: 'Pigmentação & coloração', img: 'https://images.unsplash.com/photo-1618077360395-f3068be8e001?w=600&auto=format&fit=crop' },
+];
+
+const GALERIA = [
+  'photo-1503951914875-452162b0f3f1',
+  'photo-1521590832167-7bcbfaa6381f',
+  'photo-1599351431202-1e0f0137899a',
+  'photo-1585747860715-2ba37e788b70',
+  'photo-1596728325488-58c87691e9af',
+  'photo-1562004760-aceed7bb0fe3',
 ];
 
 export function BarbeariaTemplate() {
@@ -37,14 +46,21 @@ export function BarbeariaTemplate() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,#000_0deg,#1a1200_90deg,#000_180deg,#1a1200_270deg,#000_360deg)]" />
-        <div className="relative max-w-6xl mx-auto px-6 py-32 text-center">
+      <section className="relative overflow-hidden min-h-[80vh] flex items-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1600&auto=format&fit=crop"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-6 py-32">
           <p className="text-yellow-500 text-xs uppercase tracking-[0.4em] mb-6">Desde 2010</p>
           <h1 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-8">
             Barba. <span className="text-yellow-500">Corte.</span><br />Atitude.
           </h1>
-          <p className="text-white/60 text-lg max-w-xl mx-auto mb-10">
+          <p className="text-white/70 text-lg max-w-xl mb-10">
             Barbearia tradicional com estilo contemporâneo. Agende em menos de 1 minuto.
           </p>
           <a href="#contato" className="inline-block px-10 py-5 bg-yellow-500 text-black font-black uppercase tracking-widest hover:bg-yellow-400">
@@ -78,14 +94,31 @@ export function BarbeariaTemplate() {
           <div className="grid md:grid-cols-3 gap-8">
             {EQUIPE.map((e) => (
               <div key={e.name} className="text-center">
-                <div className="w-40 h-40 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-800 flex items-center justify-center text-6xl font-black text-black">
-                  {e.initial}
+                <div className="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-yellow-500/20">
+                  <img src={e.img} alt={e.name} className="w-full h-full object-cover" />
                 </div>
                 <h3 className="font-black uppercase tracking-wide text-xl">{e.name}</h3>
                 <p className="text-white/40 text-xs uppercase tracking-widest mt-2">{e.role}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Galeria */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <p className="text-yellow-500 text-xs uppercase tracking-[0.4em] mb-4">Nosso trabalho</p>
+        <h2 className="text-5xl font-black uppercase tracking-tight mb-12">Galeria</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {GALERIA.map((p) => (
+            <div key={p} className="aspect-square overflow-hidden">
+              <img
+                src={`https://images.unsplash.com/${p}?w=600&auto=format&fit=crop`}
+                alt=""
+                className="w-full h-full object-cover hover:scale-110 transition-transform duration-700 grayscale hover:grayscale-0"
+              />
+            </div>
+          ))}
         </div>
       </section>
 

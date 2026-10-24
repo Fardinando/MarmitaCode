@@ -1,19 +1,28 @@
 import Link from 'next/link';
 
 const MENU = [
-  { cat: 'Entradas', items: [
-    { name: 'Bruschetta de tomate', desc: 'Tomate confitado, manjericão, azeite siciliano', price: 'R$ 24' },
-    { name: 'Pastéis de queijo', desc: '6 unidades, massa fininha, muçarela derretida', price: 'R$ 28' },
-  ]},
-  { cat: 'Pratos principais', items: [
-    { name: 'Risoto de camarão', desc: 'Arroz arbóreo, camarões, limão siciliano', price: 'R$ 58' },
-    { name: 'Fettuccine ao sugo', desc: 'Massa fresca, molho de tomate caseiro, parmesão', price: 'R$ 42' },
-    { name: 'Filé ao molho madeira', desc: 'Mignon selado, cogumelos frescos, batata rústica', price: 'R$ 72' },
-  ]},
-  { cat: 'Sobremesas', items: [
-    { name: 'Tiramisù', desc: 'Receita italiana da nona', price: 'R$ 22' },
-    { name: 'Petit gâteau', desc: 'Com sorvete de creme', price: 'R$ 24' },
-  ]},
+  {
+    cat: 'Entradas',
+    items: [
+      { name: 'Bruschetta de tomate', desc: 'Tomate confitado, manjericão, azeite siciliano', price: 'R$ 24', img: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&auto=format&fit=crop' },
+      { name: 'Pastéis de queijo', desc: '6 unidades, massa fininha, muçarela derretida', price: 'R$ 28', img: 'https://images.unsplash.com/photo-1626200925024-1a1fe550d388?w=600&auto=format&fit=crop' },
+    ],
+  },
+  {
+    cat: 'Pratos principais',
+    items: [
+      { name: 'Risoto de camarão', desc: 'Arroz arbóreo, camarões frescos, limão siciliano', price: 'R$ 58', img: 'https://images.unsplash.com/photo-1633964913295-ceb43826a07f?w=600&auto=format&fit=crop' },
+      { name: 'Fettuccine ao sugo', desc: 'Massa fresca, molho de tomate caseiro, parmesão', price: 'R$ 42', img: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&auto=format&fit=crop' },
+      { name: 'Filé ao molho madeira', desc: 'Mignon selado, cogumelos frescos, batata rústica', price: 'R$ 72', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop' },
+    ],
+  },
+  {
+    cat: 'Sobremesas',
+    items: [
+      { name: 'Tiramisù', desc: 'Receita italiana da nona', price: 'R$ 22', img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&auto=format&fit=crop' },
+      { name: 'Petit gâteau', desc: 'Com sorvete de creme', price: 'R$ 24', img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop' },
+    ],
+  },
 ];
 
 export function RestauranteTemplate() {
@@ -55,9 +64,33 @@ export function RestauranteTemplate() {
               </a>
             </div>
           </div>
-          <div className="aspect-square rounded-3xl bg-[linear-gradient(135deg,#78350f,#431407)] shadow-2xl flex items-center justify-center text-9xl">
-            🍝
+          <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl border border-amber-900/40">
+            <img
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop"
+              alt="Prato italiano"
+              className="w-full h-full object-cover"
+            />
           </div>
+        </div>
+      </section>
+
+      {/* Galeria do ambiente */}
+      <section className="max-w-6xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            'photo-1517248135467-4c7edcad34c4',
+            'photo-1559339352-11d035aa65de',
+            'photo-1550966871-3ed3cdb5ed0c',
+            'photo-1544148103-0773bf10d330',
+          ].map((p) => (
+            <div key={p} className="aspect-square rounded-2xl overflow-hidden">
+              <img
+                src={`https://images.unsplash.com/${p}?w=600&auto=format&fit=crop`}
+                alt="ambiente"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -73,7 +106,10 @@ export function RestauranteTemplate() {
               </h3>
               <div className="space-y-6">
                 {cat.items.map((item) => (
-                  <div key={item.name} className="flex gap-6 items-baseline">
+                  <div key={item.name} className="flex gap-5 items-center">
+                    <div className="w-20 h-20 shrink-0 rounded-xl overflow-hidden border border-amber-900/40">
+                      <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
                     <div className="flex-1">
                       <div className="flex items-baseline gap-3 flex-wrap">
                         <span className="font-bold text-lg">{item.name}</span>

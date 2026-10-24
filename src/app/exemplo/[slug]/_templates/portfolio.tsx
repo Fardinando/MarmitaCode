@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 const PROJETOS = [
-  { title: 'Rebranding Vinícola', year: '2026', tag: 'Branding', color: 'from-rose-500 to-amber-500' },
-  { title: 'App de meditação', year: '2026', tag: 'Produto', color: 'from-teal-500 to-cyan-500' },
-  { title: 'Identidade visual Studio X', year: '2025', tag: 'Branding', color: 'from-violet-500 to-fuchsia-500' },
-  { title: 'E-commerce de moda', year: '2025', tag: 'Web', color: 'from-stone-500 to-stone-700' },
-  { title: 'Direção de arte editorial', year: '2024', tag: 'Editorial', color: 'from-emerald-500 to-lime-500' },
-  { title: 'Campanha Verão', year: '2024', tag: 'Social', color: 'from-orange-500 to-red-500' },
+  { title: 'Rebranding Vinícola', year: '2026', tag: 'Branding', img: 'photo-1510812431401-41d2bd2722f3' },
+  { title: 'App de meditação', year: '2026', tag: 'Produto', img: 'photo-1559526324-4b87b5e36e44' },
+  { title: 'Identidade visual Studio X', year: '2025', tag: 'Branding', img: 'photo-1618005182384-a83a8bd57fbe' },
+  { title: 'E-commerce de moda', year: '2025', tag: 'Web', img: 'photo-1515886657613-9f3515b0c78f' },
+  { title: 'Direção de arte editorial', year: '2024', tag: 'Editorial', img: 'photo-1596920566403-2072ed25d437' },
+  { title: 'Campanha Verão', year: '2024', tag: 'Social', img: 'photo-1618220179428-22790b461013' },
 ];
 
 export function PortfolioTemplate() {
@@ -50,7 +50,13 @@ export function PortfolioTemplate() {
         <div className="grid md:grid-cols-2 gap-6">
           {PROJETOS.map((p) => (
             <div key={p.title} className="group cursor-pointer">
-              <div className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${p.color} mb-5 group-hover:scale-[1.02] transition-transform`} />
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-5">
+                <img
+                  src={`https://images.unsplash.com/${p.img}?w=1000&auto=format&fit=crop`}
+                  alt={p.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
               <div className="flex items-baseline justify-between">
                 <h3 className="text-xl font-bold">{p.title}</h3>
                 <span className="text-stone-500 text-sm">{p.year}</span>
@@ -63,11 +69,17 @@ export function PortfolioTemplate() {
 
       {/* Sobre */}
       <section id="sobre" className="bg-stone-900 text-stone-50 py-32 mt-24">
-        <div className="max-w-4xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+        <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-[280px_1fr] gap-16 items-center">
+          <div className="aspect-square rounded-full overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop"
+              alt="Designer"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div>
             <p className="text-stone-400 text-sm uppercase tracking-widest mb-4">Sobre</p>
-            <h2 className="text-5xl font-black tracking-tight italic">Olá, eu sou um designer com propósito.</h2>
-          </div>
+            <h2 className="text-5xl font-black tracking-tight italic mb-6">Olá, eu sou um designer com propósito.</h2>
           <div className="text-stone-300 leading-relaxed space-y-5">
             <p>
               Trabalho há mais de 10 anos criando identidades visuais e experiências digitais
@@ -87,6 +99,7 @@ export function PortfolioTemplate() {
                 <div className="text-stone-400">países atendidos</div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>

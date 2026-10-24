@@ -70,6 +70,45 @@ const TEMPLATES = [
     features: ['Vitrine de produtos', 'Pedido via WhatsApp', 'Destaques e promoções', 'Fácil de atualizar'],
     sort_order: 5,
   },
+  {
+    slug: 'saas',
+    name: 'Linear SaaS',
+    category: 'SaaS',
+    description: 'Landing page de produto SaaS com hero, features, social proof e planos.',
+    long_description:
+      'Landing moderna para produtos SaaS. Hero com screenshot do produto, lista de recursos, logos de clientes, depoimento forte e tabela de preços comparativa.',
+    demo_url: '/exemplo/saas',
+    featured: true,
+    active: true,
+    features: ['Hero com screenshot', 'Features destacadas', 'Social proof (logos)', 'Tabela de planos'],
+    sort_order: 6,
+  },
+  {
+    slug: 'fitness',
+    name: 'Forge Fitness',
+    category: 'Fitness',
+    description: 'Site de academia com aulas, estrutura, planos e matrícula.',
+    long_description:
+      'Visual energético para academia, studio ou centro de treinamento. Grade de aulas com instrutores, galeria do espaço, planos com destaque e CTA pra aula experimental grátis.',
+    demo_url: '/exemplo/fitness',
+    featured: false,
+    active: true,
+    features: ['Grade de aulas', 'Galeria da estrutura', 'Planos destacados', 'Aula experimental'],
+    sort_order: 7,
+  },
+  {
+    slug: 'imobiliaria',
+    name: 'Horizonte Imóveis',
+    category: 'Imobiliária',
+    description: 'Site de imobiliária com busca, catálogo e agendamento.',
+    long_description:
+      'Template para imobiliárias e corretores. Busca por filtros, grid de imóveis com preço e características, destaques, CTA pra avaliação gratuita de imóvel.',
+    demo_url: '/exemplo/imobiliaria',
+    featured: true,
+    active: true,
+    features: ['Busca por filtros', 'Cards de imóvel com fotos', 'Agendamento de visita', 'Captação de vendedores'],
+    sort_order: 8,
+  },
 ];
 
 const TIER_SEED = [

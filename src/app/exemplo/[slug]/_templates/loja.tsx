@@ -1,14 +1,14 @@
 import Link from 'next/link';
 
 const PRODUTOS = [
-  { name: 'Vestido midi floral', price: 189, color: 'from-pink-200 to-rose-300', tag: 'Novo' },
-  { name: 'Blazer linho creme', price: 329, color: 'from-amber-100 to-amber-200', tag: null },
-  { name: 'Calça wide alfaiataria', price: 249, color: 'from-stone-200 to-stone-400', tag: null },
-  { name: 'Camisa seda estampada', price: 219, color: 'from-indigo-200 to-indigo-300', tag: 'Promo' },
-  { name: 'Saia plissada pastel', price: 169, color: 'from-emerald-100 to-emerald-200', tag: null },
-  { name: 'Casaco oversized', price: 489, color: 'from-neutral-300 to-neutral-500', tag: 'Novo' },
-  { name: 'Vestido longo linho', price: 299, color: 'from-orange-100 to-orange-200', tag: null },
-  { name: 'Bolsa couro vintage', price: 379, color: 'from-amber-700 to-amber-900', tag: 'Promo' },
+  { name: 'Vestido midi floral', price: 189, img: 'photo-1572804013309-59a88b7e92f1', tag: 'Novo' },
+  { name: 'Blazer linho creme', price: 329, img: 'photo-1591047139829-d91aecb6caea', tag: null },
+  { name: 'Calça wide alfaiataria', price: 249, img: 'photo-1551803091-e20673f15770', tag: null },
+  { name: 'Camisa seda estampada', price: 219, img: 'photo-1564257577-6c8d9d6ddc46', tag: 'Promo' },
+  { name: 'Saia plissada pastel', price: 169, img: 'photo-1583496661160-fb5886a0aaaa', tag: null },
+  { name: 'Casaco oversized', price: 489, img: 'photo-1544022613-e87ca75a784a', tag: 'Novo' },
+  { name: 'Vestido longo linho', price: 299, img: 'photo-1595777457583-95e059d581b8', tag: null },
+  { name: 'Bolsa couro vintage', price: 379, img: 'photo-1584917865442-de89df76afd3', tag: 'Promo' },
 ];
 
 export function LojaTemplate() {
@@ -50,8 +50,12 @@ export function LojaTemplate() {
               </a>
             </div>
           </div>
-          <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-rose-100 via-amber-100 to-rose-200 flex items-center justify-center text-9xl">
-            👗
+          <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
+            <img
+              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop"
+              alt="Moda primavera"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -65,7 +69,12 @@ export function LojaTemplate() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {PRODUTOS.map((p) => (
             <div key={p.name} className="group cursor-pointer">
-              <div className={`relative aspect-[3/4] rounded-2xl bg-gradient-to-br ${p.color} mb-3 overflow-hidden`}>
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden mb-3 bg-neutral-100">
+                <img
+                  src={`https://images.unsplash.com/${p.img}?w=600&auto=format&fit=crop`}
+                  alt={p.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
                 {p.tag && (
                   <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
                     p.tag === 'Promo' ? 'bg-rose-500 text-white' : 'bg-neutral-900 text-white'
