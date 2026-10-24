@@ -90,13 +90,24 @@ async function runSeed() {
   const admin = createAdminClient();
   const report: Record<string, unknown> = {};
 
-  // 1. Deactivate templates antigos que não estão na lista nova (não apaga, só desativa).
+  // 1. Desativa templates antigos cujos slugs não estão na lista nova (não apaga).
   const newSlugs = TEMPLATES.map((t) => t.slug);
-  const { error: deactivateError } = await admin
+  const { data: oldTemplates } = await admin
     .from('templates')
-    .update({ active: false })
-    .not('slug', 'in', `(${newSlugs.map((s) => `"${s}"`).join(',')})`);
-  report.deactivated_old = deactivateError ? deactivateError.message : 'ok';
+    .select('slug')
+    .not('slug', 'in', `(${newSlugs.join(',')})`);
+  if (oldTemplates && oldTemplates.length > 0) {
+    const slugsToDeactivate = oldTemplates.map((t) => t.slug);
+    const { error: deactivateError } = await admin
+      .from('templates')
+      .update({ active: false })
+      .in('slug', slugsToDeactivate);
+    report.deactivated_old = deactivateError
+      ? deactivateError.message
+      : slugsToDeactivate;
+  } else {
+    report.deactivated_old = 'none';
+  }
 
   // 2. Upsert templates novos.
   const { data: upserted, error: upsertError } = await admin
@@ -144,26 +155,35 @@ async function runSeed() {
 }
 
 export async function GET() {
-  // Idempotência pública: a rota só executa enquanto o seed inicial não rodou.
-  // Depois de popular 'restaurante', ela fica inerte — qualquer um que chame
-  // recebe só uma resposta informativa.
-  const admin = createAdminClient();
-  const { data: existing } = await admin
-    .from('templates')
-    .select('slug, active')
-    .eq('slug', 'restaurante')
-    .maybeSingle();
+  try {
+    const admin = createAdminClient();
+    const { data: existing, error: checkErr } = await admin
+      .from('templates')
+      .select('slug, active')
+      .eq('slug', 'restaurante')
+      .maybeSingle();
 
-  if (existing?.active) {
-    return NextResponse.json({
-      ok: true,
-      alreadySeeded: true,
-      message: 'Seed já rodou. Para re-popular, use o painel /admin/templates.',
-    });
+    if (checkErr) {
+      return NextResponse.json(
+        { ok: false, step: 'check_existing', error: checkErr.message, code: checkErr.code },
+        { status: 500 }
+      );
+    }
+
+    if (existing?.active) {
+      return NextResponse.json({
+        ok: true,
+        alreadySeeded: true,
+        message: 'Seed já rodou. Para re-popular, use /admin/templates.',
+      });
+    }
+
+    const result = await runSeed();
+    return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ ok: false, step: 'exception', error: msg }, { status: 500 });
   }
-
-  const result = await runSeed();
-  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
 }
 
 export async function POST() {
