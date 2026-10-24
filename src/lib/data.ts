@@ -18,7 +18,8 @@ export const DEFAULT_DOMAIN_PRICING: DomainPricing[] = [
 ];
 
 // Fallback plans for the 100% custom order flow (no template selected).
-// Only À la Carte makes sense for the custom route (sem template).
+// Pra rota 'personalizado' só faz sentido o plano À la Carte, que é o único
+// que cobre projetos do zero.
 export function defaultCustomTiers(): TemplateTier[] {
   return [
     {
@@ -27,16 +28,12 @@ export function defaultCustomTiers(): TemplateTier[] {
       tier: 'premium',
       setup_price: 397,
       monthly_price: 47.9,
-      features: [],
-      active: true,
-    },
-    {
-      id: 'custom-personalizado',
-      template_id: 'custom',
-      tier: 'personalizado',
-      setup_price: 397,
-      monthly_price: 47.9,
-      features: [],
+      features: [
+        'Projeto 100% personalizado',
+        'Desenvolvido do zero a partir do seu briefing',
+        'Design exclusivo',
+        'Lógica frontend sob medida',
+      ],
       active: true,
     },
   ];

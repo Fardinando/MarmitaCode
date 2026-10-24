@@ -283,8 +283,8 @@ export function OrderWizard({
               >
                 <div className="font-black text-sm uppercase mb-2">Não precisa — use o endereço gratuito</div>
                 <p className="text-white/50 text-xs leading-relaxed">
-                  Seu site fica em um endereço do tipo <b className="text-white">seunome.marmitacode.com</b>.
-                  Zero custo adicional, pronto no mesmo dia. Pode trocar pra domínio próprio depois.
+                  Seu site fica em um endereço do tipo <b className="text-white">marmitacode.com.br/seunome</b>.
+                  Zero custo adicional. Pode trocar pra domínio próprio depois.
                 </p>
               </button>
             </div>
@@ -299,7 +299,7 @@ export function OrderWizard({
                       <li>Depois do pedido, enviamos tutorial do Registro.br por e-mail.</li>
                       <li>Você escolhe e paga o domínio direto no Registro.br (a taxa é anual deles).</li>
                       <li>Nos informa o domínio registrado — a gente configura DNS e SSL.</li>
-                      <li>Em até 24h o site está no ar no seu domínio.</li>
+                      <li>O prazo para o site entrar no ar será informado após o fechamento do pedido.</li>
                     </ol>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ export function OrderWizard({
                 A compra e renovação do domínio é <b className="text-white">responsabilidade sua</b> — você compra
                 direto no Registro.br. Após o pedido, enviamos um <b className="text-white">tutorial</b> explicando
                 como fazer. Você também pode optar por usar o endereço gratuito{' '}
-                <b className="text-white">seunome.marmitacode.com</b>.
+                <b className="text-white">marmitacode.com.br/seunome</b>.
               </TermItem>
               <TermItem title="Inadimplência">
                 Se a mensalidade não for paga, o site <b className="text-white">sairá do ar</b> e
