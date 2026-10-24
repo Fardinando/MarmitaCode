@@ -1,3 +1,9 @@
+export const SLOGANS = [
+  'Seu site quentinho, do jeitinho que você pediu.',
+  'Site sob medida, entrega ligeira.',
+  'Da nossa cozinha digital direto pro seu negócio.',
+] as const;
+
 export const siteConfig = {
   name: 'MarmitaCode',
   tagline: 'Solução entregue quentinha',

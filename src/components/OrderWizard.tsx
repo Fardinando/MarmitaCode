@@ -54,6 +54,8 @@ export function OrderWizard({
 
   const [domainYears, setDomainYears] = useState<number | null>(null);
   const [discountCode, setDiscountCode] = useState('');
+  const [extras, setExtras] = useState<string[]>([]);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const selectedTierRow = useMemo(
     () => template.tiers.find((t) => t.tier === tier) ?? null,
@@ -70,7 +72,7 @@ export function OrderWizard({
 
   const total = Math.max(0, setupPrice + domainCost);
 
-  const steps = ['Plano', 'Briefing', 'Domínio', 'Contato', 'Revisão'];
+  const steps = ['Plano', 'Briefing', 'Domínio', 'Contato', 'Termos', 'Revisão'];
 
   const nameValid = name.trim().length >= 2;
   const emailValid = isValidEmail(email);
@@ -79,7 +81,21 @@ export function OrderWizard({
   const canAdvance = () => {
     if (step === 1) return business.trim().length > 0;
     if (step === 3) return nameValid && emailValid && phoneValid;
+    if (step === 4) return acceptedTerms;
     return true;
+  };
+
+  const isBasico = tier === 'basico';
+  const EXTRAS_AVAILABLE = [
+    { key: 'db-login', label: 'Banco de dados (login/cadastro)', priceHint: '+ R$ 30-80/mês' },
+    { key: 'video-host', label: 'Hospedagem de vídeos', priceHint: '+ R$ 25-70/mês' },
+    { key: 'payment-api', label: 'Integração com pagamentos', priceHint: '+ R$ 20-50/mês' },
+    { key: 'admin-area', label: 'Área administrativa customizada', priceHint: '+ R$ 40-100/mês' },
+    { key: 'other', label: 'Outra funcionalidade (descreva no briefing)', priceHint: 'A combinar' },
+  ];
+
+  const toggleExtra = (k: string) => {
+    setExtras((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
   };
 
   const submit = async () => {
@@ -100,6 +116,7 @@ export function OrderWizard({
             layout,
             about,
             references,
+            extras: extras.length > 0 ? extras.join(', ') : undefined,
           },
           contact: { name, email, phone, company },
           domainYears,
@@ -149,7 +166,18 @@ export function OrderWizard({
       <div className="p-10 rounded-[3rem] bg-white/[0.02] border border-white/5">
         {step === 0 && (
           <div>
-            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Escolha o plano</h2>
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2">Escolha o plano</h2>
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-8">
+              Setup único + mensalidade de R$ 47,90
+            </p>
+            {!isBasico && (
+              <div className="mb-6 p-5 rounded-2xl bg-[#FF8C00]/5 border border-[#FF8C00]/20 text-xs text-white/70 leading-relaxed">
+                <b className="text-[#FF8C00]">Funcionalidades extras aumentam a mensalidade.</b> Coisas como
+                banco de dados (login/cadastro), hospedagem de vídeo, integrações pagas e áreas
+                administrativas sob medida geram custo adicional. Você escolhe quais extras quer no
+                passo <b className="text-white">Termos</b>.
+              </div>
+            )}
             <div className="space-y-4">
               {template.tiers.map((t) => (
                 <button
@@ -294,6 +322,98 @@ export function OrderWizard({
         )}
 
         {step === 4 && (
+          <div>
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2">
+              Antes de finalizar
+            </h2>
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-8">
+              Leia com atenção — você aceita estes termos ao concluir o pedido
+            </p>
+
+            {!isBasico && (
+              <div className="mb-8">
+                <h3 className="text-sm font-black uppercase tracking-widest text-[#FF8C00] mb-3">
+                  Funcionalidades extras (opcional)
+                </h3>
+                <p className="text-white/50 text-xs mb-4 leading-relaxed">
+                  Marque o que quer no seu site. Cada extra adiciona um valor à mensalidade
+                  — detalhamos o preço final após o briefing.
+                </p>
+                <div className="space-y-2">
+                  {EXTRAS_AVAILABLE.map((ex) => (
+                    <label
+                      key={ex.key}
+                      className={cn(
+                        'flex items-center gap-3 p-4 rounded-2xl border cursor-pointer transition-all',
+                        extras.includes(ex.key)
+                          ? 'border-[#FF8C00]/50 bg-[#FF8C00]/10'
+                          : 'border-white/10 bg-white/[0.02] hover:border-white/30'
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={extras.includes(ex.key)}
+                        onChange={() => toggleExtra(ex.key)}
+                        className="w-4 h-4 accent-[#FF8C00]"
+                      />
+                      <span className="flex-1 text-sm font-bold">{ex.label}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00]">
+                        {ex.priceHint}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-4 text-xs text-white/70 leading-relaxed mb-8">
+              <TermItem title="Mensalidade de R$ 47,90">
+                Cobre apenas a <b className="text-white">mão de obra para instalação e controle do site</b>:
+                hospedagem básica, pequenos ajustes e manutenção. Funcionalidades extras
+                (banco de dados, hospedagem de vídeos, integrações) aumentam o valor mensal.
+              </TermItem>
+              <TermItem title="Responsabilidade pelo domínio">
+                A compra e renovação do domínio é <b className="text-white">responsabilidade sua</b>.
+                Após a compra do site, enviaremos um <b className="text-white">tutorial</b> explicando como
+                fazer a compra no Registro.br. Você deve nos adicionar como{' '}
+                <b className="text-white">administrador</b> do domínio para que a gente possa fazer
+                a configuração técnica necessária.
+              </TermItem>
+              <TermItem title="Inadimplência">
+                Se a mensalidade não for paga, o site <b className="text-white">sairá do ar</b> e
+                os visitantes passarão a ver a tela de erro <b className="text-white">404 personalizada
+                da MarmitaCode</b>. Assim que a mensalidade for regularizada, o site volta ao ar.
+              </TermItem>
+              <TermItem title="Pagamento inicial">
+                O valor do setup é cobrado agora, no fechamento do pedido, via Mercado Pago (Pix,
+                cartão de crédito ou débito). A primeira mensalidade é cobrada 30 dias depois
+                da publicação do site.
+              </TermItem>
+            </div>
+
+            <label className="flex items-start gap-3 p-5 rounded-2xl bg-white/5 border border-white/10 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                className="w-5 h-5 mt-0.5 accent-[#FF8C00]"
+              />
+              <span className="text-xs text-white/80 leading-relaxed">
+                Eu li e concordo com os termos acima, com os{' '}
+                <a href="/termos" target="_blank" className="text-[#FF8C00] underline">
+                  Termos de Uso
+                </a>{' '}
+                e a{' '}
+                <a href="/privacidade" target="_blank" className="text-[#FF8C00] underline">
+                  Política de Privacidade
+                </a>
+                .
+              </span>
+            </label>
+          </div>
+        )}
+
+        {step === 5 && (
           <div>
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Revisão do pedido</h2>
             <div className="space-y-3 text-sm mb-8">
@@ -445,6 +565,17 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex justify-between py-2 border-b border-white/5">
       <span className="text-white/40 font-bold">{label}</span>
       <span className="font-black">{value}</span>
+    </div>
+  );
+}
+
+function TermItem({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5">
+      <h4 className="text-sm font-black uppercase tracking-wide text-white mb-2">
+        {title}
+      </h4>
+      <p className="text-white/60">{children}</p>
     </div>
   );
 }

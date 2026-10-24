@@ -124,10 +124,10 @@ export interface SiteProject {
 }
 
 export const TIER_LABELS: Record<Tier, string> = {
-  basico: 'Básico',
-  intermediario: 'Intermediário',
-  premium: 'Premium',
-  personalizado: '100% Personalizado',
+  basico: 'Feijão com Arroz',
+  intermediario: 'Prato Feito',
+  premium: 'À la Carte',
+  personalizado: 'À la Carte',
 };
 
 export const STATUS_LABELS: Record<OrderStatus, string> = {

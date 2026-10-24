@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useSyncExternalStore } from 'react';
+import React, { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import {
@@ -13,30 +13,36 @@ import {
   Layers,
   Wrench,
   Lock,
+  UtensilsCrossed,
+  ChefHat,
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
+import { SLOGANS } from '@/lib/site-config';
 
 const emptySubscribe = () => () => {};
 
 const TIERS = [
   {
     key: 'basico',
-    name: 'Básico',
+    name: 'Feijão com Arroz',
+    price: 'R$ 97',
     icon: Layers,
-    desc: 'Um dos nossos templates, com o essencial trocado: logomarca, cores e textos.',
+    desc: 'O básico bem feito: pegue um dos nossos templates e troque cores, marca, fontes e textos. Pronto pra servir.',
   },
   {
     key: 'intermediario',
-    name: 'Intermediário',
-    icon: Palette,
-    desc: 'Template com mais liberdade: animações, ordem das seções e fluxos ajustáveis.',
+    name: 'Prato Feito',
+    price: 'R$ 197',
+    icon: UtensilsCrossed,
+    desc: 'Template com mais liberdade: mude o fluxo, adicione ou tire funcionalidades, ajuste seções. Ainda é marmita, só que turbinada.',
   },
   {
     key: 'premium',
-    name: '100% Personalizado',
-    icon: Rocket,
-    desc: 'Do zero, exatamente como você imaginou. Ou fortemente baseado em um template.',
+    name: 'À la Carte',
+    price: 'R$ 397',
+    icon: ChefHat,
+    desc: 'Site 100% personalizado, desenvolvido do zero a partir do seu prompt. Nada de template — o chef prepara exclusivo pra você.',
   },
 ];
 
@@ -49,6 +55,11 @@ const STEPS = [
 
 export default function Home() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const [slogan, setSlogan] = useState<string>(SLOGANS[0]);
+  useEffect(() => {
+    setSlogan(SLOGANS[Math.floor(Math.random() * SLOGANS.length)]);
+  }, []);
+
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
@@ -86,8 +97,11 @@ export default function Home() {
           <h1 className="text-[11vw] md:text-[7.5rem] font-black tracking-tighter leading-[0.85] uppercase italic mb-8">
             Sites que <span className="text-[#FF8C00]">vendem.</span>
           </h1>
-          <p className="text-white/40 text-lg md:text-xl font-black uppercase tracking-[0.3em] max-w-2xl mb-14">
-            Templates prontos ou projetos 100% sob medida — do briefing ao ar.
+          <p className="text-white/60 text-lg md:text-2xl font-bold italic max-w-3xl mb-6 min-h-[2.5em]">
+            {slogan}
+          </p>
+          <p className="text-white/30 text-xs md:text-sm font-black uppercase tracking-[0.3em] max-w-2xl mb-14">
+            Templates prontos ou projetos sob medida — do briefing ao ar.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
@@ -113,9 +127,12 @@ export default function Home() {
       {/* TIERS */}
       <section id="como-funciona" className="relative py-32 px-6 z-10">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-center mb-20">
-            Três níveis de <span className="text-[#FF8C00]">customização.</span>
+          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-center mb-6">
+            Escolha sua <span className="text-[#FF8C00]">marmita.</span>
           </h2>
+          <p className="text-center text-white/40 font-bold uppercase tracking-widest text-[11px] mb-20">
+            + Mensalidade de R$ 47,90 em todos os planos
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TIERS.map((t, i) => {
               const Icon = t.icon;
@@ -131,8 +148,12 @@ export default function Home() {
                   }`}
                 >
                   <Icon size={34} className="text-[#FF8C00] mb-8" />
-                  <h3 className="text-2xl font-black uppercase italic tracking-tighter mb-4">{t.name}</h3>
-                  <p className="text-white/40 font-bold leading-relaxed">{t.desc}</p>
+                  <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-2">{t.name}</h3>
+                  <div className="text-[#FF8C00] font-black text-2xl mb-6">
+                    {t.price}
+                    <span className="text-white/30 text-xs ml-2 font-bold">+ mensalidade</span>
+                  </div>
+                  <p className="text-white/50 font-bold leading-relaxed">{t.desc}</p>
                 </motion.div>
               );
             })}

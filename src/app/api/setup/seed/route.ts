@@ -73,9 +73,35 @@ const TEMPLATES = [
 ];
 
 const TIER_SEED = [
-  { tier: 'basico', setup_price: 300, monthly_price: 75, features: ['Troca de logomarca', 'Troca de cores', 'Troca de textos'] },
-  { tier: 'intermediario', setup_price: 500, monthly_price: 100, features: ['Tudo do Básico', 'Animações personalizadas', 'Reordenação de seções', 'Ajuste de fluxos'] },
-  { tier: 'premium', setup_price: 900, monthly_price: 125, features: ['Tudo do Intermediário', 'Design exclusivo', 'Lógica sob medida', 'Baseado ou não em template'] },
+  {
+    tier: 'basico',
+    setup_price: 97,
+    monthly_price: 47.9,
+    features: ['Template do catálogo', 'Troca de logomarca', 'Troca de cores', 'Troca de fontes', 'Troca de textos'],
+  },
+  {
+    tier: 'intermediario',
+    setup_price: 197,
+    monthly_price: 47.9,
+    features: [
+      'Tudo do Feijão com Arroz',
+      'Mudança no fluxo de ações',
+      'Adicionar ou remover funcionalidades',
+      'Reordenação de seções',
+      'Animações personalizadas',
+    ],
+  },
+  {
+    tier: 'premium',
+    setup_price: 397,
+    monthly_price: 47.9,
+    features: [
+      'Projeto 100% personalizado',
+      'Desenvolvido do zero a partir do seu prompt',
+      'Design exclusivo',
+      'Lógica frontend sob medida',
+    ],
+  },
 ];
 
 const DOMAIN_SEED = [
