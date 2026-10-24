@@ -2,9 +2,9 @@ import Link from 'next/link';
 import { Truck, ShieldCheck, RefreshCw } from 'lucide-react';
 
 const PRODUTOS = [
-  { name: 'Café especial Serra do Caparaó', price: 48, img: 'photo-1559525839-d9acd0988f72', badge: 'Novo' },
+  { name: 'Café especial Serra do Caparaó', price: 48, img: 'photo-1495474472287-4d71bcdd2085', badge: 'Novo' },
   { name: 'Mel orgânico silvestre 500g', price: 32, img: 'photo-1587049352846-4a222e784d38', badge: null },
-  { name: 'Azeite extra-virgem Serra Gaúcha', price: 89, img: 'photo-1619021897677-73c9b32e5321', badge: 'Top' },
+  { name: 'Azeite extra-virgem Serra Gaúcha', price: 89, img: 'photo-1474979266404-7eaacbcd87c5', badge: 'Top' },
   { name: 'Chocolate 70% bean-to-bar', price: 28, img: 'photo-1511381939415-e44015466834', badge: null },
   { name: 'Granola artesanal com castanhas', price: 36, img: 'photo-1517686469429-8bdb88b9f907', badge: null },
   { name: 'Kombucha gengibre & limão 500ml', price: 18, img: 'photo-1596803244535-925769f389fc', badge: 'Promo' },

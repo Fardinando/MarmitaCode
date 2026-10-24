@@ -17,7 +17,7 @@ const PRODUTOS: Produto[] = [
   { id: '1', name: 'Vestido midi floral', price: 189, img: 'photo-1572804013309-59a88b7e92f1', tag: 'Novo', category: 'vestidos' },
   { id: '2', name: 'Blazer linho creme', price: 329, img: 'photo-1591047139829-d91aecb6caea', tag: null, category: 'blazers' },
   { id: '3', name: 'Calça wide alfaiataria', price: 249, img: 'photo-1551803091-e20673f15770', tag: null, category: 'calcas' },
-  { id: '4', name: 'Camisa seda estampada', price: 219, img: 'photo-1564257577-6c8d9d6ddc46', tag: 'Promo', category: 'blazers' },
+  { id: '4', name: 'Camisa seda estampada', price: 219, img: 'photo-1550246140-29f40b909e5a', tag: 'Promo', category: 'blazers' },
   { id: '5', name: 'Saia plissada pastel', price: 169, img: 'photo-1583496661160-fb5886a0aaaa', tag: null, category: 'vestidos' },
   { id: '6', name: 'Casaco oversized', price: 489, img: 'photo-1544022613-e87ca75a784a', tag: 'Novo', category: 'blazers' },
   { id: '7', name: 'Vestido longo linho', price: 299, img: 'photo-1595777457583-95e059d581b8', tag: null, category: 'vestidos' },

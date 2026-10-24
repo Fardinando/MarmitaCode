@@ -18,7 +18,7 @@ interface Prato {
 const CARDAPIO: Record<Categoria, Prato[]> = {
   entradas: [
     { name: 'Burrata della casa', desc: 'Burrata cremosa, tomate confitado, azeite siciliano, pão artesanal', price: 48, img: 'photo-1572695157366-5e585ab2b69f', tags: ['Vegetariano'], highlight: true },
-    { name: 'Carpaccio di manzo', desc: 'Fatias finas de filé, rúcula, parmesão e redução de balsâmico', price: 54, img: 'photo-1626200925024-1a1fe550d388' },
+    { name: 'Carpaccio di manzo', desc: 'Fatias finas de filé, rúcula, parmesão e redução de balsâmico', price: 54, img: 'photo-1546549032-9571cd6b27df' },
     { name: 'Antipasto misto', desc: 'Seleção de queijos, embutidos italianos e azeitonas marinadas', price: 68, img: 'photo-1544025162-d76694265947' },
   ],
   principais: [
@@ -28,8 +28,8 @@ const CARDAPIO: Record<Categoria, Prato[]> = {
   ],
   massas: [
     { name: 'Tagliatelle al tartufo', desc: 'Massa fresca, trufa negra, manteiga de ervas e parmesão de 24 meses', price: 82, img: 'photo-1621996346565-e3dbc646d9a9', highlight: true },
-    { name: 'Lasagna della nonna', desc: 'Receita tradicional, ragù de carne, bechamel e muçarela de búfala', price: 68, img: 'photo-1619895092538-128f4d3f0f8b' },
-    { name: 'Risotto ai frutti di mare', desc: 'Arroz arbóreo, camarões, lulas, mariscos frescos, limão siciliano', price: 92, img: 'photo-1633964913295-ceb43826a07f' },
+    { name: 'Lasagna della nonna', desc: 'Receita tradicional, ragù de carne, bechamel e muçarela de búfala', price: 68, img: 'photo-1619740455993-9e612b1af08a' },
+    { name: 'Risotto ai frutti di mare', desc: 'Arroz arbóreo, camarões, lulas, mariscos frescos, limão siciliano', price: 92, img: 'photo-1476124369491-e7addf5db371' },
     { name: 'Spaghetti alle vongole', desc: 'Massa fresca, vongoles, alho, vinho branco, salsinha', price: 72, img: 'photo-1551892374-ecf8754cf8b0' },
   ],
   sobremesas: [

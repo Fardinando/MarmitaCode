@@ -54,7 +54,7 @@ export function Barbearia2Template() {
           <div className="relative">
             <div className="aspect-[4/5] overflow-hidden border-8 border-[#2b1810] shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1521490878406-df8de974c384?w=800&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&auto=format&fit=crop"
                 alt="Barbearia tradicional"
                 className="w-full h-full object-cover sepia-[0.3]"
               />
