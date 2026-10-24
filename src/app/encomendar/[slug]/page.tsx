@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getTemplateBySlug, getDomainPricing, defaultCustomTiers } from '@/lib/data';
+import { getTemplateBySlug, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
 import { mpEnabled } from '@/lib/payments/mercadopago';
 import type { Tier } from '@/lib/types';
@@ -20,8 +20,6 @@ export default async function EncomendarPage({
   const isCustom = slug === 'personalizado';
   const template = isCustom ? null : await getTemplateBySlug(slug);
   if (!isCustom && !template) notFound();
-
-  const domainPricing = await getDomainPricing();
 
   const initialTier: Tier =
     (tier as Tier) ?? (isCustom ? 'personalizado' : 'basico');
@@ -56,7 +54,6 @@ export default async function EncomendarPage({
         <OrderWizard
           template={wizardTemplate}
           isCustom={isCustom}
-          domainPricing={domainPricing}
           initialTier={initialTier}
           paymentMode={mpEnabled() ? 'mercadopago' : 'mock'}
         />

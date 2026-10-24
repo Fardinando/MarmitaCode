@@ -3,13 +3,22 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendOrderEmails } from '@/lib/notifications/email';
 import { appendOrderToSheet } from '@/lib/notifications/sheets';
-import { DEFAULT_DOMAIN_PRICING } from '@/lib/data';
 import { rateLimit } from '@/lib/rate-limit';
 import { isValidEmail, isValidPhoneBR } from '@/lib/validation';
 import { createOrderPreference, mpEnabled } from '@/lib/payments/mercadopago';
 import type { Briefing, Tier } from '@/lib/types';
 
 const ALLOWED_TIERS: Tier[] = ['basico', 'intermediario', 'premium', 'personalizado'];
+
+// Mesmos valores do catálogo do wizard, validados aqui no server
+// pra o cliente não poder "zerar" os extras no payload.
+const EXTRAS_SERVER: Record<string, number> = {
+  'db-login': 30,
+  'video-host': 25,
+  'payment-api': 20,
+  'admin-area': 40,
+  'other': 0,
+};
 
 interface OrderBody {
   templateSlug?: string | null;
@@ -21,11 +30,11 @@ interface OrderBody {
     phone?: string;
     company?: string;
   };
-  domainYears?: number | null;
+  wantsDomain?: boolean | null;
   discountCode?: string | null;
   setupPrice?: number;
   monthlyPrice?: number;
-  domainTotal?: number;
+  extras?: string[];
 }
 
 function clientIp(req: Request) {
@@ -47,12 +56,11 @@ function validate(body: OrderBody): string | null {
   if (body.contact.phone && !isValidPhoneBR(body.contact.phone)) {
     return 'Telefone inválido. Use DDD + número.';
   }
-  if (body.domainYears != null && ![1, 2, 3, 5, 10].includes(Number(body.domainYears))) {
-    return 'Plano de domínio inválido.';
-  }
   if (body.discountCode && String(body.discountCode).length > 60) {
     return 'Cupom inválido.';
   }
+  if (body.extras && !Array.isArray(body.extras)) return 'Extras inválidos.';
+  if (body.extras && body.extras.length > 10) return 'Extras inválidos.';
   const briefing = body.briefing ?? {};
   const briefingSize = JSON.stringify(briefing).length;
   if (briefingSize > 20_000) return 'Briefing muito grande.';
@@ -80,7 +88,7 @@ export async function POST(req: Request) {
 
     let template: { id: string; slug: string } | null = null;
     let setupPrice = Number(body.setupPrice ?? 0);
-    let monthlyPrice = Number(body.monthlyPrice ?? 0);
+    let baseMonthly = Number(body.monthlyPrice ?? 0);
 
     if (body.templateSlug) {
       const { data: t } = await admin
@@ -99,27 +107,18 @@ export async function POST(req: Request) {
           .single();
         if (tierRow) {
           setupPrice = Number(tierRow.setup_price);
-          monthlyPrice = Number(tierRow.monthly_price);
+          baseMonthly = Number(tierRow.monthly_price);
         }
       }
     }
 
-    let domainTotal = 0;
-    if (body.domainYears) {
-      const { data: dp } = await admin
-        .from('domain_pricing')
-        .select('registry_price, labor_fee')
-        .eq('years', body.domainYears)
-        .single();
-      if (dp) {
-        domainTotal = Number(dp.registry_price) + Number(dp.labor_fee);
-      } else {
-        const fallback = DEFAULT_DOMAIN_PRICING.find((d) => d.years === body.domainYears);
-        domainTotal = fallback
-          ? Number(fallback.registry_price) + Number(fallback.labor_fee)
-          : Number(body.domainTotal ?? 0);
-      }
-    }
+    // Calcula adicional de extras SEM confiar no payload do cliente.
+    const extrasList = Array.isArray(body.extras) ? body.extras : [];
+    const extrasMonthlyAdd = extrasList.reduce(
+      (sum, k) => sum + (EXTRAS_SERVER[k] ?? 0),
+      0
+    );
+    const monthlyPrice = baseMonthly + extrasMonthlyAdd;
 
     let discountAmount = 0;
     if (body.discountCode) {
@@ -134,8 +133,8 @@ export async function POST(req: Request) {
       }
     }
 
-    const subtotal = setupPrice + domainTotal;
-    const total = Math.max(0, subtotal - discountAmount);
+    // Só o setup é cobrado AGORA. Mensalidade começa 30 dias depois.
+    const totalNow = Math.max(0, setupPrice - discountAmount);
 
     const supabase = await createClient();
     const {
@@ -162,9 +161,9 @@ export async function POST(req: Request) {
         monthly_price: monthlyPrice,
         discount_code: body.discountCode ?? null,
         discount_amount: discountAmount,
-        domain_years: body.domainYears ?? null,
-        domain_total: domainTotal,
-        total_paid: total,
+        domain_years: null,
+        domain_total: 0,
+        total_paid: totalNow,
         payment_mock: !useRealPayment,
         payment_provider: useRealPayment ? 'mercadopago' : null,
         client_ip: ip === 'unknown' ? null : ip,
@@ -195,7 +194,7 @@ export async function POST(req: Request) {
     });
 
     let checkoutUrl: string | null = null;
-    if (useRealPayment && total > 0) {
+    if (useRealPayment && totalNow > 0) {
       try {
         const pref = await createOrderPreference(order);
         checkoutUrl = pref.init_point;
