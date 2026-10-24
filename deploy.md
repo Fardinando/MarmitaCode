@@ -69,6 +69,27 @@ Cada pedido é adicionado como uma nova linha na planilha.
 
 ---
 
+## 3.5. Configurar o Mercado Pago (pagamento real)
+
+> Opcional. Sem estas variáveis o site funciona com pagamento mockup (fecha pedidos sem cobrar).
+> **Com** `MP_ACCESS_TOKEN` definido, o wizard de encomenda redireciona para o Mercado Pago (Pix + cartão + débito).
+
+1. Crie uma conta em https://www.mercadopago.com.br.
+2. Vá em **Desenvolvedores → Suas integrações → Criar aplicação** (categoria: Pagamentos online, modelo: Checkout Pro).
+3. Em **Credenciais**:
+   - **Teste**: use `TEST-...` para validar o fluxo com o cartão de teste.
+   - **Produção**: ative e use quando quiser receber de verdade.
+4. Copie:
+   - `Access Token` → `MP_ACCESS_TOKEN`
+   - `Public Key` → `NEXT_PUBLIC_MP_PUBLIC_KEY`
+5. Em **Notificações → URLs de notificação**, cadastre o webhook:
+   `https://SEU_DOMINIO/api/payments/webhook` (evento: Pagamentos).
+6. Faça um pedido de teste e verifique no admin que o status muda de `aguardando_pagamento` para `pago`.
+
+Cartões de teste: https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/additional-content/your-integrations/test/cards
+
+---
+
 ## 4. Variáveis de ambiente
 
 Copie `.env.example` para `.env.local` para rodar localmente, ou cadastre tudo na Vercel.
@@ -89,6 +110,10 @@ GOOGLE_PRIVATE_KEY=
 GOOGLE_SHEETS_ID=
 
 NEXT_PUBLIC_WHATSAPP_NUMBER=5583996532203
+
+# Mercado Pago (opcional — ativa pagamento real)
+MP_ACCESS_TOKEN=
+NEXT_PUBLIC_MP_PUBLIC_KEY=
 ```
 
 > `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `GOOGLE_PRIVATE_KEY` são **secretas** — nunca commite nem exponha no cliente.  

@@ -25,11 +25,13 @@ export function OrderWizard({
   isCustom = false,
   domainPricing,
   initialTier,
+  paymentMode = 'mock',
 }: {
   template: WizardTemplate;
   isCustom?: boolean;
   domainPricing: DomainPricing[];
   initialTier: Tier;
+  paymentMode?: 'mock' | 'mercadopago';
 }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -109,6 +111,10 @@ export function OrderWizard({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Erro ao enviar pedido.');
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
       router.push(`/checkout/sucesso?order=${data.order.id}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro inesperado.');
@@ -308,12 +314,16 @@ export function OrderWizard({
             </div>
 
             <div className="flex items-baseline justify-between p-6 rounded-3xl bg-[#FF8C00]/10 border border-[#FF8C00]/20 mb-6">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00]">Total a pagar (mock)</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00]">
+                Total a pagar{paymentMode === 'mock' ? ' (mock)' : ''}
+              </span>
               <span className="text-4xl font-black text-[#FF8C00]">R$ {total.toFixed(2)}</span>
             </div>
 
             <p className="text-[10px] text-white/30 font-bold mb-6">
-              * Pagamento simulado (mockup). Nenhuma cobrança real será feita neste momento.
+              {paymentMode === 'mercadopago'
+                ? '* Você será redirecionado para o Mercado Pago. Aceitamos Pix, cartão de crédito e débito.'
+                : '* Pagamento simulado (mockup). Nenhuma cobrança real será feita neste momento.'}
             </p>
 
             {error && (
@@ -328,7 +338,11 @@ export function OrderWizard({
               className="w-full py-6 bg-white text-black font-black text-xs uppercase tracking-widest rounded-3xl hover:bg-[#FF8C00] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
             >
               {saving ? <Loader2 className="animate-spin" size={18} /> : <Check size={18} />}
-              {saving ? 'Enviando pedido...' : 'Finalizar pedido (mock)'}
+              {saving
+                ? 'Enviando pedido...'
+                : paymentMode === 'mercadopago'
+                ? 'Pagar com Mercado Pago'
+                : 'Finalizar pedido (mock)'}
             </button>
           </div>
         )}

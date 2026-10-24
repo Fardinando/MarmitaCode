@@ -6,6 +6,7 @@ import { appendOrderToSheet } from '@/lib/notifications/sheets';
 import { DEFAULT_DOMAIN_PRICING } from '@/lib/data';
 import { rateLimit } from '@/lib/rate-limit';
 import { isValidEmail, isValidPhoneBR } from '@/lib/validation';
+import { createOrderPreference, mpEnabled } from '@/lib/payments/mercadopago';
 import type { Briefing, Tier } from '@/lib/types';
 
 const ALLOWED_TIERS: Tier[] = ['basico', 'intermediario', 'premium', 'personalizado'];
@@ -141,6 +142,9 @@ export async function POST(req: Request) {
       data: { user },
     } = await supabase.auth.getUser();
 
+    const useRealPayment = mpEnabled();
+    const initialStatus = useRealPayment ? 'aguardando_pagamento' : 'pago';
+
     const { data: order, error } = await admin
       .from('orders')
       .insert({
@@ -148,7 +152,7 @@ export async function POST(req: Request) {
         template_id: template?.id ?? null,
         template_slug: template?.slug ?? null,
         tier: body.tier,
-        status: 'pago',
+        status: initialStatus,
         briefing: body.briefing ?? {},
         contact_name: body.contact.name.trim(),
         contact_email: body.contact.email.trim(),
@@ -161,7 +165,8 @@ export async function POST(req: Request) {
         domain_years: body.domainYears ?? null,
         domain_total: domainTotal,
         total_paid: total,
-        payment_mock: true,
+        payment_mock: !useRealPayment,
+        payment_provider: useRealPayment ? 'mercadopago' : null,
         client_ip: ip === 'unknown' ? null : ip,
       })
       .select('*')
@@ -174,16 +179,35 @@ export async function POST(req: Request) {
     await admin.from('site_projects').insert({
       order_id: order.id,
       client_id: user?.id ?? null,
-      status: 'em_producao',
+      status: initialStatus === 'pago' ? 'em_producao' : 'aguardando',
       monthly_status: 'pendente',
     });
 
-    await Promise.allSettled([
-      sendOrderEmails(order),
-      appendOrderToSheet(order),
-    ]);
+    let checkoutUrl: string | null = null;
+    if (useRealPayment && total > 0) {
+      try {
+        const pref = await createOrderPreference(order);
+        checkoutUrl = pref.init_point;
+        await admin
+          .from('orders')
+          .update({ payment_id: pref.id, payment_url: pref.init_point })
+          .eq('id', order.id);
+      } catch (e) {
+        console.error('MP preference error:', e);
+        return NextResponse.json(
+          { error: 'Erro ao criar pagamento. Tente novamente.' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Fluxo mock: dispara notificações imediatamente.
+      await Promise.allSettled([
+        sendOrderEmails(order),
+        appendOrderToSheet(order),
+      ]);
+    }
 
-    return NextResponse.json({ success: true, order });
+    return NextResponse.json({ success: true, order, checkoutUrl });
   } catch (err) {
     console.error('Order error:', err);
     return NextResponse.json({ error: 'Erro interno.' }, { status: 500 });

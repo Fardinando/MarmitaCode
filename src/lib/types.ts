@@ -101,6 +101,10 @@ export interface Order {
   domain_total: number;
   total_paid: number;
   payment_mock: boolean;
+  payment_provider: string | null;
+  payment_id: string | null;
+  payment_status: string | null;
+  payment_url: string | null;
   client_ip: string | null;
   created_at: string;
   updated_at: string;

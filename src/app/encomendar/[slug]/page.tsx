@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTemplateBySlug, getDomainPricing, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
+import { mpEnabled } from '@/lib/payments/mercadopago';
 import type { Tier } from '@/lib/types';
 
 export const metadata = { title: 'Encomendar | MarmitaCode' };
@@ -57,6 +58,7 @@ export default async function EncomendarPage({
           isCustom={isCustom}
           domainPricing={domainPricing}
           initialTier={initialTier}
+          paymentMode={mpEnabled() ? 'mercadopago' : 'mock'}
         />
       </div>
     </main>

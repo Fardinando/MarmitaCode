@@ -201,14 +201,30 @@ drop policy if exists projects_admin_write on public.site_projects;
 create policy projects_admin_write on public.site_projects for all
   using (public.is_admin()) with check (public.is_admin());
 
+-- ============ PAGAMENTO (Mercado Pago) ============
+alter table public.orders add column if not exists payment_provider text;
+alter table public.orders add column if not exists payment_id text;
+alter table public.orders add column if not exists payment_status text;
+alter table public.orders add column if not exists payment_url text;
+
 -- ============ SEED ============
-insert into public.templates (slug, name, category, description, long_description, featured, active, features, sort_order) values
-  ('loja-vitrine', 'Loja Vitrine', 'E-commerce', 'Loja online completa com catálogo e checkout.', 'Template de e-commerce com catálogo, carrinho, checkout e painel de pedidos. Ideal para quem quer vender online rápido.', true, true, '["Catálogo de produtos","Carrinho e checkout","Gestão de pedidos","Integração de pagamento"]', 1),
-  ('cursos-online', 'Cursos Online', 'Cursos', 'Plataforma de aulas com área de membros.', 'Template para vender cursos com área de membros, videoaulas e progresso do aluno.', true, true, '["Área de membros","Videoaulas","Certificados","Checkout de cursos"]', 2),
-  ('landing-conversao', 'Landing de Conversão', 'Landing Page', 'Página única focada em captar leads.', 'Landing page de alta conversão com formulário, provas sociais e CTA forte.', false, true, '["Formulário de captura","Provas sociais","CTA otimizado","SEO técnico"]', 3),
-  ('portfolio-dev', 'Portfólio Dev', 'Portfólio', 'Mostre seus trabalhos com elegância.', 'Portfólio moderno para devs e criativos, com grid de projetos e contato.', false, true, '["Grid de projetos","Página de contato","Animações","Modo escuro"]', 4),
-  ('institucional-pro', 'Institucional Pro', 'Institucional', 'Site institucional para sua empresa.', 'Site institucional completo: sobre, serviços, equipe, blog e contato.', false, true, '["Páginas institucionais","Blog integrado","Formulário de contato","Google Maps"]', 5)
-on conflict (slug) do nothing;
+insert into public.templates (slug, name, category, description, long_description, demo_url, featured, active, features, sort_order) values
+  ('restaurante', 'Sabor da Casa', 'Restaurante', 'Site para restaurantes e delivery com cardápio e pedido pelo WhatsApp.', 'Template completo para restaurantes: hero com destaque, cardápio categorizado, horários, endereço e botão de pedido direto no WhatsApp.', '/exemplo/restaurante', true, true, '["Cardápio categorizado","Pedido pelo WhatsApp","Horários e endereço","Visual aconchegante"]', 1),
+  ('barbearia', 'Barber Studio', 'Barbearia', 'Site de barbearia e salão com serviços, equipe e agendamento.', 'Visual moderno preto e dourado, serviços com preços, equipe, agendamento rápido pelo WhatsApp. Perfeito para barbearias e salões.', '/exemplo/barbearia', true, true, '["Serviços com preços","Perfis da equipe","Agendamento WhatsApp","Visual masculino premium"]', 2),
+  ('curso', 'Academia Online', 'Cursos', 'Página de curso online com módulos, depoimentos e inscrição.', 'Landing page completa para venda de curso: hero convertedor, módulos, depoimentos, preço e CTA. Pensada para alta conversão.', '/exemplo/curso', true, true, '["Hero de alta conversão","Módulos detalhados","Depoimentos","Checkout do curso"]', 3),
+  ('portfolio', 'Portfolio Studio', 'Portfólio', 'Portfólio profissional minimalista com projetos, bio e contato.', 'Portfólio elegante e minimalista para designers, criativos e consultores. Grid de projetos, bio completa e contato direto.', '/exemplo/portfolio', false, true, '["Grid de projetos","Bio detalhada","Design minimalista","Contato direto"]', 4),
+  ('loja', 'Loja Boutique', 'E-commerce', 'Vitrine de produtos com pedido via WhatsApp.', 'Vitrine moderna para pequenos lojistas. Grade de produtos, destaques, promoções e pedido via WhatsApp. Sem complicação de pagamento online.', '/exemplo/loja', true, true, '["Vitrine de produtos","Pedido via WhatsApp","Destaques e promoções","Fácil de atualizar"]', 5)
+on conflict (slug) do update set
+  name = excluded.name,
+  category = excluded.category,
+  description = excluded.description,
+  long_description = excluded.long_description,
+  demo_url = excluded.demo_url,
+  featured = excluded.featured,
+  active = excluded.active,
+  features = excluded.features,
+  sort_order = excluded.sort_order,
+  updated_at = now();
 
 insert into public.template_tiers (template_id, tier, setup_price, monthly_price, features)
 select t.id, tiers.tier, tiers.setup, tiers.monthly, tiers.features
