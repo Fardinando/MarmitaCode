@@ -13,36 +13,24 @@ import {
   Star,
   BookOpen,
   LogIn,
-  BarChart3,
+  MessageSquare,
+  User,
+  Trophy,
+  ArrowRight,
 } from 'lucide-react';
 
 const MODULOS = [
-  { num: '01', title: 'Fundamentos do design', lessons: 12, duration: '2h 30min', progress: 100 },
-  { num: '02', title: 'Técnicas avançadas', lessons: 18, duration: '4h 10min', progress: 60 },
-  { num: '03', title: 'Projeto prático', lessons: 10, duration: '3h 00min', progress: 20 },
-  { num: '04', title: 'Mercado e carreira', lessons: 8, duration: '1h 40min', progress: 0 },
-  { num: '05', title: 'Certificação', lessons: 4, duration: '45min', progress: 0 },
+  { num: '01', title: 'Fundamentos do design', lessons: 12, duration: '2h 30min' },
+  { num: '02', title: 'Técnicas avançadas', lessons: 18, duration: '4h 10min' },
+  { num: '03', title: 'Projeto prático', lessons: 10, duration: '3h 00min' },
+  { num: '04', title: 'Mercado e carreira', lessons: 8, duration: '1h 40min' },
+  { num: '05', title: 'Certificação', lessons: 4, duration: '45min' },
 ];
 
 const DEPOIMENTOS = [
-  {
-    name: 'Ana Prado',
-    role: 'Designer freelancer',
-    img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop',
-    text: 'Mudou minha carreira. O conteúdo é denso mas super didático — em 3 meses já fechei meus primeiros clientes.',
-  },
-  {
-    name: 'Carlos Monteiro',
-    role: 'Empreendedor',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop',
-    text: 'Melhor investimento que fiz este ano. Comunidade incrível e o professor realmente responde.',
-  },
-  {
-    name: 'Juliana Reis',
-    role: 'Analista de marketing',
-    img: 'https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?w=200&auto=format&fit=crop',
-    text: 'Em 3 meses consegui promover-me no trabalho aplicando o método. Vale cada centavo.',
-  },
+  { name: 'Ana Prado', role: 'Designer freelancer', img: 'photo-1544005313-94ddf0286df2', text: 'Mudou minha carreira. Em 3 meses fechei meus primeiros clientes.' },
+  { name: 'Carlos Monteiro', role: 'Empreendedor', img: 'photo-1507003211169-0a1dd7228f2d', text: 'Melhor investimento do ano. Comunidade incrível e professor responde.' },
+  { name: 'Juliana Reis', role: 'Analista de marketing', img: 'photo-1534751516642-a1af1ef26a56', text: 'Em 3 meses me promovi no trabalho aplicando o método.' },
 ];
 
 export function CursoTemplate() {
@@ -53,7 +41,6 @@ export function CursoTemplate() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      {/* Nav */}
       <nav className="sticky top-10 z-40 bg-slate-950/90 backdrop-blur border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="font-black text-xl flex items-center gap-2">
@@ -154,7 +141,7 @@ export function CursoTemplate() {
                   <span className="flex items-center gap-1"><Clock size={12} /> {m.duration}</span>
                 </p>
               </div>
-              <div className="text-indigo-400">→</div>
+              <ArrowRight size={18} className="text-indigo-400" />
             </div>
           ))}
         </div>
@@ -178,11 +165,6 @@ export function CursoTemplate() {
               Trabalhou com marcas como Nike, Nubank e Spotify. Nos últimos 5 anos vem formando
               a nova geração de designers brasileiros com um método único de ensino prático.
             </p>
-            <div className="flex gap-4 text-xs uppercase tracking-widest text-white/40">
-              <span>+5.000 alunos</span>
-              <span>·</span>
-              <span>50+ empresas atendidas</span>
-            </div>
           </div>
         </div>
       </section>
@@ -197,7 +179,7 @@ export function CursoTemplate() {
               <div className="text-indigo-400 text-xl mb-4">★★★★★</div>
               <p className="text-white/80 leading-relaxed mb-6">&ldquo;{d.text}&rdquo;</p>
               <div className="flex items-center gap-3">
-                <img src={d.img} alt={d.name} className="w-12 h-12 rounded-full object-cover" />
+                <img src={`https://images.unsplash.com/${d.img}?w=200&auto=format&fit=crop`} alt={d.name} className="w-12 h-12 rounded-full object-cover" />
                 <div>
                   <div className="font-bold">{d.name}</div>
                   <div className="text-white/40 text-sm">{d.role}</div>
@@ -250,28 +232,14 @@ function LoginView({ onBack, onLogin }: { onBack: () => void; onLogin: () => voi
             <h1 className="text-3xl font-black mb-2">Entrar na plataforma</h1>
             <p className="text-white/50 text-sm">Acesse sua área de alunos</p>
           </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onLogin();
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={(e) => { e.preventDefault(); onLogin(); }} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-widest">E-mail</label>
-              <input
-                type="email"
-                defaultValue="voce@email.com"
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-sm outline-none focus:border-indigo-500/50"
-              />
+              <input type="email" defaultValue="voce@email.com" className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-sm outline-none focus:border-indigo-500/50" />
             </div>
             <div>
               <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-widest">Senha</label>
-              <input
-                type="password"
-                defaultValue="••••••••"
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-sm outline-none focus:border-indigo-500/50"
-              />
+              <input type="password" defaultValue="••••••••" className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-sm outline-none focus:border-indigo-500/50" />
             </div>
             <button type="submit" className="w-full py-4 bg-indigo-500 hover:bg-indigo-400 rounded-xl font-bold">
               Entrar
@@ -289,17 +257,57 @@ function LoginView({ onBack, onLogin }: { onBack: () => void; onLogin: () => voi
   );
 }
 
+type Tab = 'aulas' | 'comunidade' | 'certificado';
+
+interface Lesson {
+  id: number;
+  title: string;
+  duration: string;
+  done: boolean;
+  locked?: boolean;
+}
+
+const INITIAL_LESSONS: Lesson[] = [
+  { id: 1, title: 'Boas-vindas e introdução', duration: '8min', done: true },
+  { id: 2, title: 'Instalando as ferramentas', duration: '12min', done: true },
+  { id: 3, title: 'Fundamentos do design visual', duration: '18min', done: true },
+  { id: 4, title: 'Tipografia aplicada', duration: '22min', done: false },
+  { id: 5, title: 'Teoria das cores', duration: '15min', done: false },
+  { id: 6, title: 'Hierarquia e composição', duration: '20min', done: false, locked: true },
+  { id: 7, title: 'Grid e espaçamento', duration: '17min', done: false, locked: true },
+];
+
+const POSTS = [
+  { user: 'Ana P.', avatar: 'photo-1544005313-94ddf0286df2', time: '2h', text: 'Acabei a aula 4 e finalmente entendi hierarquia tipográfica. Alguém tem referências pra praticar?', likes: 12, comments: 4 },
+  { user: 'Carlos M.', avatar: 'photo-1507003211169-0a1dd7228f2d', time: '5h', text: 'Projeto da aula 3 ficou lindão! Quem quer dar um feedback?', likes: 24, comments: 8 },
+  { user: 'Juliana R.', avatar: 'photo-1534751516642-a1af1ef26a56', time: '1d', text: 'Dica: acelerei pra 1.25x e o Rafael fica ainda mais claro. 😂', likes: 48, comments: 15 },
+];
+
 function AppView({ onLogout }: { onLogout: () => void }) {
-  const [activeLesson, setActiveLesson] = useState(0);
-  const lessons = [
-    { title: 'Boas-vindas e introdução', duration: '8min', done: true },
-    { title: 'Instalando as ferramentas', duration: '12min', done: true },
-    { title: 'Fundamentos do design visual', duration: '18min', done: true },
-    { title: 'Tipografia aplicada', duration: '22min', done: false, current: true },
-    { title: 'Teoria das cores', duration: '15min', done: false },
-    { title: 'Hierarquia e composição', duration: '20min', done: false, locked: true },
-    { title: 'Grid e espaçamento', duration: '17min', done: false, locked: true },
-  ];
+  const [tab, setTab] = useState<Tab>('aulas');
+  const [lessons, setLessons] = useState(INITIAL_LESSONS);
+  const [activeLesson, setActiveLesson] = useState(4);
+
+  const done = lessons.filter((l) => l.done).length;
+  const total = lessons.length;
+  const progress = Math.round((done / total) * 100);
+  const current = lessons.find((l) => l.id === activeLesson) ?? lessons[0];
+
+  const markDone = (id: number) => {
+    setLessons((prev) => {
+      const next = prev.map((l) => (l.id === id ? { ...l, done: true } : l));
+      // Desbloqueia a próxima
+      const idx = next.findIndex((l) => l.id === id);
+      if (idx >= 0 && next[idx + 1]?.locked) {
+        next[idx + 1] = { ...next[idx + 1], locked: false };
+      }
+      return next;
+    });
+    // Vai pra próxima
+    const idx = lessons.findIndex((l) => l.id === id);
+    const nextLesson = lessons[idx + 1];
+    if (nextLesson) setActiveLesson(nextLesson.id);
+  };
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -311,115 +319,217 @@ function AppView({ onLogout }: { onLogout: () => void }) {
               <BookOpen size={18} className="text-indigo-400" />
               Academia<span className="text-indigo-400">.</span>
             </div>
-            <div className="hidden md:flex gap-5 text-sm text-white/70">
-              <a className="text-white border-b-2 border-indigo-400 pb-1">Meus cursos</a>
-              <a className="hover:text-white">Comunidade</a>
-              <a className="hover:text-white">Suporte</a>
+            <div className="hidden md:flex gap-1 text-sm">
+              <TabButton active={tab === 'aulas'} onClick={() => setTab('aulas')} icon={<Play size={14} />}>
+                Aulas
+              </TabButton>
+              <TabButton active={tab === 'comunidade'} onClick={() => setTab('comunidade')} icon={<MessageSquare size={14} />}>
+                Comunidade
+              </TabButton>
+              <TabButton active={tab === 'certificado'} onClick={() => setTab('certificado')} icon={<Trophy size={14} />}>
+                Certificado
+              </TabButton>
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-xs text-white/50">
+              <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+              </div>
+              {progress}%
+            </div>
             <div className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center font-black">V</div>
-            <button onClick={onLogout} className="text-xs text-white/50 hover:text-white">
-              Sair
-            </button>
+            <button onClick={onLogout} className="text-xs text-white/50 hover:text-white">Sair</button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-[1fr_320px] gap-8">
-        {/* Main */}
-        <div>
-          <div className="text-xs text-white/40 uppercase tracking-widest mb-2">
-            Módulo 02 · Técnicas avançadas
-          </div>
-          <h1 className="text-3xl font-black mb-6">{lessons[activeLesson].title}</h1>
-          <div className="aspect-video rounded-2xl overflow-hidden bg-black border border-white/10 relative group cursor-pointer mb-6">
-            <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop"
-              alt="aula"
-              className="w-full h-full object-cover opacity-60"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center group-hover:scale-110 transition">
-                <Play size={28} className="ml-1" />
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        {tab === 'aulas' && (
+          <div className="grid lg:grid-cols-[1fr_320px] gap-8">
+            <div>
+              <div className="text-xs text-white/40 uppercase tracking-widest mb-2">
+                Módulo 02 · Técnicas avançadas
+              </div>
+              <h1 className="text-3xl font-black mb-6">{current.title}</h1>
+              <div className="aspect-video rounded-2xl overflow-hidden bg-black border border-white/10 relative group cursor-pointer mb-6">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop" alt="aula" className="w-full h-full object-cover opacity-60" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center group-hover:scale-110 transition">
+                    <Play size={28} className="ml-1" />
+                  </div>
+                </div>
+                <div className="absolute bottom-0 inset-x-0 h-1 bg-white/10">
+                  <div className="h-full bg-indigo-500" style={{ width: '35%' }} />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
+                <div className="flex items-center gap-6 text-xs text-white/50 uppercase tracking-widest">
+                  <span className="flex items-center gap-1"><Clock size={12} /> {current.duration}</span>
+                  <span className="flex items-center gap-1"><Users size={12} /> 847 assistindo</span>
+                </div>
+                {!current.done && (
+                  <button
+                    onClick={() => markDone(current.id)}
+                    className="px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+                  >
+                    <CheckCircle2 size={14} /> Marcar como concluída
+                  </button>
+                )}
+                {current.done && (
+                  <span className="px-5 py-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs font-bold uppercase tracking-widest text-emerald-400 flex items-center gap-2">
+                    <CheckCircle2 size={14} /> Concluída
+                  </span>
+                )}
+              </div>
+
+              <div className="prose prose-invert max-w-none">
+                <h3 className="text-xl font-bold mb-3">Sobre esta aula</h3>
+                <p className="text-white/60 leading-relaxed">
+                  Nesta aula vamos explorar o papel da tipografia na comunicação visual.
+                  Você vai aprender a escolher famílias tipográficas, criar hierarquia e usar
+                  fontes de maneira estratégica em projetos reais.
+                </p>
+                <h3 className="text-xl font-bold mt-8 mb-3">Materiais complementares</h3>
+                <ul className="text-white/60 space-y-2 text-sm">
+                  <li>📄 PDF resumo da aula</li>
+                  <li>🎨 Arquivo Figma de referência</li>
+                  <li>🔗 Links curados do professor</li>
+                </ul>
               </div>
             </div>
-            <div className="absolute bottom-0 inset-x-0 h-1 bg-white/10">
-              <div className="h-full bg-indigo-500" style={{ width: '35%' }} />
-            </div>
-          </div>
-          <div className="flex items-center gap-6 text-xs text-white/50 uppercase tracking-widest mb-8">
-            <span className="flex items-center gap-1"><Clock size={12} /> {lessons[activeLesson].duration}</span>
-            <span className="flex items-center gap-1"><Users size={12} /> 847 alunos assistindo</span>
-          </div>
-          <div className="prose prose-invert max-w-none">
-            <h3 className="text-xl font-bold mb-3">Sobre esta aula</h3>
-            <p className="text-white/60 leading-relaxed">
-              Nesta aula vamos explorar o papel da tipografia na comunicação visual.
-              Você vai aprender a escolher famílias tipográficas, criar hierarquia e usar
-              fontes de maneira estratégica em projetos reais.
-            </p>
-            <h3 className="text-xl font-bold mt-8 mb-3">Materiais</h3>
-            <ul className="text-white/60 space-y-2 text-sm">
-              <li>📄 PDF resumo da aula</li>
-              <li>🎨 Arquivo Figma de referência</li>
-              <li>🔗 Links curados</li>
-            </ul>
-          </div>
-        </div>
 
-        {/* Sidebar - lesson list */}
-        <aside>
-          <div className="sticky top-28 p-5 rounded-2xl bg-white/[0.03] border border-white/5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-sm">Progresso do módulo</h3>
-              <span className="text-xs text-indigo-400 font-black">3/7</span>
-            </div>
-            <div className="h-2 bg-white/5 rounded-full mb-6 overflow-hidden">
-              <div className="h-full bg-indigo-500 rounded-full" style={{ width: '43%' }} />
-            </div>
-            <div className="space-y-2">
-              {lessons.map((l, i) => (
-                <button
-                  key={l.title}
-                  onClick={() => !l.locked && setActiveLesson(i)}
-                  disabled={l.locked}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl text-left text-xs transition ${
-                    i === activeLesson
-                      ? 'bg-indigo-500/20 border border-indigo-500/40'
-                      : l.locked
-                      ? 'opacity-40 cursor-not-allowed'
-                      : 'hover:bg-white/5'
-                  }`}
-                >
-                  {l.done ? (
-                    <CheckCircle2 size={16} className="text-indigo-400 shrink-0" />
-                  ) : l.locked ? (
-                    <Lock size={16} className="text-white/40 shrink-0" />
-                  ) : (
-                    <Circle size={16} className={i === activeLesson ? 'text-indigo-400 shrink-0' : 'text-white/40 shrink-0'} />
-                  )}
-                  <span className="flex-1 font-bold">{l.title}</span>
-                  <span className="text-white/40">{l.duration}</span>
+            {/* Sidebar: lista de aulas */}
+            <aside>
+              <div className="sticky top-28 p-5 rounded-2xl bg-white/[0.03] border border-white/5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-sm">Progresso do módulo</h3>
+                  <span className="text-xs text-indigo-400 font-black">{done}/{total}</span>
+                </div>
+                <div className="h-2 bg-white/5 rounded-full mb-6 overflow-hidden">
+                  <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+                </div>
+                <div className="space-y-2">
+                  {lessons.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => !l.locked && setActiveLesson(l.id)}
+                      disabled={l.locked}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl text-left text-xs transition ${
+                        l.id === activeLesson
+                          ? 'bg-indigo-500/20 border border-indigo-500/40'
+                          : l.locked
+                          ? 'opacity-40 cursor-not-allowed'
+                          : 'hover:bg-white/5'
+                      }`}
+                    >
+                      {l.done ? (
+                        <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                      ) : l.locked ? (
+                        <Lock size={16} className="text-white/40 shrink-0" />
+                      ) : (
+                        <Circle size={16} className={l.id === activeLesson ? 'text-indigo-400 shrink-0' : 'text-white/40 shrink-0'} />
+                      )}
+                      <span className="flex-1 font-bold">{l.title}</span>
+                      <span className="text-white/40">{l.duration}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          </div>
+        )}
+
+        {tab === 'comunidade' && (
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-3xl font-black mb-6">Comunidade de alunos</h1>
+            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 mb-6">
+              <textarea
+                placeholder="Compartilhe sua dúvida, projeto ou dica..."
+                className="w-full bg-transparent outline-none text-sm resize-none"
+                rows={3}
+              />
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-xs text-white/40">2.000+ alunos ativos</span>
+                <button className="px-5 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-lg text-xs font-bold">
+                  Publicar
                 </button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {POSTS.map((p) => (
+                <article key={p.user} className="p-6 bg-white/[0.03] rounded-2xl border border-white/5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img src={`https://images.unsplash.com/${p.avatar}?w=200&auto=format&fit=crop`} className="w-10 h-10 rounded-full object-cover" alt={p.user} />
+                    <div className="flex-1">
+                      <div className="font-bold text-sm">{p.user}</div>
+                      <div className="text-xs text-white/40">{p.time} atrás</div>
+                    </div>
+                  </div>
+                  <p className="text-white/80 text-sm leading-relaxed mb-4">{p.text}</p>
+                  <div className="flex gap-6 text-xs text-white/50">
+                    <button className="hover:text-indigo-400 flex items-center gap-1">♡ {p.likes}</button>
+                    <button className="hover:text-indigo-400 flex items-center gap-1">💬 {p.comments}</button>
+                    <button className="hover:text-indigo-400">Compartilhar</button>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
+        )}
 
-          <div className="mt-4 p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-            <div className="flex items-center gap-2 mb-2">
-              <BarChart3 size={16} className="text-indigo-400" />
-              <span className="text-xs font-bold uppercase tracking-widest">Seu desempenho</span>
+        {tab === 'certificado' && (
+          <div className="max-w-2xl mx-auto text-center py-12">
+            <div className="relative inline-block mb-10">
+              <Trophy size={120} className="text-indigo-500/20" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-4xl font-black text-indigo-400">{progress}%</span>
+              </div>
             </div>
-            <div className="text-2xl font-black">43% concluído</div>
-            <div className="text-xs text-white/50 mt-1">Mais 4 aulas pra terminar o módulo</div>
+            <h1 className="text-4xl font-black mb-4">
+              {progress === 100 ? '🎉 Parabéns!' : `Faltam ${total - done} aulas`}
+            </h1>
+            <p className="text-white/60 mb-10 max-w-md mx-auto">
+              {progress === 100
+                ? 'Você concluiu todo o módulo! Seu certificado digital está disponível.'
+                : 'Conclua todas as aulas pra desbloquear seu certificado digital, válido em todo o Brasil.'}
+            </p>
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 mb-6">
+              <User size={32} className="text-indigo-400 mx-auto mb-4" />
+              <div className="text-xs text-indigo-300 uppercase tracking-widest mb-2">Em nome de</div>
+              <div className="text-2xl font-black mb-6">Você mesmo(a)</div>
+              <div className="text-xs text-white/60 uppercase tracking-widest">
+                Curso de Design Visual Avançado
+              </div>
+            </div>
+            <button
+              disabled={progress < 100}
+              className="w-full py-4 bg-indigo-500 hover:bg-indigo-400 rounded-xl font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              {progress === 100 ? 'Baixar certificado em PDF' : 'Certificado bloqueado'}
+            </button>
           </div>
-        </aside>
+        )}
       </div>
 
       <footer className="border-t border-white/5 py-6 text-center text-white/30 text-xs">
         Demo navegável · <Link href="/encomendar/curso" className="text-indigo-400 hover:underline">Quero este site</Link>
       </footer>
     </main>
+  );
+}
+
+function TabButton({ active, onClick, icon, children }: { active: boolean; onClick: () => void; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 ${
+        active ? 'bg-indigo-500/20 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
+      }`}
+    >
+      {icon} {children}
+    </button>
   );
 }
