@@ -156,28 +156,6 @@ async function runSeed() {
 
 export async function GET() {
   try {
-    const admin = createAdminClient();
-    const { data: existing, error: checkErr } = await admin
-      .from('templates')
-      .select('slug, active')
-      .eq('slug', 'restaurante')
-      .maybeSingle();
-
-    if (checkErr) {
-      return NextResponse.json(
-        { ok: false, step: 'check_existing', error: checkErr.message, code: checkErr.code },
-        { status: 500 }
-      );
-    }
-
-    if (existing?.active) {
-      return NextResponse.json({
-        ok: true,
-        alreadySeeded: true,
-        message: 'Seed já rodou. Para re-popular, use /admin/templates.',
-      });
-    }
-
     const result = await runSeed();
     return NextResponse.json(result, { status: result.ok ? 200 : 500 });
   } catch (err) {
