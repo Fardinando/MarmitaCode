@@ -84,6 +84,10 @@ Cada pedido é adicionado como uma nova linha na planilha.
    - `Public Key` → `NEXT_PUBLIC_MP_PUBLIC_KEY`
 5. Em **Notificações → URLs de notificação**, cadastre o webhook:
    `https://SEU_DOMINIO/api/payments/webhook` (evento: Pagamentos).
+   Depois de salvar, o painel mostra uma **chave secreta** da notificação —
+   copie e salve como `MP_WEBHOOK_SECRET` na Vercel. Essa chave é obrigatória
+   em produção: nosso webhook valida HMAC-SHA256 do payload e rejeita
+   requisições sem assinatura ou com timestamp antigo (>10 min).
 6. Faça um pedido de teste e verifique no admin que o status muda de `aguardando_pagamento` para `pago`.
 
 Cartões de teste: https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/additional-content/your-integrations/test/cards
@@ -114,6 +118,7 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=5583996532203
 # Mercado Pago (opcional — ativa pagamento real)
 MP_ACCESS_TOKEN=
 NEXT_PUBLIC_MP_PUBLIC_KEY=
+MP_WEBHOOK_SECRET=
 ```
 
 > `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `GOOGLE_PRIVATE_KEY` são **secretas** — nunca commite nem exponha no cliente.  
