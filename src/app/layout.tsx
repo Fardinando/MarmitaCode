@@ -77,7 +77,7 @@ export default function RootLayout({
     <html lang="pt-br" className={`${plusJakarta.variable}`}>
       <body className="antialiased">
         <SiteHeader />
-        <div className="pt-20">{children}</div>
+        <div className="pt-16 md:pt-20">{children}</div>
         <SiteFooter />
         <Analytics />
       </body>

@@ -7,7 +7,7 @@ export default function DemoLayout({ children }: { children: React.ReactNode }) 
       <style>{`
         header.fixed { display: none !important; }
         footer { display: none !important; }
-        body > div.pt-20 { padding-top: 0 !important; }
+        body > div[class*="pt-"] { padding-top: 0 !important; }
       `}</style>
 
       <div className="fixed top-0 inset-x-0 z-[100] bg-[#FF8C00] text-black">

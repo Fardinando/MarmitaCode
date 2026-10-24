@@ -7,6 +7,11 @@ import { LojaTemplate } from './loja';
 import { SaasTemplate } from './saas';
 import { FitnessTemplate } from './fitness';
 import { ImobiliariaTemplate } from './imobiliaria';
+import { Restaurante2Template } from './restaurante-2';
+import { Barbearia2Template } from './barbearia-2';
+import { Curso2Template } from './curso-2';
+import { Portfolio2Template } from './portfolio-2';
+import { Loja2Template } from './loja-2';
 
 export interface DemoTemplate {
   slug: string;
@@ -72,6 +77,41 @@ export const DEMO_TEMPLATES: Record<string, DemoTemplate> = {
     category: 'Imobiliária',
     description: 'Site de imobiliária com busca, catálogo de imóveis, filtros e agendamento de visita.',
     Component: ImobiliariaTemplate,
+  },
+  'restaurante-2': {
+    slug: 'restaurante-2',
+    name: 'Comida Sincera',
+    category: 'Restaurante',
+    description: 'Restaurante de comida brasileira rústica — fogão a lenha, pratos do dia, história familiar.',
+    Component: Restaurante2Template,
+  },
+  'barbearia-2': {
+    slug: 'barbearia-2',
+    name: 'Barbearia Seu Henrique',
+    category: 'Barbearia',
+    description: 'Barbearia vintage/tradicional — estética clássica, tipografia serifada, cores quentes.',
+    Component: Barbearia2Template,
+  },
+  'curso-2': {
+    slug: 'curso-2',
+    name: 'Mentoria da Mariana',
+    category: 'Cursos',
+    description: 'Curso com estilo de creator individual — pessoal, caloroso, prova social com fotos reais.',
+    Component: Curso2Template,
+  },
+  'portfolio-2': {
+    slug: 'portfolio-2',
+    name: 'nova.dev Portfolio',
+    category: 'Portfólio',
+    description: 'Portfólio tech dark com projetos alternados, acentos neon e visual futurista.',
+    Component: Portfolio2Template,
+  },
+  'loja-2': {
+    slug: 'loja-2',
+    name: 'Empório Direto',
+    category: 'E-commerce',
+    description: 'Mercado online de produtores artesanais — vitrine de produtos, newsletter e selo de frete grátis.',
+    Component: Loja2Template,
   },
 };
 
