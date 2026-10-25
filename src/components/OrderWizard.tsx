@@ -29,15 +29,6 @@ interface DiscountResult {
   error?: string;
 }
 
-// Valores adicionais na mensalidade por funcionalidade extra.
-const EXTRAS_CATALOG = [
-  { key: 'db-login', label: 'Banco de dados (login/cadastro)', priceAdd: 30, hint: '+ R$ 30/mês' },
-  { key: 'video-host', label: 'Hospedagem de vídeos', priceAdd: 25, hint: '+ R$ 25/mês' },
-  { key: 'payment-api', label: 'Integração com pagamentos', priceAdd: 20, hint: '+ R$ 20/mês' },
-  { key: 'admin-area', label: 'Área administrativa customizada', priceAdd: 40, hint: '+ R$ 40/mês' },
-  { key: 'other', label: 'Outra funcionalidade (descreva no briefing)', priceAdd: 0, hint: 'A combinar' },
-] as const;
-
 export function OrderWizard({
   template,
   isCustom = false,
@@ -63,16 +54,12 @@ export function OrderWizard({
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
 
-  const [wantsDomain, setWantsDomain] = useState<boolean | null>(null);
   const [discountCode, setDiscountCode] = useState('');
   const [discountResult, setDiscountResult] = useState<DiscountResult | null>(null);
   const [checkingDiscount, setCheckingDiscount] = useState(false);
-  const [extras, setExtras] = useState<string[]>([]);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  // Fallback robusto: se o tier atual não existe no template (ex: URL
-  // veio com tier que o template não tem), cai no primeiro disponível.
-  // Isso evita o bug de "preço zerado" sem precisar reselecionar.
+  // Fallback: se o tier atual não existe no template, cai no primeiro disponível.
   const selectedTierRow = useMemo(() => {
     const match = template.tiers.find((t) => t.tier === tier);
     if (match) return match;
@@ -82,18 +69,22 @@ export function OrderWizard({
   const setupPrice = selectedTierRow ? Number(selectedTierRow.setup_price) : 0;
   const baseMonthly = selectedTierRow ? Number(selectedTierRow.monthly_price) : 0;
 
-  const isBasico = tier === 'basico';
-
-  const extrasMonthlyAdd = extras.reduce((sum, k) => {
-    const ex = EXTRAS_CATALOG.find((e) => e.key === k);
-    return sum + (ex?.priceAdd ?? 0);
-  }, 0);
-
-  const finalMonthly = baseMonthly + extrasMonthlyAdd;
-
-  // Se tem desconto aplicado, usa; senão, totalNow = setupPrice.
+  // Mensalidade sempre a base — extras serão escolhidos no briefing pós-pagamento.
+  const finalMonthly = baseMonthly;
   const discountValue = discountResult?.valid ? (discountResult.discountAmount ?? 0) : 0;
   const totalNow = Math.max(0, setupPrice - discountValue);
+
+  const steps = ['Plano', 'Seus dados', 'Termos', 'Pagar'];
+
+  const nameValid = name.trim().length >= 2;
+  const emailValid = isValidEmail(email);
+  const phoneValid = !phone || isValidPhoneBR(phone);
+
+  const canAdvance = () => {
+    if (step === 1) return nameValid && emailValid && phoneValid;
+    if (step === 2) return acceptedTerms;
+    return true;
+  };
 
   const applyDiscount = async () => {
     const code = discountCode.trim().toUpperCase();
@@ -123,23 +114,6 @@ export function OrderWizard({
     setDiscountCode('');
   };
 
-  const steps = ['Plano', 'Seus dados', 'Domínio & extras', 'Termos', 'Pagar'];
-
-  const nameValid = name.trim().length >= 2;
-  const emailValid = isValidEmail(email);
-  const phoneValid = !phone || isValidPhoneBR(phone);
-
-  const canAdvance = () => {
-    if (step === 1) return nameValid && emailValid && phoneValid;
-    if (step === 2) return wantsDomain !== null;
-    if (step === 3) return acceptedTerms;
-    return true;
-  };
-
-  const toggleExtra = (k: string) => {
-    setExtras((prev) => (prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]));
-  };
-
   const submit = async () => {
     setSaving(true);
     setError(null);
@@ -150,29 +124,23 @@ export function OrderWizard({
         body: JSON.stringify({
           templateSlug: isCustom ? null : template.slug,
           tier,
-          briefing: {
-            business_name: '', // briefing completo vem pós-pagamento
-            wants_domain: wantsDomain ? 'sim' : 'não',
-            extras: extras.length > 0 ? extras.join(', ') : undefined,
-          },
+          // Briefing vazio — todas as info detalhadas vêm pós-pagamento.
+          briefing: {},
           contact: { name, email, phone, company },
-          wantsDomain,
+          wantsDomain: null,
           discountCode: discountCode || null,
           setupPrice,
           monthlyPrice: finalMonthly,
-          extras,
-          _hp: honeypot, // honeypot
+          extras: [],
+          _hp: honeypot,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Erro ao enviar pedido.');
       if (data.checkoutUrl) {
-        // Mercado Pago → após pagamento, redireciona pra /checkout/criar-conta
-        // (ou direto pro briefing se já estava logado).
         window.location.href = data.checkoutUrl;
         return;
       }
-      // Mock: pagamento é considerado aprovado — vai pra criar conta ou briefing
       router.push(data.postPayUrl || `/briefing/${data.order.id}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro inesperado.');
@@ -214,7 +182,7 @@ export function OrderWizard({
       </div>
 
       <div className="p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-white/[0.02] border border-white/5">
-        {/* Honeypot invisível pra bots */}
+        {/* Honeypot */}
         <input
           type="text"
           name="website"
@@ -226,11 +194,12 @@ export function OrderWizard({
           aria-hidden="true"
         />
 
+        {/* STEP 0: PLANO */}
         {step === 0 && (
           <div>
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2">Escolha o plano</h2>
             <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-8">
-              Setup único + mensalidade a partir de R$ 47,90
+              Setup único + mensalidade de R$ 47,90
             </p>
             <div className="space-y-4">
               {template.tiers.map((t) => (
@@ -255,6 +224,7 @@ export function OrderWizard({
           </div>
         )}
 
+        {/* STEP 1: DADOS */}
         {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-2 flex items-center gap-3">
@@ -286,58 +256,8 @@ export function OrderWizard({
           </div>
         )}
 
+        {/* STEP 2: TERMOS (reduzidos) */}
         {step === 2 && (
-          <div>
-            <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Domínio & extras</h2>
-
-            <div className="mb-8">
-              <p className="text-white/60 text-sm mb-4 font-bold">Quer usar um domínio próprio (ex.: seusite.com.br)?</p>
-              <div className="space-y-3">
-                <button onClick={() => setWantsDomain(true)}
-                  className={cn('w-full text-left p-5 rounded-2xl border',
-                    wantsDomain === true ? 'border-[#FF8C00] bg-[#FF8C00]/10' : 'border-white/5 bg-white/[0.02]')}>
-                  <div className="font-black text-sm uppercase mb-1">Sim, quero domínio próprio</div>
-                  <p className="text-white/50 text-xs">
-                    Você registra no Registro.br. Enviamos tutorial e cuidamos de DNS/SSL.
-                  </p>
-                </button>
-                <button onClick={() => setWantsDomain(false)}
-                  className={cn('w-full text-left p-5 rounded-2xl border',
-                    wantsDomain === false ? 'border-[#FF8C00] bg-[#FF8C00]/10' : 'border-white/5 bg-white/[0.02]')}>
-                  <div className="font-black text-sm uppercase mb-1">Não — use o endereço gratuito</div>
-                  <p className="text-white/50 text-xs">
-                    <b className="text-white">marmitacode.com.br/seunome</b>. Zero custo adicional.
-                  </p>
-                </button>
-              </div>
-            </div>
-
-            {!isBasico && (
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-widest text-[#FF8C00] mb-3">
-                  Funcionalidades extras (opcional)
-                </h3>
-                <p className="text-white/50 text-xs mb-4">
-                  Cada extra adiciona valor à mensalidade.
-                </p>
-                <div className="space-y-2">
-                  {EXTRAS_CATALOG.map((ex) => (
-                    <label key={ex.key}
-                      className={cn('flex items-center gap-3 p-4 rounded-2xl border cursor-pointer',
-                        extras.includes(ex.key) ? 'border-[#FF8C00]/50 bg-[#FF8C00]/10' : 'border-white/10 bg-white/[0.02]')}>
-                      <input type="checkbox" checked={extras.includes(ex.key)}
-                        onChange={() => toggleExtra(ex.key)} className="w-4 h-4 accent-[#FF8C00]" />
-                      <span className="flex-1 text-sm font-bold">{ex.label}</span>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00]">{ex.hint}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {step === 3 && (
           <div>
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Antes de pagar</h2>
 
@@ -345,19 +265,15 @@ export function OrderWizard({
               <TermItem title="O que acontece agora">
                 Você <b className="text-white">paga</b> o setup e, logo após o pagamento confirmado,
                 <b className="text-white"> cria sua conta</b> com uma senha. Em seguida vai pro{' '}
-                <b className="text-white">briefing completo</b> pra detalhar tudo que seu site precisa ter.
+                <b className="text-white">briefing completo</b> onde detalha tudo que seu site precisa ter
+                — incluindo domínio próprio, funcionalidades extras, imagens, textos e visual.
               </TermItem>
               <TermItem title="Setup e mensalidade">
-                O <b className="text-white">setup</b> é cobrado agora. A <b className="text-white">mensalidade</b>
-                {' '}de R$ {finalMonthly.toFixed(2).replace('.', ',')} começa 30 dias após a publicação do site.
-              </TermItem>
-              <TermItem title="Responsabilidade pelo domínio">
-                A compra e renovação do domínio é sua, direto no Registro.br. A gente envia tutorial e cuida
-                de toda configuração técnica.
-              </TermItem>
-              <TermItem title="Inadimplência">
-                Se a mensalidade não for paga, o site <b className="text-white">sai do ar</b> e vira a tela
-                de erro <b className="text-white">404 personalizada da MarmitaCode</b>.
+                O <b className="text-white">setup</b> é cobrado agora, uma única vez. A{' '}
+                <b className="text-white">mensalidade de R$ {finalMonthly.toFixed(2).replace('.', ',')}</b>{' '}
+                começa 30 dias após a publicação do site e cobre a hospedagem básica, pequenos ajustes
+                e manutenção. Funcionalidades extras (banco de dados, hospedagem de vídeos, integrações
+                pagas) aumentam o valor mensal e serão escolhidas no briefing.
               </TermItem>
             </div>
 
@@ -373,17 +289,14 @@ export function OrderWizard({
           </div>
         )}
 
-        {step === 4 && (
+        {/* STEP 3: PAGAR */}
+        {step === 3 && (
           <div>
             <h2 className="text-3xl font-black italic uppercase tracking-tighter mb-8">Revisão & pagamento</h2>
 
             <div className="space-y-3 text-sm mb-6">
               <Row label="Template" value={template?.name ?? '100% Personalizado'} />
               <Row label="Plano" value={TIER_LABELS[tier]} />
-              <Row label="Domínio" value={wantsDomain ? 'Próprio (você registra)' : 'Endereço gratuito'} />
-              {extras.length > 0 && (
-                <Row label="Extras" value={`${extras.length} funcionalidade(s)`} />
-              )}
             </div>
 
             <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 mb-6 space-y-3">
@@ -400,7 +313,7 @@ export function OrderWizard({
               </div>
             </div>
 
-            {/* Campo de desconto */}
+            {/* Cupom de desconto */}
             <div className="mb-6">
               <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">
                 Tem um cupom de desconto?
@@ -463,7 +376,7 @@ export function OrderWizard({
                   <span className="block text-[10px] font-black uppercase tracking-widest text-[#FF8C00] mb-1">
                     A pagar agora{paymentMode === 'mock' ? ' (mock)' : ''}
                   </span>
-                  <span className="text-white/50 text-xs">Setup único · depois: briefing</span>
+                  <span className="text-white/50 text-xs">Setup único · depois: criar conta e briefing</span>
                   {discountResult?.valid && discountValue > 0 && (
                     <div className="text-emerald-400 text-xs font-bold mt-1">
                       Desconto: − R$ {discountValue.toFixed(2).replace('.', ',')}
@@ -494,7 +407,7 @@ export function OrderWizard({
                 ? 'Processando...'
                 : paymentMode === 'mercadopago'
                 ? 'Pagar com Mercado Pago'
-                : 'Pagar (mock) e ir pro briefing'}
+                : 'Pagar (mock) e ir pra conta'}
             </button>
           </div>
         )}
