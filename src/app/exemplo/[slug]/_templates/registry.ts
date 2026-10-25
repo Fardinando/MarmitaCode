@@ -12,6 +12,10 @@ import { Barbearia2Template } from './barbearia-2';
 import { Curso2Template } from './curso-2';
 import { Portfolio2Template } from './portfolio-2';
 import { Loja2Template } from './loja-2';
+import { ClinicaTemplate } from './clinica';
+import { AdvocaciaTemplate } from './advocacia';
+import { PetshopTemplate } from './petshop';
+import { EventosTemplate } from './eventos';
 
 export interface DemoTemplate {
   slug: string;
@@ -112,6 +116,34 @@ export const DEMO_TEMPLATES: Record<string, DemoTemplate> = {
     category: 'E-commerce',
     description: 'Mercado online de produtores artesanais — vitrine de produtos, newsletter e selo de frete grátis.',
     Component: Loja2Template,
+  },
+  clinica: {
+    slug: 'clinica',
+    name: 'Clínica Vida+',
+    category: 'Clínica',
+    description: 'Clínica multiespecialidade com agendamento de consulta interativo (especialidade, médico, horário).',
+    Component: ClinicaTemplate,
+  },
+  advocacia: {
+    slug: 'advocacia',
+    name: 'Alves & Martins Advocacia',
+    category: 'Advocacia',
+    description: 'Escritório de advocacia com áreas de atuação, cases e formulário multi-step de consultoria.',
+    Component: AdvocaciaTemplate,
+  },
+  petshop: {
+    slug: 'petshop',
+    name: 'AuAu+ Pet Shop',
+    category: 'Pet shop',
+    description: 'Pet shop com agendamento de banho/tosa por porte do pet e loja de produtos com carrinho.',
+    Component: PetshopTemplate,
+  },
+  eventos: {
+    slug: 'eventos',
+    name: 'Haut Événement',
+    category: 'Eventos',
+    description: 'Cerimonial de eventos com calculadora de orçamento ao vivo (convidados, espaço, extras).',
+    Component: EventosTemplate,
   },
 };
 
