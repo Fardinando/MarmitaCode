@@ -18,6 +18,17 @@ interface WizardTemplate {
   tiers: TemplateTier[];
 }
 
+interface DiscountResult {
+  valid: boolean;
+  code?: string;
+  percent?: number;
+  amount?: number;
+  discountAmount?: number;
+  total?: number;
+  message?: string;
+  error?: string;
+}
+
 // Valores adicionais na mensalidade por funcionalidade extra.
 const EXTRAS_CATALOG = [
   { key: 'db-login', label: 'Banco de dados (login/cadastro)', priceAdd: 30, hint: '+ R$ 30/mês' },
@@ -54,13 +65,19 @@ export function OrderWizard({
 
   const [wantsDomain, setWantsDomain] = useState<boolean | null>(null);
   const [discountCode, setDiscountCode] = useState('');
+  const [discountResult, setDiscountResult] = useState<DiscountResult | null>(null);
+  const [checkingDiscount, setCheckingDiscount] = useState(false);
   const [extras, setExtras] = useState<string[]>([]);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const selectedTierRow = useMemo(
-    () => template.tiers.find((t) => t.tier === tier) ?? null,
-    [template, tier]
-  );
+  // Fallback robusto: se o tier atual não existe no template (ex: URL
+  // veio com tier que o template não tem), cai no primeiro disponível.
+  // Isso evita o bug de "preço zerado" sem precisar reselecionar.
+  const selectedTierRow = useMemo(() => {
+    const match = template.tiers.find((t) => t.tier === tier);
+    if (match) return match;
+    return template.tiers[0] ?? null;
+  }, [template, tier]);
 
   const setupPrice = selectedTierRow ? Number(selectedTierRow.setup_price) : 0;
   const baseMonthly = selectedTierRow ? Number(selectedTierRow.monthly_price) : 0;
@@ -73,7 +90,38 @@ export function OrderWizard({
   }, 0);
 
   const finalMonthly = baseMonthly + extrasMonthlyAdd;
-  const totalNow = setupPrice;
+
+  // Se tem desconto aplicado, usa; senão, totalNow = setupPrice.
+  const discountValue = discountResult?.valid ? (discountResult.discountAmount ?? 0) : 0;
+  const totalNow = Math.max(0, setupPrice - discountValue);
+
+  const applyDiscount = async () => {
+    const code = discountCode.trim().toUpperCase();
+    if (!code) {
+      setDiscountResult({ valid: false, error: 'Digite um código.' });
+      return;
+    }
+    setCheckingDiscount(true);
+    setDiscountResult(null);
+    try {
+      const res = await fetch('/api/discount/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, setup: setupPrice }),
+      });
+      const data = (await res.json()) as DiscountResult;
+      setDiscountResult(data);
+    } catch {
+      setDiscountResult({ valid: false, error: 'Erro ao verificar cupom.' });
+    } finally {
+      setCheckingDiscount(false);
+    }
+  };
+
+  const removeDiscount = () => {
+    setDiscountResult(null);
+    setDiscountCode('');
+  };
 
   const steps = ['Plano', 'Seus dados', 'Domínio & extras', 'Termos', 'Pagar'];
 
@@ -119,7 +167,7 @@ export function OrderWizard({
       const data = await res.json();
       if (res.status === 401 && data.requireLogin) {
         // Precisa de login — manda pra signup com retorno pra encomendar.
-        router.push(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}&signup=1`);
+        router.push(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}&mode=signup`);
         return;
       }
       if (!res.ok) throw new Error(data.error ?? 'Erro ao enviar pedido.');
@@ -356,11 +404,61 @@ export function OrderWizard({
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 mb-6">
-              <input value={discountCode} onChange={(e) => setDiscountCode(e.target.value)}
-                placeholder="Código de desconto (opcional)"
-                maxLength={60}
-                className="w-full bg-transparent outline-none text-sm" />
+            {/* Campo de desconto */}
+            <div className="mb-6">
+              <span className="block text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">
+                Tem um cupom de desconto?
+              </span>
+              {discountResult?.valid ? (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-3 flex-wrap">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                      <Check size={16} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <div className="font-black text-sm text-emerald-300">{discountResult.code}</div>
+                      <div className="text-xs text-emerald-400/80">{discountResult.message}</div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeDiscount}
+                    className="text-xs font-bold text-emerald-300/70 hover:text-emerald-300 underline"
+                  >
+                    Remover
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2">
+                    <input
+                      value={discountCode}
+                      onChange={(e) => {
+                        setDiscountCode(e.target.value.toUpperCase());
+                        if (discountResult) setDiscountResult(null);
+                      }}
+                      placeholder="BLACKFRIDAY25"
+                      maxLength={40}
+                      autoComplete="off"
+                      className="flex-1 px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-sm font-black uppercase tracking-wide outline-none focus:border-[#FF8C00]/50"
+                    />
+                    <button
+                      type="button"
+                      onClick={applyDiscount}
+                      disabled={checkingDiscount || !discountCode.trim()}
+                      className="shrink-0 px-6 py-4 rounded-2xl bg-[#FF8C00] text-black text-xs font-black uppercase tracking-widest hover:bg-[#FFD700] disabled:opacity-30 flex items-center gap-2"
+                    >
+                      {checkingDiscount ? <Loader2 size={14} className="animate-spin" /> : null}
+                      {checkingDiscount ? 'Checando...' : 'Aplicar'}
+                    </button>
+                  </div>
+                  {discountResult && !discountResult.valid && discountResult.error && (
+                    <div className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold">
+                      {discountResult.error}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
 
             <div className="p-6 rounded-3xl bg-[#FF8C00]/10 border border-[#FF8C00]/20 mb-4">
@@ -370,8 +468,20 @@ export function OrderWizard({
                     A pagar agora{paymentMode === 'mock' ? ' (mock)' : ''}
                   </span>
                   <span className="text-white/50 text-xs">Setup único · depois: briefing</span>
+                  {discountResult?.valid && discountValue > 0 && (
+                    <div className="text-emerald-400 text-xs font-bold mt-1">
+                      Desconto: − R$ {discountValue.toFixed(2).replace('.', ',')}
+                    </div>
+                  )}
                 </div>
-                <span className="text-4xl font-black text-[#FF8C00]">R$ {totalNow.toFixed(2).replace('.', ',')}</span>
+                <div className="text-right">
+                  {discountResult?.valid && discountValue > 0 && (
+                    <div className="text-white/40 text-sm line-through">
+                      R$ {setupPrice.toFixed(2).replace('.', ',')}
+                    </div>
+                  )}
+                  <span className="text-4xl font-black text-[#FF8C00]">R$ {totalNow.toFixed(2).replace('.', ',')}</span>
+                </div>
               </div>
             </div>
 

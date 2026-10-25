@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getTemplateBySlug, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
 import { mpEnabled } from '@/lib/payments/mercadopago';
 import { getProfile } from '@/lib/auth';
+import { TIER_WHITELIST } from '@/lib/security/schemas';
 import type { Tier } from '@/lib/types';
 
 export const metadata = { title: 'Encomendar | MarmitaCode' };
@@ -19,12 +20,16 @@ export default async function EncomendarPage({
   const { tier } = await searchParams;
   const profile = await getProfile();
 
+  // Fluxo novo: login obrigatório ANTES de qualquer coisa.
+  // Se não tem conta, manda pra signup carregando o retorno.
+  if (!profile) {
+    const next = `/encomendar/${slug}${tier ? `?tier=${tier}` : ''}`;
+    redirect(`/login?next=${encodeURIComponent(next)}&mode=signup`);
+  }
+
   const isCustom = slug === 'personalizado';
   const template = isCustom ? null : await getTemplateBySlug(slug);
   if (!isCustom && !template) notFound();
-
-  const initialTier: Tier =
-    (tier as Tier) ?? (isCustom ? 'personalizado' : 'basico');
 
   const wizardTemplate = template
     ? { slug: template.slug, name: template.name, tiers: template.tiers }
@@ -33,6 +38,15 @@ export default async function EncomendarPage({
         name: 'Projeto 100% Personalizado',
         tiers: defaultCustomTiers(),
       };
+
+  // Garante que o tier inicial casa com algum tier disponível no template.
+  // Fallback: primeiro tier disponível ou 'basico'.
+  const availableTiers = wizardTemplate.tiers.map((t) => t.tier);
+  const requested = tier && (TIER_WHITELIST as readonly string[]).includes(tier) ? (tier as Tier) : null;
+  const initialTier: Tier =
+    (requested && availableTiers.includes(requested) ? requested : null) ??
+    availableTiers[0] ??
+    (isCustom ? 'personalizado' : 'basico');
 
   return (
     <main className="relative min-h-screen bg-black text-white px-6 py-16">
@@ -51,6 +65,9 @@ export default async function EncomendarPage({
           <p className="text-white/40 font-bold mt-4">
             {template ? `Template: ${template.name}` : 'Projeto 100% personalizado'}
           </p>
+          <p className="text-white/30 text-xs mt-3">
+            Logado como <b className="text-white">{profile.email ?? profile.name ?? 'você'}</b>
+          </p>
         </div>
 
         <OrderWizard
@@ -58,7 +75,7 @@ export default async function EncomendarPage({
           isCustom={isCustom}
           initialTier={initialTier}
           paymentMode={mpEnabled() ? 'mercadopago' : 'mock'}
-          isLoggedIn={!!profile}
+          isLoggedIn={true}
         />
       </div>
     </main>
