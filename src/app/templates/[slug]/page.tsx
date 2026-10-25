@@ -28,15 +28,31 @@ export default async function TemplateDetailPage({
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-12 mb-24">
-          <div className="relative aspect-[16/11] rounded-[3rem] overflow-hidden bg-gradient-to-br from-white/5 to-transparent border border-white/5">
+          <a
+            href={demoSrc}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Abrir demonstração de ${template.name}`}
+            className="group relative aspect-[16/11] rounded-[3rem] overflow-hidden bg-gradient-to-br from-white/5 to-transparent border border-white/5 hover:border-[#FF8C00]/40 transition-colors block"
+          >
             {template.image_url ? (
-              <Image src={template.image_url} alt={template.name} fill className="object-cover" />
+              <Image
+                src={template.image_url}
+                alt={template.name}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-white/10 font-black uppercase tracking-widest">
                 {template.category}
               </div>
             )}
-          </div>
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+              <span className="opacity-0 group-hover:opacity-100 transition inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF8C00] text-black text-xs font-black uppercase tracking-widest shadow-2xl">
+                Abrir demonstração <ExternalLink size={14} />
+              </span>
+            </div>
+          </a>
 
           <div className="flex flex-col justify-center">
             <span className="text-[10px] font-black text-[#FF8C00] uppercase tracking-[0.3em] mb-4">

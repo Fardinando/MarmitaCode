@@ -72,7 +72,8 @@ export async function createOrderPreference(order: Order): Promise<PreferenceRes
           }
         : undefined,
       back_urls: {
-        success: `${siteConfig.url}/checkout/sucesso?order=${order.id}`,
+        // Após pagamento aprovado, cliente vai direto pro briefing.
+        success: `${siteConfig.url}/briefing/${order.id}`,
         pending: `${siteConfig.url}/checkout/pendente?order=${order.id}`,
         failure: `${siteConfig.url}/checkout/falha?order=${order.id}`,
       },

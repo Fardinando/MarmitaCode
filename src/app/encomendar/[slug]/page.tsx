@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTemplateBySlug, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
 import { mpEnabled } from '@/lib/payments/mercadopago';
+import { getProfile } from '@/lib/auth';
 import type { Tier } from '@/lib/types';
 
 export const metadata = { title: 'Encomendar | MarmitaCode' };
@@ -16,6 +17,7 @@ export default async function EncomendarPage({
 }) {
   const { slug } = await params;
   const { tier } = await searchParams;
+  const profile = await getProfile();
 
   const isCustom = slug === 'personalizado';
   const template = isCustom ? null : await getTemplateBySlug(slug);
@@ -56,6 +58,7 @@ export default async function EncomendarPage({
           isCustom={isCustom}
           initialTier={initialTier}
           paymentMode={mpEnabled() ? 'mercadopago' : 'mock'}
+          isLoggedIn={!!profile}
         />
       </div>
     </main>

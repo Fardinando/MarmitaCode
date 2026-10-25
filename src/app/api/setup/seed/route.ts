@@ -217,6 +217,18 @@ const TEMPLATES = [
     features: ['Calculadora de orçamento', '4 tipos de evento', 'Galeria', 'Solicitação de proposta'],
     sort_order: 17,
   },
+  {
+    slug: 'medico',
+    name: 'Dra. Luiza Montenegro',
+    category: 'Medicina',
+    description: 'Site profissional para médico com biografia, formação e agendamento.',
+    long_description: 'Template elegante estilo portfolio médico. Hero com CRM destacado, biografia pessoal, 4 áreas de atendimento, timeline de formação, depoimentos de pacientes, convênios aceitos e modal de agendamento multi-step (tipo de consulta + presencial/online + dia/horário + dados).',
+    demo_url: '/exemplo/medico',
+    featured: true,
+    active: true,
+    features: ['Agendamento multi-step', 'Timeline de formação', 'Depoimentos', 'Convênios aceitos'],
+    sort_order: 18,
+  },
 ];
 
 const TIER_SEED = [

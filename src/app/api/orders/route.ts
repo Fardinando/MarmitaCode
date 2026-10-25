@@ -3,74 +3,36 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendOrderEmails } from '@/lib/notifications/email';
 import { appendOrderToSheet } from '@/lib/notifications/sheets';
-import { rateLimit } from '@/lib/rate-limit';
-import { isValidEmail, isValidPhoneBR } from '@/lib/validation';
+import { limit } from '@/lib/rate-limit';
 import { createOrderPreference, mpEnabled } from '@/lib/payments/mercadopago';
-import type { Briefing, Tier } from '@/lib/types';
+import { orderBodySchema } from '@/lib/security/schemas';
+import { ZodError } from 'zod';
 
-const ALLOWED_TIERS: Tier[] = ['basico', 'intermediario', 'premium', 'personalizado'];
-
-// Mesmos valores do catálogo do wizard, validados aqui no server
-// pra o cliente não poder "zerar" os extras no payload.
+// Preços server-side (fonte da verdade) pra funcionalidades extras.
 const EXTRAS_SERVER: Record<string, number> = {
   'db-login': 30,
   'video-host': 25,
   'payment-api': 20,
   'admin-area': 40,
-  'other': 0,
+  other: 0,
 };
 
-interface OrderBody {
-  templateSlug?: string | null;
-  tier: Tier;
-  briefing: Briefing;
-  contact: {
-    name: string;
-    email: string;
-    phone?: string;
-    company?: string;
-  };
-  wantsDomain?: boolean | null;
-  discountCode?: string | null;
-  setupPrice?: number;
-  monthlyPrice?: number;
-  extras?: string[];
+function clientIp(req: Request): string {
+  const xff = req.headers.get('x-forwarded-for');
+  const real = req.headers.get('x-real-ip');
+  const ip = xff?.split(',')[0]?.trim() ?? real ?? 'unknown';
+  // RFC: trim pra evitar key injection
+  return ip.replace(/[^\w:.-]/g, '').slice(0, 64) || 'unknown';
 }
 
-function clientIp(req: Request) {
-  return (
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    req.headers.get('x-real-ip') ??
-    'unknown'
-  );
-}
-
-function validate(body: OrderBody): string | null {
-  if (!body || typeof body !== 'object') return 'Dados inválidos.';
-  if (!body.tier || !ALLOWED_TIERS.includes(body.tier)) return 'Plano inválido.';
-  if (!body.contact || typeof body.contact !== 'object') return 'Contato ausente.';
-  const name = (body.contact.name ?? '').trim();
-  const email = (body.contact.email ?? '').trim();
-  if (name.length < 2 || name.length > 120) return 'Nome inválido.';
-  if (!isValidEmail(email)) return 'E-mail inválido.';
-  if (body.contact.phone && !isValidPhoneBR(body.contact.phone)) {
-    return 'Telefone inválido. Use DDD + número.';
-  }
-  if (body.discountCode && String(body.discountCode).length > 60) {
-    return 'Cupom inválido.';
-  }
-  if (body.extras && !Array.isArray(body.extras)) return 'Extras inválidos.';
-  if (body.extras && body.extras.length > 10) return 'Extras inválidos.';
-  const briefing = body.briefing ?? {};
-  const briefingSize = JSON.stringify(briefing).length;
-  if (briefingSize > 20_000) return 'Briefing muito grande.';
-  return null;
-}
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
     const ip = clientIp(req);
-    const rl = rateLimit(`orders:${ip}`, 5, 60_000);
+
+    // Rate limit mais apertado: 3 pedidos/min por IP.
+    const rl = limit('orders', ip);
     if (!rl.ok) {
       return NextResponse.json(
         { error: `Muitas tentativas. Tente em ${rl.retryAfter}s.` },
@@ -78,48 +40,73 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = (await req.json()) as OrderBody;
-    const validationError = validate(body);
-    if (validationError) {
-      return NextResponse.json({ error: validationError }, { status: 400 });
+    // Protege contra body gigante (10kb é mais que suficiente)
+    const raw = await req.text();
+    if (raw.length > 50_000) {
+      return NextResponse.json({ error: 'Payload grande demais.' }, { status: 413 });
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return NextResponse.json({ error: 'JSON inválido.' }, { status: 400 });
+    }
+
+    // Validação Zod — todas as entradas sanitizadas.
+    let body;
+    try {
+      body = orderBodySchema.parse(parsed);
+    } catch (e) {
+      const msg = e instanceof ZodError ? e.issues[0]?.message ?? 'Dados inválidos.' : 'Dados inválidos.';
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
+
+    // Honeypot: se bot preencheu, retorna 200 silencioso pra não dar feedback.
+    if (body._hp && body._hp.length > 0) {
+      return NextResponse.json({ success: true, order: { id: 'bot-detected' } });
     }
 
     const admin = createAdminClient();
 
+    // Resolve preços no banco (nunca confia no cliente).
     let template: { id: string; slug: string } | null = null;
-    let setupPrice = Number(body.setupPrice ?? 0);
-    let baseMonthly = Number(body.monthlyPrice ?? 0);
+    let setupPrice = 0;
+    let baseMonthly = 0;
 
     if (body.templateSlug) {
       const { data: t } = await admin
         .from('templates')
-        .select('id, slug')
+        .select('id, slug, active')
         .eq('slug', body.templateSlug)
         .single();
 
-      if (t) {
-        template = t;
-        const { data: tierRow } = await admin
-          .from('template_tiers')
-          .select('setup_price, monthly_price')
-          .eq('template_id', t.id)
-          .eq('tier', body.tier)
-          .single();
-        if (tierRow) {
-          setupPrice = Number(tierRow.setup_price);
-          baseMonthly = Number(tierRow.monthly_price);
-        }
+      if (!t || !t.active) {
+        return NextResponse.json({ error: 'Template indisponível.' }, { status: 400 });
       }
+      template = { id: t.id, slug: t.slug };
+
+      const { data: tierRow } = await admin
+        .from('template_tiers')
+        .select('setup_price, monthly_price')
+        .eq('template_id', t.id)
+        .eq('tier', body.tier)
+        .single();
+      if (tierRow) {
+        setupPrice = Number(tierRow.setup_price);
+        baseMonthly = Number(tierRow.monthly_price);
+      }
+    } else {
+      // Personalizado — usa valor dica mas limita.
+      setupPrice = Math.max(0, Math.min(10000, Number(body.setupPrice ?? 397)));
+      baseMonthly = Math.max(0, Math.min(500, Number(body.monthlyPrice ?? 47.9)));
     }
 
-    // Calcula adicional de extras SEM confiar no payload do cliente.
     const extrasList = Array.isArray(body.extras) ? body.extras : [];
-    const extrasMonthlyAdd = extrasList.reduce(
-      (sum, k) => sum + (EXTRAS_SERVER[k] ?? 0),
-      0
-    );
+    const extrasMonthlyAdd = extrasList.reduce((s, k) => s + (EXTRAS_SERVER[k] ?? 0), 0);
     const monthlyPrice = baseMonthly + extrasMonthlyAdd;
 
+    // Desconto — resolvido no banco.
     let discountAmount = 0;
     if (body.discountCode) {
       const { data: d } = await admin
@@ -128,18 +115,24 @@ export async function POST(req: Request) {
         .eq('code', body.discountCode)
         .single();
       if (d && d.active && (!d.expires_at || new Date(d.expires_at) > new Date())) {
-        discountAmount =
-          (setupPrice * Number(d.percent)) / 100 + Number(d.amount);
+        discountAmount = (setupPrice * Number(d.percent)) / 100 + Number(d.amount);
       }
     }
 
-    // Só o setup é cobrado AGORA. Mensalidade começa 30 dias depois.
     const totalNow = Math.max(0, setupPrice - discountAmount);
 
+    // User logado é obrigatório — fluxo novo exige cadastro antes do pagamento.
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Você precisa estar logado pra fechar o pedido.', requireLogin: true },
+        { status: 401 }
+      );
+    }
 
     const useRealPayment = mpEnabled();
     const initialStatus = useRealPayment ? 'aguardando_pagamento' : 'pago';
@@ -147,16 +140,17 @@ export async function POST(req: Request) {
     const { data: order, error } = await admin
       .from('orders')
       .insert({
-        client_id: user?.id ?? null,
+        client_id: user.id,
         template_id: template?.id ?? null,
         template_slug: template?.slug ?? null,
         tier: body.tier,
         status: initialStatus,
+        // Briefing inicial é mínimo — o briefing completo vem APÓS pagamento.
         briefing: body.briefing ?? {},
-        contact_name: body.contact.name.trim(),
-        contact_email: body.contact.email.trim(),
-        contact_phone: body.contact.phone?.trim() ?? null,
-        company_name: body.contact.company?.trim() ?? null,
+        contact_name: body.contact.name,
+        contact_email: body.contact.email,
+        contact_phone: body.contact.phone ?? null,
+        company_name: body.contact.company ?? null,
         setup_price: setupPrice,
         monthly_price: monthlyPrice,
         discount_code: body.discountCode ?? null,
@@ -172,23 +166,16 @@ export async function POST(req: Request) {
       .single();
 
     if (error || !order) {
-      console.error('Order insert error:', error);
+      console.error('[orders] insert error', { code: error?.code });
       return NextResponse.json(
-        {
-          error: error?.message ?? 'Erro ao criar pedido.',
-          hint: error?.code === '42703'
-            ? 'Alguma coluna do schema não existe. Rode o schema.sql atualizado no Supabase.'
-            : error?.code === '42P01'
-            ? 'Tabela orders não existe. Rode o schema.sql no Supabase.'
-            : undefined,
-        },
+        { error: 'Erro ao criar pedido. Tente novamente.' },
         { status: 500 }
       );
     }
 
     await admin.from('site_projects').insert({
       order_id: order.id,
-      client_id: user?.id ?? null,
+      client_id: user.id,
       status: initialStatus === 'pago' ? 'em_producao' : 'aguardando',
       monthly_status: 'pendente',
     });
@@ -203,30 +190,25 @@ export async function POST(req: Request) {
           .update({ payment_id: pref.id, payment_url: pref.init_point })
           .eq('id', order.id);
       } catch (e) {
-        console.error('MP preference error:', e);
+        console.error('[orders] MP preference error', e);
         return NextResponse.json(
           { error: 'Erro ao criar pagamento. Tente novamente.' },
           { status: 500 }
         );
       }
     } else {
-      // Fluxo mock: dispara notificações imediatamente.
-      await Promise.allSettled([
-        sendOrderEmails(order),
-        appendOrderToSheet(order),
-      ]);
+      await Promise.allSettled([sendOrderEmails(order), appendOrderToSheet(order)]);
     }
 
-    return NextResponse.json({ success: true, order, checkoutUrl });
+    return NextResponse.json({
+      success: true,
+      order: { id: order.id, status: order.status },
+      checkoutUrl,
+      // Após pagamento o cliente é levado pra /briefing/[orderId]
+      briefingUrl: `/briefing/${order.id}`,
+    });
   } catch (err) {
-    console.error('Order error:', err);
-    const message = err instanceof Error ? err.message : 'Erro interno.';
-    return NextResponse.json(
-      {
-        error: 'Erro interno ao criar pedido.',
-        detail: process.env.NODE_ENV === 'production' ? undefined : message,
-      },
-      { status: 500 }
-    );
+    console.error('[orders] unhandled', err);
+    return NextResponse.json({ error: 'Erro interno ao criar pedido.' }, { status: 500 });
   }
 }

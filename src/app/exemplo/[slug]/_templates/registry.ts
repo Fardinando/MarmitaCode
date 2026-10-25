@@ -16,6 +16,7 @@ import { ClinicaTemplate } from './clinica';
 import { AdvocaciaTemplate } from './advocacia';
 import { PetshopTemplate } from './petshop';
 import { EventosTemplate } from './eventos';
+import { MedicoTemplate } from './medico';
 
 export interface DemoTemplate {
   slug: string;
@@ -144,6 +145,13 @@ export const DEMO_TEMPLATES: Record<string, DemoTemplate> = {
     category: 'Eventos',
     description: 'Cerimonial de eventos com calculadora de orçamento ao vivo (convidados, espaço, extras).',
     Component: EventosTemplate,
+  },
+  medico: {
+    slug: 'medico',
+    name: 'Dra. Luiza Montenegro',
+    category: 'Medicina',
+    description: 'Site profissional para médico individual — biografia, formação, convênios e agendamento de consulta.',
+    Component: MedicoTemplate,
   },
 };
 
