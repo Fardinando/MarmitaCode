@@ -282,10 +282,14 @@ async function runSeed() {
     report.deactivated_old = 'none';
   }
 
-  // 2. Upsert templates novos.
+  // 2. Upsert templates novos — anexando image_url automático baseado no slug.
+  const templatesWithImage = TEMPLATES.map((t) => ({
+    ...t,
+    image_url: `/templates/${t.slug}.png`,
+  }));
   const { data: upserted, error: upsertError } = await admin
     .from('templates')
-    .upsert(TEMPLATES, { onConflict: 'slug' })
+    .upsert(templatesWithImage, { onConflict: 'slug' })
     .select('id, slug');
   if (upsertError) {
     return { ok: false, step: 'upsert_templates', error: upsertError.message };

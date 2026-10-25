@@ -197,24 +197,25 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF8C00]/10 border border-[#FF8C00]/20 text-[#FF8C00] text-[10px] font-black uppercase tracking-[0.2em] mb-8">
-              <Globe size={14} /> Domínio por nós
+              <Globe size={14} /> Domínio próprio
             </span>
             <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-8">
-              Nós cuidamos do seu <span className="text-[#FF8C00]">domínio.</span>
+              Seu site, seu <span className="text-[#FF8C00]">domínio.</span>
             </h2>
             <p className="text-white/50 text-lg font-bold leading-relaxed mb-8">
-              Você escolhe o período e nós registramos no <b className="text-white">Registro.br</b> com as nossas
-              credenciais como <b className="text-white">administrador</b>. Você permanece o <b className="text-white">dono</b> do domínio.
+              Você registra o seu domínio direto no <b className="text-white">Registro.br</b> — simples e rápido. Enviamos
+              um <b className="text-white">tutorial passo a passo</b> depois do pedido, e cuidamos de toda a configuração
+              técnica (DNS, apontamento, SSL).
             </p>
             <ul className="space-y-4 mb-10">
               <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Check size={18} className="text-[#FF8C00]" /> Planos de 1, 2, 3, 5 e 10 anos
+                <Check size={18} className="text-[#FF8C00]" /> Você escolhe e registra no Registro.br
               </li>
               <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Check size={18} className="text-[#FF8C00]" /> Taxa do Registro.br (anual) + mão de obra única
+                <Check size={18} className="text-[#FF8C00]" /> Tutorial completo enviado por e-mail
               </li>
               <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Lock size={18} className="text-[#FF8C00]" /> Você ainda efetiva a compra no Registro.br
+                <Lock size={18} className="text-[#FF8C00]" /> Nós fazemos toda a configuração técnica
               </li>
             </ul>
             <Link
@@ -230,7 +231,7 @@ export default function Home() {
             <div className="relative bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 flex items-center justify-center">
               <div className="text-center">
                 <Wrench size={60} className="text-[#FF8C00] mx-auto mb-6" />
-                <p className="text-white/40 font-bold">Mão de obra única + taxa anual controlada pelo Registro.br.</p>
+                <p className="text-white/40 font-bold">Você compra o domínio direto no Registro.br. A gente faz a configuração técnica.</p>
               </div>
             </div>
           </div>

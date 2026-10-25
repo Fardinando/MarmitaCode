@@ -14,9 +14,9 @@ const AREAS = [
 ];
 
 const ADVOGADOS = [
-  { nome: 'Dr. Fernando Alves', oab: '234.567-SP', foto: 'photo-1507003211169-0a1dd7228f2d', esp: 'Trabalhista & Empresarial', anos: 22 },
-  { nome: 'Dra. Isabela Martins', oab: '345.678-SP', foto: 'photo-1573496359142-b8d87734a5a2', esp: 'Civil & Família', anos: 18 },
-  { nome: 'Dr. Rafael Souza', oab: '456.789-SP', foto: 'photo-1560250097-0b93528c311a', esp: 'Tributário & Empresarial', anos: 15 },
+  { nome: 'Dr. Fernando Alves', oab: 'xxxxxx', foto: 'photo-1507003211169-0a1dd7228f2d', esp: 'Trabalhista & Empresarial', anos: 22 },
+  { nome: 'Dra. Isabela Martins', oab: 'xxxxxx', foto: 'photo-1573496359142-b8d87734a5a2', esp: 'Civil & Família', anos: 18 },
+  { nome: 'Dr. Rafael Souza', oab: 'xxxxxx', foto: 'photo-1560250097-0b93528c311a', esp: 'Tributário & Empresarial', anos: 15 },
 ];
 
 const CASES = [
