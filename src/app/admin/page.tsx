@@ -9,16 +9,29 @@ export const dynamic = 'force-dynamic';
 export default async function AdminDashboard() {
   const admin = createAdminClient();
 
-  const [{ count: templates }, { count: orders }, { count: clients }, { data: recent }] =
-    await Promise.all([
-      admin.from('templates').select('*', { count: 'exact', head: true }),
-      admin.from('orders').select('*', { count: 'exact', head: true }),
-      admin.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
-      admin.from('orders').select('*').order('created_at', { ascending: false }).limit(8),
-    ]);
+  // Status que contam como "pago" (dinheiro realmente entrou).
+  const PAID_STATUSES = ['pago', 'briefing_recebido', 'em_producao', 'publicado', 'manutencao'];
+
+  const [
+    { count: templates },
+    { count: orders },
+    { count: clients },
+    { data: recent },
+    { data: paidOrders },
+  ] = await Promise.all([
+    admin.from('templates').select('*', { count: 'exact', head: true }),
+    admin.from('orders').select('*', { count: 'exact', head: true }),
+    admin.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'client'),
+    admin.from('orders').select('*').order('created_at', { ascending: false }).limit(8),
+    admin.from('orders').select('total_paid').in('status', PAID_STATUSES),
+  ]);
 
   const recentOrders = (recent as Order[]) ?? [];
-  const revenue = recentOrders.reduce((sum, o) => sum + Number(o.total_paid), 0);
+  // Receita = soma de TODOS os pedidos efetivamente pagos.
+  const revenue = ((paidOrders as { total_paid: number }[]) ?? []).reduce(
+    (sum, o) => sum + Number(o.total_paid),
+    0
+  );
 
   return (
     <div>
@@ -28,7 +41,7 @@ export default async function AdminDashboard() {
         <Stat label="Templates" value={String(templates ?? 0)} />
         <Stat label="Pedidos" value={String(orders ?? 0)} />
         <Stat label="Contratantes" value={String(clients ?? 0)} />
-        <Stat label="Receita (últimos)" value={`R$ ${revenue.toFixed(0)}`} highlight />
+        <Stat label="Receita (pagos)" value={`R$ ${revenue.toFixed(2).replace('.', ',')}`} highlight />
       </div>
 
       <div className="flex items-center justify-between mb-6">

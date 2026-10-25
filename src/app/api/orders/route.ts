@@ -121,17 +121,23 @@ export async function POST(req: Request) {
 
     const totalNow = Math.max(0, setupPrice - discountAmount);
 
-    // User logado é obrigatório — fluxo novo exige cadastro antes do pagamento.
+    // Pedido pode ser feito SEM login — a conta é criada depois do pagamento.
+    // Se o cliente já estiver logado, vinculamos o pedido ao user existente.
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado pra fechar o pedido.', requireLogin: true },
-        { status: 401 }
-      );
+    // Se não tem user, tenta encontrar um perfil com o email informado
+    // (caso o cliente já tenha conta mas não esteja logado).
+    let clientId: string | null = user?.id ?? null;
+    if (!clientId && body.contact.email) {
+      const { data: existing } = await admin
+        .from('profiles')
+        .select('id')
+        .eq('email', body.contact.email)
+        .maybeSingle();
+      if (existing) clientId = existing.id;
     }
 
     const useRealPayment = mpEnabled();
@@ -140,7 +146,7 @@ export async function POST(req: Request) {
     const { data: order, error } = await admin
       .from('orders')
       .insert({
-        client_id: user.id,
+        client_id: clientId,
         template_id: template?.id ?? null,
         template_slug: template?.slug ?? null,
         tier: body.tier,
@@ -175,7 +181,7 @@ export async function POST(req: Request) {
 
     await admin.from('site_projects').insert({
       order_id: order.id,
-      client_id: user.id,
+      client_id: clientId,
       status: initialStatus === 'pago' ? 'em_producao' : 'aguardando',
       monthly_status: 'pendente',
     });
@@ -200,12 +206,17 @@ export async function POST(req: Request) {
       await Promise.allSettled([sendOrderEmails(order), appendOrderToSheet(order)]);
     }
 
+    // Fluxo novo: após pagamento o cliente vai pra /checkout/criar-conta
+    // (ou direto pro briefing se já estava logado quando fez o pedido).
+    const postPayUrl = clientId
+      ? `/briefing/${order.id}`
+      : `/checkout/criar-conta?order=${order.id}`;
+
     return NextResponse.json({
       success: true,
       order: { id: order.id, status: order.status },
       checkoutUrl,
-      // Após pagamento o cliente é levado pra /briefing/[orderId]
-      briefingUrl: `/briefing/${order.id}`,
+      postPayUrl,
     });
   } catch (err) {
     console.error('[orders] unhandled', err);

@@ -165,19 +165,15 @@ export function OrderWizard({
         }),
       });
       const data = await res.json();
-      if (res.status === 401 && data.requireLogin) {
-        // Precisa de login — manda pra signup com retorno pra encomendar.
-        router.push(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}&mode=signup`);
-        return;
-      }
       if (!res.ok) throw new Error(data.error ?? 'Erro ao enviar pedido.');
       if (data.checkoutUrl) {
-        // Mercado Pago → após pagamento, redireciona pra /briefing/[orderId]
+        // Mercado Pago → após pagamento, redireciona pra /checkout/criar-conta
+        // (ou direto pro briefing se já estava logado).
         window.location.href = data.checkoutUrl;
         return;
       }
-      // Mock: pagamento é considerado aprovado — vai direto pro briefing
-      router.push(data.briefingUrl || `/briefing/${data.order.id}`);
+      // Mock: pagamento é considerado aprovado — vai pra criar conta ou briefing
+      router.push(data.postPayUrl || `/briefing/${data.order.id}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro inesperado.');
       setSaving(false);
@@ -208,11 +204,11 @@ export function OrderWizard({
         ))}
       </div>
 
-      {/* Aviso de novo fluxo */}
+      {/* Aviso do fluxo */}
       <div className="mb-6 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-xs text-white/70 flex items-start gap-3">
         <Info size={16} className="text-blue-400 shrink-0 mt-0.5" />
         <div>
-          <b className="text-white">Como funciona:</b> você escolhe o plano, cria sua conta, paga,
+          <b className="text-white">Como funciona:</b> você escolhe o plano, paga, cria sua conta,
           preenche o briefing completo e recebe seu site pronto.
         </div>
       </div>
@@ -275,7 +271,7 @@ export function OrderWizard({
                   >
                     Faça login
                   </Link>{' '}
-                  — se não, criamos uma pra você automaticamente no próximo passo.
+                  — se não, você cria depois do pagamento com esse mesmo e-mail.
                 </span>
               </div>
             )}
@@ -347,9 +343,9 @@ export function OrderWizard({
 
             <div className="space-y-4 text-xs text-white/70 leading-relaxed mb-8">
               <TermItem title="O que acontece agora">
-                Você <b className="text-white">cria sua conta</b>, <b className="text-white">paga</b> o setup,
-                e logo em seguida é levado pro <b className="text-white">briefing completo</b> onde você vai
-                detalhar tudo que seu site precisa ter.
+                Você <b className="text-white">paga</b> o setup e, logo após o pagamento confirmado,
+                <b className="text-white"> cria sua conta</b> com uma senha. Em seguida vai pro{' '}
+                <b className="text-white">briefing completo</b> pra detalhar tudo que seu site precisa ter.
               </TermItem>
               <TermItem title="Setup e mensalidade">
                 O <b className="text-white">setup</b> é cobrado agora. A <b className="text-white">mensalidade</b>

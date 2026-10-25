@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getTemplateBySlug, defaultCustomTiers } from '@/lib/data';
 import { OrderWizard } from '@/components/OrderWizard';
 import { mpEnabled } from '@/lib/payments/mercadopago';
@@ -18,14 +18,8 @@ export default async function EncomendarPage({
 }) {
   const { slug } = await params;
   const { tier } = await searchParams;
+  // Login NÃO é obrigatório — paga primeiro, cria conta depois.
   const profile = await getProfile();
-
-  // Fluxo novo: login obrigatório ANTES de qualquer coisa.
-  // Se não tem conta, manda pra signup carregando o retorno.
-  if (!profile) {
-    const next = `/encomendar/${slug}${tier ? `?tier=${tier}` : ''}`;
-    redirect(`/login?next=${encodeURIComponent(next)}&mode=signup`);
-  }
 
   const isCustom = slug === 'personalizado';
   const template = isCustom ? null : await getTemplateBySlug(slug);
@@ -65,9 +59,11 @@ export default async function EncomendarPage({
           <p className="text-white/40 font-bold mt-4">
             {template ? `Template: ${template.name}` : 'Projeto 100% personalizado'}
           </p>
-          <p className="text-white/30 text-xs mt-3">
-            Logado como <b className="text-white">{profile.email ?? profile.name ?? 'você'}</b>
-          </p>
+          {profile && (
+            <p className="text-white/30 text-xs mt-3">
+              Logado como <b className="text-white">{profile.email ?? profile.name ?? 'você'}</b>
+            </p>
+          )}
         </div>
 
         <OrderWizard
@@ -75,7 +71,7 @@ export default async function EncomendarPage({
           isCustom={isCustom}
           initialTier={initialTier}
           paymentMode={mpEnabled() ? 'mercadopago' : 'mock'}
-          isLoggedIn={true}
+          isLoggedIn={!!profile}
         />
       </div>
     </main>
