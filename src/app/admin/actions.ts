@@ -91,19 +91,50 @@ export async function updateOrderStatus(formData: FormData) {
   revalidatePath('/admin/pedidos');
 }
 
-export async function saveDiscount(formData: FormData) {
+export async function saveDiscount(formData: FormData): Promise<void> {
   await requireAdmin();
   const admin = createAdminClient();
   const id = String(formData.get('id') ?? '');
+
+  const code = String(formData.get('code') ?? '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9_-]/g, '')
+    .slice(0, 40);
+  if (!code) throw new Error('Código obrigatório.');
+
+  const tipo = String(formData.get('tipo') ?? 'percent');
+  const valor = Math.max(0, Number(formData.get('valor') ?? 0));
+  if (!valor || valor <= 0) throw new Error('Valor do desconto obrigatório.');
+
+  const percent = tipo === 'percent' ? Math.min(100, valor) : 0;
+  const amount = tipo === 'amount' ? valor : 0;
+
+  const expiresRaw = String(formData.get('expires_at') ?? '').trim();
   const payload = {
-    code: String(formData.get('code') ?? '').trim().toUpperCase(),
-    percent: Number(formData.get('percent') ?? 0),
-    amount: Number(formData.get('amount') ?? 0),
+    code,
+    percent,
+    amount,
     active: formData.get('active') === 'on',
-    expires_at: String(formData.get('expires_at') ?? '') || null,
+    expires_at: expiresRaw || null,
   };
-  if (id) await admin.from('discounts').update(payload).eq('id', id);
-  else await admin.from('discounts').insert(payload);
+
+  if (id) {
+    await admin.from('discounts').update(payload).eq('id', id);
+  } else {
+    const { data: existing } = await admin.from('discounts').select('id').eq('code', code).maybeSingle();
+    if (existing) throw new Error(`Código ${code} já existe.`);
+    await admin.from('discounts').insert(payload);
+  }
+  revalidatePath('/admin/descontos');
+}
+
+export async function toggleDiscount(formData: FormData) {
+  await requireAdmin();
+  const admin = createAdminClient();
+  const id = String(formData.get('id') ?? '');
+  const active = formData.get('active') === 'true';
+  if (id) await admin.from('discounts').update({ active }).eq('id', id);
   revalidatePath('/admin/descontos');
 }
 

@@ -2,7 +2,6 @@ import type { ComponentType } from 'react';
 import { RestauranteTemplate } from './restaurante';
 import { BarbeariaTemplate } from './barbearia';
 import { CursoTemplate } from './curso';
-import { PortfolioTemplate } from './portfolio';
 import { LojaTemplate } from './loja';
 import { SaasTemplate } from './saas';
 import { FitnessTemplate } from './fitness';
@@ -47,13 +46,6 @@ export const DEMO_TEMPLATES: Record<string, DemoTemplate> = {
     category: 'Cursos',
     description: 'Página de curso online — hero, módulos, depoimentos e inscrição.',
     Component: CursoTemplate,
-  },
-  portfolio: {
-    slug: 'portfolio',
-    name: 'Portfolio Studio',
-    category: 'Portfólio',
-    description: 'Portfólio profissional minimalista — bio, projetos e contato.',
-    Component: PortfolioTemplate,
   },
   loja: {
     slug: 'loja',

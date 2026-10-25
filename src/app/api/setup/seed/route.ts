@@ -45,19 +45,6 @@ const TEMPLATES = [
     sort_order: 3,
   },
   {
-    slug: 'portfolio',
-    name: 'Portfolio Studio',
-    category: 'Portfólio',
-    description: 'Portfólio profissional minimalista com projetos, bio e contato.',
-    long_description:
-      'Portfólio elegante e minimalista para designers, criativos e consultores. Grid de projetos, bio completa e contato direto.',
-    demo_url: '/exemplo/portfolio',
-    featured: false,
-    active: true,
-    features: ['Grid de projetos', 'Bio detalhada', 'Design minimalista', 'Contato direto'],
-    sort_order: 4,
-  },
-  {
     slug: 'loja',
     name: 'Loja Boutique',
     category: 'E-commerce',
