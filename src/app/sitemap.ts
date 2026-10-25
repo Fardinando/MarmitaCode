@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${base}/termos`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${base}/privacidade`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${base}/tutorial/dominio-proprio`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
   const templates = await getTemplates().catch(() => []);

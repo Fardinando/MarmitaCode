@@ -34,6 +34,12 @@ export default async function AccountPage() {
   const orderList = (orders as Order[]) ?? [];
   const projectList = (projects as SiteProject[]) ?? [];
 
+  // Verifica se tem algum pedido com domínio próprio.
+  const hasDomainOrder = orderList.some((o) => {
+    const b = o.briefing as Record<string, unknown> | null;
+    return b && (b.wants_domain === 'sim' || b.domain_name);
+  });
+
   return (
     <main className="relative min-h-screen bg-black text-white px-6 py-20">
       <div className="max-w-6xl mx-auto">
@@ -41,6 +47,29 @@ export default async function AccountPage() {
           Minha <span className="text-[#FF8C00]">conta</span>
         </h1>
         <p className="text-white/40 font-bold mb-16">{user.email}</p>
+
+        {hasDomainOrder && (
+          <Link
+            href="/tutorial/dominio-proprio"
+            className="block mb-16 p-6 rounded-3xl bg-gradient-to-br from-[#FF8C00]/20 to-[#FF8C00]/5 border border-[#FF8C00]/30 hover:border-[#FF8C00]/60 transition group"
+          >
+            <div className="flex items-center gap-5 flex-wrap">
+              <div className="w-14 h-14 rounded-full bg-[#FF8C00]/20 flex items-center justify-center text-2xl shrink-0">
+                🌐
+              </div>
+              <div className="flex-1 min-w-[200px]">
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF8C00] mb-1">
+                  Você escolheu domínio próprio
+                </div>
+                <div className="font-black text-lg">Tutorial: Registro.br passo a passo</div>
+                <div className="text-sm text-white/60 mt-1">
+                  Guia completo com os papéis (dono, admin, técnico) explicados e nossos dados pra você adicionar como contato técnico.
+                </div>
+              </div>
+              <div className="text-[#FF8C00] text-2xl group-hover:translate-x-1 transition shrink-0">→</div>
+            </div>
+          </Link>
+        )}
 
         <section className="mb-20">
           <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#FF8C00] mb-8">Meus pedidos</h2>

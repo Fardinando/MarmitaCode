@@ -417,9 +417,26 @@ export function BriefingForm({ orderId, templateName, initialData }: Props) {
             </div>
             <TextArea label="Descreva as imagens que quer / referências" value={imagesDesc} onChange={setImagesDesc} rows={4}
               placeholder="Ex: Fotos do nosso restaurante, dos pratos; imagens vibrantes com cores quentes; close-ups dos ingredientes..." />
-            <div className="pt-5 border-t border-white/5">
+            <div className="pt-5 border-t border-white/5 space-y-4">
               <Field label="Nome do domínio (se já comprou)" value={domainName} onChange={setDomainName}
                 placeholder="seusite.com.br" compact />
+              <a
+                href="/tutorial/dominio-proprio"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block p-5 rounded-2xl bg-[#FF8C00]/10 border border-[#FF8C00]/30 hover:bg-[#FF8C00]/20 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FF8C00]/20 flex items-center justify-center text-xl">🌐</div>
+                  <div className="flex-1">
+                    <div className="font-black text-sm text-[#FF8C00]">Quer ajuda pra registrar o domínio?</div>
+                    <div className="text-xs text-white/60 mt-1">
+                      Tutorial completo: Registro.br passo a passo, com a MarmitaCode como contato técnico.
+                    </div>
+                  </div>
+                  <div className="text-[#FF8C00] text-xl">→</div>
+                </div>
+              </a>
             </div>
           </Section>
         )}
