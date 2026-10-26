@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { linkOrphanOrders } from '@/lib/link-orphan-orders';
 import type { Profile } from '@/lib/types';
 
 export async function getUser() {
@@ -17,6 +18,10 @@ export async function getProfile(): Promise<Profile | null> {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return null;
+
+    // Fallback: vincula pedidos órfãos ao user atual se o email bater.
+    // Idempotente — se já está vinculado, não faz nada.
+    await linkOrphanOrders(user.id, user.email);
 
     const { data } = await supabase
       .from('profiles')

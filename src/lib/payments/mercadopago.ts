@@ -72,12 +72,11 @@ export async function createOrderPreference(order: Order): Promise<PreferenceRes
           }
         : undefined,
       back_urls: {
-        // Após pagamento aprovado, cliente cria a conta e depois vai pro briefing.
-        // Se já estiver logado quando volta, a página redireciona direto pro briefing.
         success: `${siteConfig.url}/checkout/criar-conta?order=${order.id}`,
-        pending: `${siteConfig.url}/checkout/pendente?order=${order.id}`,
+        pending: `${siteConfig.url}/checkout/criar-conta?order=${order.id}`,
         failure: `${siteConfig.url}/checkout/falha?order=${order.id}`,
       },
+      // 'approved' redireciona após aprovação. Pending (Pix) fica no MP até confirmar.
       auto_return: 'approved',
       notification_url: `${siteConfig.url}/api/payments/webhook`,
       statement_descriptor: 'MARMITACODE',

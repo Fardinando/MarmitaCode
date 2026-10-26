@@ -52,12 +52,36 @@ export function BriefingForm({ orderId, templateName, initialData }: Props) {
   const [logoDesc, setLogoDesc] = useState((initialData?.logo_description as string) ?? '');
 
   // Visual
-  const [primary, setPrimary] = useState((initialData?.primary_color as string) ?? '#FF8C00');
-  const [secondary, setSecondary] = useState((initialData?.secondary_color as string) ?? '#000000');
-  const [accent, setAccent] = useState((initialData?.accent_color as string) ?? '#FFFFFF');
+  // Cores ilimitadas, ordenadas por prioridade (do mais importante pro menos).
+  // Compatibilidade: se vier dado antigo (primary/secondary/accent) junta num array.
+  const [colors, setColors] = useState<string[]>(() => {
+    const stored = initialData?.colors as string[] | undefined;
+    if (Array.isArray(stored) && stored.length > 0) return stored;
+    const legacy: string[] = [];
+    const p = initialData?.primary_color as string | undefined;
+    const s = initialData?.secondary_color as string | undefined;
+    const a = initialData?.accent_color as string | undefined;
+    if (p) legacy.push(p);
+    if (s) legacy.push(s);
+    if (a) legacy.push(a);
+    return legacy.length > 0 ? legacy : ['#FF8C00', '#000000', '#FFFFFF'];
+  });
   const [fontStyle, setFontStyle] = useState((initialData?.font_style as string) ?? '');
   const [visualTone, setVisualTone] = useState<string>((initialData?.visual_tone as string) ?? '');
   const [visualRefs, setVisualRefs] = useState((initialData?.visual_references as string) ?? '');
+
+  const addColor = () => setColors((p) => [...p, '#999999']);
+  const removeColor = (i: number) => setColors((p) => p.filter((_, idx) => idx !== i));
+  const updateColor = (i: number, v: string) => setColors((p) => p.map((c, idx) => (idx === i ? v : c)));
+  const moveColor = (i: number, dir: -1 | 1) => {
+    setColors((p) => {
+      const j = i + dir;
+      if (j < 0 || j >= p.length) return p;
+      const next = [...p];
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
+    });
+  };
 
   // Estrutura
   const [pages, setPages] = useState<string[]>((initialData?.pages_desired as string[]) ?? ['Home / Início', 'Sobre', 'Serviços', 'Contato']);
@@ -140,7 +164,10 @@ export function BriefingForm({ orderId, templateName, initialData }: Props) {
         briefing: {
           business_name: businessName, business_tagline: tagline, business_about: about,
           business_segment: segment, business_target_audience: targetAudience, logo_description: logoDesc,
-          primary_color: primary, secondary_color: secondary, accent_color: accent,
+          // Mantém colors (array ilimitado por prioridade) e os 3 primeiros em legacy
+          // pra compat com uso antigo (admin/export).
+          colors,
+          primary_color: colors[0], secondary_color: colors[1], accent_color: colors[2],
           font_style: fontStyle, visual_tone: visualTone || undefined, visual_references: visualRefs,
           pages_desired: pages,
           hero_headline: heroHeadline, hero_subheadline: heroSub,
@@ -239,10 +266,67 @@ export function BriefingForm({ orderId, templateName, initialData }: Props) {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <ColorField label="Cor principal" value={primary} onChange={setPrimary} />
-              <ColorField label="Cor secundária" value={secondary} onChange={setSecondary} />
-              <ColorField label="Cor de destaque" value={accent} onChange={setAccent} />
+            <div>
+              {/* Lista de cores ordenadas por prioridade de uso */}
+              <div>
+                <SmallLabel>Paleta de cores (ordem = prioridade de uso)</SmallLabel>
+                <p className="text-white/40 text-xs mb-4">
+                  A primeira cor é a mais importante (predominante no site). As demais são usadas como complementares.
+                  Adicione quantas quiser e use ↑↓ pra ordenar.
+                </p>
+                <div className="space-y-2">
+                  {colors.map((c, i) => (
+                    <div key={i} className="flex items-center gap-2 p-3 bg-white/[0.02] border border-white/10 rounded-2xl">
+                      <span className="w-7 h-7 rounded-full bg-[#FF8C00]/20 text-[#FF8C00] font-black text-xs flex items-center justify-center shrink-0">
+                        {i + 1}
+                      </span>
+                      <input
+                        type="color"
+                        value={c}
+                        onChange={(e) => updateColor(i, e.target.value)}
+                        className="w-10 h-10 rounded cursor-pointer bg-transparent shrink-0"
+                        aria-label={`Cor ${i + 1}`}
+                      />
+                      <input
+                        value={c}
+                        onChange={(e) => updateColor(i, e.target.value)}
+                        maxLength={9}
+                        className="flex-1 bg-transparent outline-none text-xs font-mono"
+                      />
+                      <div className="flex gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => moveColor(i, -1)}
+                          disabled={i === 0}
+                          className="w-7 h-7 rounded bg-white/5 text-white/70 hover:bg-white/10 disabled:opacity-20 text-xs font-black"
+                          aria-label="Mover pra cima"
+                        >↑</button>
+                        <button
+                          type="button"
+                          onClick={() => moveColor(i, 1)}
+                          disabled={i === colors.length - 1}
+                          className="w-7 h-7 rounded bg-white/5 text-white/70 hover:bg-white/10 disabled:opacity-20 text-xs font-black"
+                          aria-label="Mover pra baixo"
+                        >↓</button>
+                        <button
+                          type="button"
+                          onClick={() => removeColor(i)}
+                          disabled={colors.length <= 1}
+                          className="w-7 h-7 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-20 text-xs font-black"
+                          aria-label="Remover"
+                        >×</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={addColor}
+                  className="mt-3 w-full py-3 border-2 border-dashed border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest text-white/50 hover:border-[#FF8C00]/40 hover:text-[#FF8C00]"
+                >
+                  + adicionar cor
+                </button>
+              </div>
             </div>
             <Field label="Preferência de fontes" value={fontStyle} onChange={setFontStyle}
               placeholder="Ex: Serifada clássica, sans-serif moderna, manuscrita, deixar com vocês..." />

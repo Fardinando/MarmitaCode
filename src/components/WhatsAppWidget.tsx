@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Bot, MoreVertical, CheckCheck, Sparkles } from 'lucide-react';
+import { X, Send, Bot, MoreVertical, CheckCheck, Sparkles, ChefHat } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { siteConfig } from '@/lib/site-config';
 
 interface MiniTemplate {
   slug: string;
@@ -210,6 +211,16 @@ export const WhatsAppWidget = () => {
               )}
               <div ref={chatEndRef} />
             </div>
+
+            {/* Botão WhatsApp destacado */}
+            <a
+              href={`https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent('Olá! Vim do site da MarmitaCode e quero conversar.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-3 mb-2 flex items-center justify-center gap-2 py-3 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-black uppercase tracking-widest rounded-full"
+            >
+              <ChefHat size={16} /> Converse com o nosso Chef
+            </a>
 
             <div className="p-3 flex items-center gap-2 border-t border-white/5">
               <input

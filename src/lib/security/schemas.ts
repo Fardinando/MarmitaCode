@@ -84,6 +84,8 @@ export const briefingUpdateSchema = z.object({
       primary_color: z.string().max(10).regex(/^#[0-9a-fA-F]{6}$/).optional(),
       secondary_color: z.string().max(10).regex(/^#[0-9a-fA-F]{6}$/).optional(),
       accent_color: z.string().max(10).regex(/^#[0-9a-fA-F]{6}$/).optional(),
+      // Lista ordenada de cores (prioridade decrescente). Até 20 cores.
+      colors: z.array(z.string().max(10).regex(/^#[0-9a-fA-F]{6}$/)).max(20).optional(),
       font_style: safeString(100).optional(),
       visual_references: safeString(1500).optional(),
       visual_tone: z.enum(['elegante', 'moderno', 'minimalista', 'ousado', 'casual', 'luxuoso', 'tecnico']).optional(),
