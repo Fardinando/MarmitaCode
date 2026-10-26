@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { ClipboardList, CheckCircle2, Globe, Rocket, Clock } from 'lucide-react';
+import { ClipboardList, Globe, Rocket, Clock, ChefHat } from 'lucide-react';
 import { requireUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { AdminMetrics } from '@/components/AdminMetrics';
+import { siteConfig } from '@/lib/site-config';
 import {
   MONTHLY_LABELS,
   STATUS_LABELS,
@@ -268,13 +269,21 @@ export default async function AccountPage() {
           </section>
         )}
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 flex flex-col items-center gap-4">
           <Link
             href="/templates"
             className="inline-block px-10 py-5 rounded-full bg-[#FF8C00] text-black text-[11px] font-black uppercase tracking-widest hover:bg-[#FFD700]"
           >
             Encomendar outro site
           </Link>
+          <a
+            href={`https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent('Olá, Chef! Vim do site da MarmitaCode e preciso conversar.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-emerald-500 text-white text-[11px] font-black uppercase tracking-widest hover:bg-emerald-400 shadow-[0_10px_40px_rgba(16,185,129,0.3)]"
+          >
+            <ChefHat size={16} /> Converse com o nosso Chef
+          </a>
         </div>
       </div>
     </main>
