@@ -93,14 +93,27 @@ export default function TutorialDominioPage() {
             </div>
           </div>
 
-          <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-white/[0.02] border border-white/5">
+          <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-black border border-white/5">
             <iframe
-              src={`https://www.youtube.com/embed/${YT_ID}?end=${YT_END}&rel=0`}
+              src={`https://www.youtube-nocookie.com/embed/${YT_ID}?end=${YT_END}&rel=0&modestbranding=1`}
               title="Como registrar domínio no Registro.br — Host2B"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
               allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              loading="lazy"
               className="absolute inset-0 w-full h-full"
             />
+          </div>
+
+          <div className="mt-2 text-right">
+            <a
+              href={`https://www.youtube.com/watch?v=${YT_ID}&t=0s`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-[#FF8C00]"
+            >
+              Abrir no YouTube ↗
+            </a>
           </div>
 
           <div className="mt-4 flex items-start gap-3 p-4 rounded-2xl bg-[#FF8C00]/5 border border-[#FF8C00]/20 text-xs text-white/70">
