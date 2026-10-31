@@ -24,6 +24,8 @@ interface Case {
   stack: string[];
   colors: { primary: string; glow: string };
   features: { icon: React.ReactNode; label: string; desc: string }[];
+  /** Se definido, mostra screenshot estático em vez do iframe. */
+  previewImage?: string;
 }
 
 const CASES: Case[] = [
@@ -49,6 +51,7 @@ const CASES: Case[] = [
     ],
     stack: ['Next.js', 'IA custom', 'Supabase', 'Vercel', 'TailwindCSS'],
     colors: { primary: '#5B6CFF', glow: 'rgba(91,108,255,0.4)' },
+    previewImage: '/cases/apexenem.png',
     features: [
       { icon: <Target size={18} />, label: 'Correção por IA', desc: 'Feedback nas 5 competências em segundos' },
       { icon: <Zap size={18} />, label: 'Simulados adaptativos', desc: 'Prioriza seus pontos fracos' },
@@ -218,9 +221,18 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
               </div>
             </div>
             <div className="relative aspect-video bg-gradient-to-br from-white/[0.03] to-black overflow-hidden">
-              {/* Desktop: iframe sempre renderizado em viewport 1440x900 (desktop real)
-                  e escalado dinamicamente pra caber no container. */}
-              <IframePreview url={c.url} title={`Preview ${c.title}`} />
+              {c.previewImage ? (
+                // Screenshot estático (quando o site não renderiza bem em iframe)
+                <img
+                  src={c.previewImage}
+                  alt={`Preview ${c.title}`}
+                  className="hidden sm:block absolute inset-0 w-full h-full object-cover object-top"
+                  loading="lazy"
+                />
+              ) : (
+                // iframe desktop (1440x900) escalado pro container via ResizeObserver
+                <IframePreview url={c.url} title={`Preview ${c.title}`} />
+              )}
               {/* Mobile: nada de iframe — placeholder bonito com nome do case */}
               <div className="sm:hidden absolute inset-0 flex items-center justify-center overflow-hidden">
                 <div
