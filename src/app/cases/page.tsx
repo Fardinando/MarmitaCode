@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, ExternalLink, ArrowUpRight, Zap, Target, Users, GraduationCap, Stethoscope } from 'lucide-react';
+import { IframePreview } from './IframePreview';
 
 export const metadata: Metadata = {
   title: 'Cases · Sites reais que a gente fez',
@@ -217,22 +218,9 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
               </div>
             </div>
             <div className="relative aspect-video bg-gradient-to-br from-white/[0.03] to-black overflow-hidden">
-              {/* Desktop: iframe renderizado em viewport 1280 e escalado pro container.
-                  Como o container tem largura responsiva (até ~1056px na seção),
-                  largura 200% + scale(0.5) sempre cabe sem quebrar. */}
-              <div
-                className="hidden sm:block absolute top-0 left-0 origin-top-left pointer-events-none"
-                style={{ width: '200%', height: '200%', transform: 'scale(0.5)' }}
-              >
-                <iframe
-                  src={c.url}
-                  title={`Preview ${c.title}`}
-                  loading="lazy"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  sandbox="allow-same-origin allow-scripts"
-                  className="w-full h-full border-0"
-                />
-              </div>
+              {/* Desktop: iframe sempre renderizado em viewport 1440x900 (desktop real)
+                  e escalado dinamicamente pra caber no container. */}
+              <IframePreview url={c.url} title={`Preview ${c.title}`} />
               {/* Mobile: nada de iframe — placeholder bonito com nome do case */}
               <div className="sm:hidden absolute inset-0 flex items-center justify-center overflow-hidden">
                 <div
