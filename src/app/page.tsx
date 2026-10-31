@@ -192,6 +192,81 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CASES — sites reais */}
+      <section className="relative py-32 px-6 z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70">
+                Sites nossos no ar agora
+              </span>
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-6">
+              Trabalhos <span className="text-[#FF8C00]">em produção.</span>
+            </h2>
+            <p className="text-white/50 text-lg font-bold max-w-2xl mx-auto">
+              Não é só template bonito — a gente lança e mantém sites no ar com usuários reais.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
+            <Link
+              href="/cases"
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#5B6CFF]/20 to-black p-10 hover:border-[#5B6CFF]/50 transition-all"
+            >
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#5B6CFF]/20 rounded-full blur-[80px]" />
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#5B6CFF] mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5B6CFF] animate-pulse" />
+                  No ar · EdTech
+                </div>
+                <h3 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-3 bg-gradient-to-r from-white to-[#5B6CFF] bg-clip-text text-transparent">
+                  ApexEnem
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed mb-6">
+                  Plataforma inteligente para o ENEM — correção de redação por IA, simulados adaptativos e acompanhamento de evolução.
+                </p>
+                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#5B6CFF] group-hover:gap-3 transition-all">
+                  Ver case completo <ArrowRight size={14} />
+                </span>
+              </div>
+            </Link>
+
+            <Link
+              href="/cases"
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#2DD4BF]/20 to-black p-10 hover:border-[#2DD4BF]/50 transition-all"
+            >
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#2DD4BF]/20 rounded-full blur-[80px]" />
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2DD4BF] mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
+                  No ar · Área de membros
+                </div>
+                <h3 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-3 bg-gradient-to-r from-white to-[#2DD4BF] bg-clip-text text-transparent">
+                  AgoraMed
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed mb-6">
+                  Área de membros pra médicos residentes — cursos, trilhas e acompanhamento, com UX pensada para o ambiente de plantão.
+                </p>
+                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#2DD4BF] group-hover:gap-3 transition-all">
+                  Ver case completo <ArrowRight size={14} />
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/cases"
+              className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white/60 hover:text-white"
+            >
+              Todos os cases <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* DOMAIN */}
       <section id="dominio" className="relative py-32 px-6 z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">

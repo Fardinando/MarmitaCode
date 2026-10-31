@@ -15,9 +15,9 @@ export async function SiteHeader() {
 
         <nav className="hidden lg:flex items-center gap-6 text-[11px] font-black uppercase tracking-widest text-white/50">
           <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
+          <Link href="/cases" className="hover:text-white transition-colors">Cases</Link>
           <Link href="/planos" className="hover:text-white transition-colors">Planos</Link>
           <Link href="/#como-funciona" className="hover:text-white transition-colors">Como funciona</Link>
-          <Link href="/#dominio" className="hover:text-white transition-colors">Domínio</Link>
         </nav>
 
         <div className="flex items-center gap-2 md:gap-4 shrink-0">
