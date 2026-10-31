@@ -153,7 +153,7 @@ export default function CasesPage() {
 
 function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean }) {
   return (
-    <article className="relative">
+    <article id={c.slug} className="relative scroll-mt-24">
       {/* Glow de fundo */}
       <div
         className="absolute inset-0 blur-[120px] opacity-30 rounded-[3rem]"
@@ -216,24 +216,54 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
                 </span>
               </div>
             </div>
-            <div className="relative aspect-video bg-gradient-to-br from-white/[0.03] to-black">
-              {/* Preview iframe do site real (quando CSP/XFO permite) */}
-              <iframe
-                src={c.url}
-                title={`Preview ${c.title}`}
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                sandbox="allow-same-origin allow-scripts"
-                className="absolute inset-0 w-full h-full border-0 pointer-events-none"
-              />
-              {/* Overlay sempre clicável — mesmo se o iframe for bloqueado,
-                  o usuário vê o CTA e abre o site em nova aba */}
+            <div className="relative aspect-video bg-gradient-to-br from-white/[0.03] to-black overflow-hidden">
+              {/* Desktop: iframe renderizado em viewport 1280 e escalado pro container.
+                  Como o container tem largura responsiva (até ~1056px na seção),
+                  largura 200% + scale(0.5) sempre cabe sem quebrar. */}
+              <div
+                className="hidden sm:block absolute top-0 left-0 origin-top-left pointer-events-none"
+                style={{ width: '200%', height: '200%', transform: 'scale(0.5)' }}
+              >
+                <iframe
+                  src={c.url}
+                  title={`Preview ${c.title}`}
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  sandbox="allow-same-origin allow-scripts"
+                  className="w-full h-full border-0"
+                />
+              </div>
+              {/* Mobile: nada de iframe — placeholder bonito com nome do case */}
+              <div className="sm:hidden absolute inset-0 flex items-center justify-center overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-70"
+                  style={{
+                    background: `radial-gradient(ellipse at center, ${c.colors.primary}55, transparent 70%)`,
+                  }}
+                />
+                <div className="relative text-center px-6">
+                  <div
+                    className="text-5xl font-black italic uppercase tracking-tighter mb-2"
+                    style={{
+                      background: `linear-gradient(135deg, #fff 0%, ${c.colors.primary} 100%)`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    {c.title}
+                  </div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
+                    {c.url.replace(/^https?:\/\//, '')}
+                  </div>
+                </div>
+              </div>
+              {/* Overlay clicável sempre — abre em nova aba */}
               <a
                 href={c.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Abrir ${c.title}`}
-                className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent hover:from-black/80 transition-colors flex items-end justify-center p-6 group"
+                className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent hover:from-black/80 transition-colors flex items-end justify-center p-6 group"
               >
                 <span
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-black text-xs font-black uppercase tracking-widest shadow-2xl group-hover:scale-105 transition-transform"

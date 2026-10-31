@@ -212,7 +212,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-6 mb-10">
             <Link
-              href="/cases"
+              href="/cases#apexenem"
               className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#5B6CFF]/20 to-black p-10 hover:border-[#5B6CFF]/50 transition-all"
             >
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#5B6CFF]/20 rounded-full blur-[80px]" />
@@ -234,7 +234,7 @@ export default function Home() {
             </Link>
 
             <Link
-              href="/cases"
+              href="/cases#agoramed"
               className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#2DD4BF]/20 to-black p-10 hover:border-[#2DD4BF]/50 transition-all"
             >
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#2DD4BF]/20 rounded-full blur-[80px]" />
