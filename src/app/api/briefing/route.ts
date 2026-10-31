@@ -104,8 +104,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Erro ao salvar briefing.' }, { status: 500 });
     }
 
-    // Notifica admin.
-    await sendOrderEmails(updated).catch((e) => console.error('[briefing] email', e));
+    // Notifica admin e cliente.
+    try {
+      const results = await sendOrderEmails(updated);
+      console.log('[briefing] email results', JSON.stringify(results, null, 2));
+    } catch (e) {
+      console.error('[briefing] email throw', e);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
