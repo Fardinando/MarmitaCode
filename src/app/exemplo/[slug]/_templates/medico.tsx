@@ -94,14 +94,12 @@ export function MedicoTemplate() {
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-16 h-px bg-[#c69749]" />
-              <span className="text-[#c69749] text-xs uppercase tracking-[0.4em] font-bold" style={{ fontFamily: 'sans-serif' }}>
-                CRM-SP 123.456 · RQE 54321
-              </span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c69749]/10 border border-[#c69749]/30 mb-8" style={{ fontFamily: 'sans-serif' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c69749] animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#c69749]">CRM-SP 123.456 · RQE 54321</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black leading-[0.95] tracking-tight mb-8">
-              Medicina com <span className="italic text-[#c69749]">tempo</span> para ouvir você.
+            <h1 className="text-5xl md:text-7xl font-black italic leading-[0.9] tracking-tight mb-8">
+              Medicina com <span className="text-[#c69749]">tempo</span> para ouvir você.
             </h1>
             <p className="text-[#1a2a3a]/70 text-lg mb-10 max-w-md leading-relaxed" style={{ fontFamily: 'sans-serif' }}>
               Consultas de 60 minutos, abordagem integrativa de endocrinologia e medicina preventiva.

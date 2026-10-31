@@ -79,12 +79,12 @@ export function AdvocaciaTemplate() {
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 py-24 grid lg:grid-cols-[1.3fr_1fr] gap-16 items-center">
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-px bg-amber-700 w-16" />
-              <span className="text-amber-700 text-xs uppercase tracking-[0.3em] font-bold" style={{ fontFamily: 'sans-serif' }}>26 anos defendendo direitos</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-700/10 border border-amber-700/30 mb-8" style={{ fontFamily: 'sans-serif' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-700 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-700">26 anos defendendo direitos</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight mb-8">
-              Direito feito com <span className="italic text-amber-700">rigor</span> e <span className="italic text-amber-700">humanidade</span>.
+            <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter mb-8">
+              Direito feito com <span className="bg-gradient-to-r from-amber-600 to-amber-400 bg-clip-text text-transparent">rigor</span> e <span className="bg-gradient-to-r from-amber-600 to-amber-400 bg-clip-text text-transparent">humanidade</span>.
             </h1>
             <p className="text-stone-700 text-lg leading-relaxed mb-10 max-w-xl" style={{ fontFamily: 'sans-serif' }}>
               Escritório boutique com 3 sócios especialistas, mais de 900 processos conduzidos

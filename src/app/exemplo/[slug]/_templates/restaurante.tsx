@@ -118,11 +118,12 @@ export function RestauranteTemplate() {
             {[1,2,3,4,5].map((i) => <Star key={i} size={14} className="fill-amber-400 text-amber-400" />)}
             <span className="text-amber-100/60 text-xs ml-2 uppercase tracking-widest">4.9 · 1.2k avaliações no Google</span>
           </div>
-          <p className="text-amber-400 text-xs uppercase tracking-[0.4em] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
-            Cucina Italiana · Desde 1998
-          </p>
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tight mb-6 max-w-4xl" style={{ fontFamily: 'Georgia, serif' }}>
-            A autêntica <span className="italic text-amber-300">dolce vita</span> no coração da cidade.
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400/10 border border-amber-400/30 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400">Cucina Italiana · Desde 1998</span>
+          </div>
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black italic leading-[0.85] tracking-tight mb-6 max-w-4xl" style={{ fontFamily: 'Georgia, serif' }}>
+            A autêntica <span className="bg-gradient-to-r from-amber-300 to-amber-100 bg-clip-text text-transparent">dolce vita</span> no coração da cidade.
           </h1>
           <p className="text-amber-100/70 text-lg max-w-xl mb-10">
             Massa fresca feita diariamente, ingredientes importados da Itália, cozinha a lenha

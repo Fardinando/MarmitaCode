@@ -90,11 +90,12 @@ export function PetshopTemplate() {
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <span className="inline-block px-4 py-2 bg-orange-100 text-orange-700 text-xs font-black uppercase tracking-widest rounded-full mb-6">
-              🐕 25 anos cuidando dos seus melhores amigos
-            </span>
-            <h1 className="text-5xl md:text-7xl font-black italic leading-[0.95] tracking-tight mb-6">
-              Pet shop com <span className="text-orange-500">amor</span> no detalhe.
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/30 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-700">🐕 25 anos cuidando dos seus melhores amigos</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter mb-6">
+              Pet shop com <span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">amor</span> no detalhe.
             </h1>
             <p className="text-amber-900/70 text-lg mb-10 max-w-md">
               Banho e tosa, consulta veterinária, loja completa e hospedagem — tudo em um lugar só, com profissionais que amam o que fazem.

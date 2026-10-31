@@ -128,9 +128,12 @@ export function LojaTemplate() {
       <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-rose-500 text-xs uppercase tracking-[0.3em] mb-6">Nova coleção · Primavera 26</p>
-            <h1 className="text-6xl md:text-7xl font-black leading-[0.95] tracking-tight mb-6">
-              Moda <span className="italic font-light">atemporal</span><br />para o seu dia a dia.
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/30 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500">Nova coleção · Primavera 26</span>
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black italic uppercase leading-[0.85] tracking-tighter mb-6">
+              Moda <span className="bg-gradient-to-r from-rose-500 to-pink-400 bg-clip-text text-transparent">atemporal</span> para o seu dia a dia.
             </h1>
             <p className="text-neutral-600 text-lg mb-10 max-w-md">
               Peças cuidadosamente selecionadas de pequenos ateliês brasileiros. Frete grátis acima de R$ 299.

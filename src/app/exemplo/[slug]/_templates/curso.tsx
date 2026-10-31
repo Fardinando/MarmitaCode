@@ -72,12 +72,12 @@ export function CursoTemplate() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.25),transparent_50%)]" />
         <div className="relative max-w-6xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="inline-block px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-bold mb-8">
-              🚀 Turma de novembro aberta
-            </span>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-              Transforme sua<br />
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">carreira em 90 dias</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-300">Turma de novembro aberta</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black italic uppercase leading-[0.85] tracking-tighter mb-6">
+              Transforme sua <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">carreira em 90 dias.</span>
             </h1>
             <p className="text-white/60 text-lg mb-10 leading-relaxed">
               Método passo a passo com mais de 50 aulas, projetos reais e certificação.

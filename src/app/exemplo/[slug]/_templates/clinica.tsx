@@ -92,12 +92,13 @@ export function ClinicaTemplate() {
       <section className="relative overflow-hidden bg-gradient-to-br from-teal-50 via-white to-cyan-50">
         <div className="max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-700 text-xs font-bold rounded-full mb-6">
-              <Shield size={12} /> Credenciado em 8 convênios
-            </span>
-            <h1 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6 text-slate-900">
-              Cuidado médico<br />
-              <span className="text-teal-600">feito com atenção.</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/30 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+              <Shield size={12} className="text-teal-600" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-700">Credenciado em 8 convênios</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter mb-6 text-slate-900">
+              Cuidado médico <span className="bg-gradient-to-r from-teal-500 to-cyan-400 bg-clip-text text-transparent">feito com atenção.</span>
             </h1>
             <p className="text-slate-600 text-lg mb-10 max-w-md">
               Clínica multiespecialidade em São Paulo. 6 especialidades, atendimento humanizado,

@@ -104,9 +104,12 @@ export function BarbeariaTemplate() {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         </div>
         <div className="relative max-w-6xl mx-auto px-6 py-32 w-full">
-          <p className="text-yellow-500 text-xs uppercase tracking-[0.4em] mb-6 font-black">Desde 2010 · Zona Oeste · SP</p>
-          <h1 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-8">
-            Barba. <span className="text-yellow-500">Corte.</span><br />Atitude.
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-yellow-500">Desde 2010 · Zona Oeste · SP</span>
+          </div>
+          <h1 className="text-7xl md:text-9xl font-black italic uppercase tracking-tighter leading-none mb-8">
+            Barba. <span className="bg-gradient-to-r from-yellow-500 to-amber-300 bg-clip-text text-transparent">Corte.</span><br />Atitude.
           </h1>
           <p className="text-white/70 text-lg max-w-xl mb-10 leading-relaxed">
             Barbearia tradicional com estilo contemporâneo. Agende em menos de 1 minuto,
@@ -131,9 +134,12 @@ export function BarbeariaTemplate() {
 
       {/* Serviços */}
       <section id="servicos" className="max-w-6xl mx-auto px-6 py-24">
-        <p className="text-yellow-500 text-xs uppercase tracking-[0.4em] mb-4 font-black">O que fazemos</p>
-        <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-16">
-          Nossos<br />serviços
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/30 mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-yellow-500">O que fazemos</span>
+        </div>
+        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none mb-16">
+          Nossos <span className="text-yellow-500">serviços.</span>
         </h2>
         <div className="grid md:grid-cols-2 gap-4">
           {SERVICOS.map((s) => (

@@ -106,9 +106,12 @@ export function Loja2Template() {
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-[1.3fr_1fr] gap-10 items-center">
         <div>
-          <p className="text-emerald-700 text-xs uppercase tracking-[0.3em] font-bold mb-6">Direto do produtor</p>
-          <h1 className="text-5xl md:text-6xl font-black leading-tight tracking-tight mb-6">
-            Produtos de verdade, feitos por <span className="italic text-emerald-700">gente de verdade</span>.
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-700/10 border border-emerald-700/30 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-700">Direto do produtor</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter mb-6">
+            Produtos de verdade, feitos por <span className="bg-gradient-to-r from-emerald-700 to-lime-500 bg-clip-text text-transparent">gente de verdade</span>.
           </h1>
           <p className="text-[#1a1a1a]/60 text-lg mb-8">
             Selecionamos pequenos produtores brasileiros e levamos até você. Comida honesta, trabalho justo.

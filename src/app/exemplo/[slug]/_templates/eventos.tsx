@@ -80,12 +80,12 @@ export function EventosTemplate() {
       <section className="relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-px bg-rose-700 w-12" />
-              <span className="text-rose-700 text-xs uppercase tracking-[0.4em] font-bold" style={{ fontFamily: 'sans-serif' }}>Cerimonial · Desde 2008</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-700/10 border border-rose-700/30 mb-8" style={{ fontFamily: 'sans-serif' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-700">Cerimonial · Desde 2008</span>
             </div>
-            <h1 className="text-6xl md:text-7xl font-black leading-[0.95] mb-8">
-              Transformamos <span className="italic text-rose-700">momentos</span> em memórias eternas.
+            <h1 className="text-6xl md:text-8xl font-black italic uppercase leading-[0.85] tracking-tighter mb-8">
+              Transformamos <span className="bg-gradient-to-r from-rose-600 to-pink-400 bg-clip-text text-transparent">momentos</span> em memórias eternas.
             </h1>
             <p className="text-[#2b1f1a]/70 text-lg mb-10 max-w-md" style={{ fontFamily: 'sans-serif' }}>
               Casamentos, 15 anos, formaturas e eventos corporativos. Mais de 400 eventos realizados em todo o Brasil.
