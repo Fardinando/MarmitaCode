@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Bed, Bath, Maximize2, MapPin, Search, Heart, SlidersHorizontal } from 'lucide-react';
+import { Bed, Bath, Maximize2, MapPin, Search, Heart, SlidersHorizontal, ArrowRight } from 'lucide-react';
 
 interface Imovel {
   id: string;
@@ -16,6 +16,8 @@ interface Imovel {
   tag: string | null;
   tipo: 'apartamento' | 'casa' | 'studio' | 'cobertura';
 }
+
+const ACCENT = '#0EA5E9';
 
 const IMOVEIS: Imovel[] = [
   { id: '1', title: 'Apartamento Jardins', neighborhood: 'Jardins', price: 1200000, bedrooms: 3, bathrooms: 2, size: 110, img: 'photo-1522708323590-d24dbb6b0267', tag: 'Novo', tipo: 'apartamento' },
@@ -84,23 +86,28 @@ export function ImobiliariaTemplate() {
   const hasFilters = tipo !== 'Todos' || bairro !== 'Todos' || priceIdx !== 0 || minQuartos !== 0;
 
   return (
-    <main className="min-h-screen bg-stone-50 text-stone-900">
-      <nav className="sticky top-10 z-40 bg-stone-50/95 backdrop-blur border-b border-stone-200">
+    <main className="min-h-screen bg-[#0A0A0F] text-white overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#0EA5E9]/20 rounded-full blur-[120px]" />
+        <div className="absolute top-96 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px]" />
+      </div>
+
+      <nav className="sticky top-10 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-black text-xl tracking-tight">
-            Horizonte<span className="text-amber-600">.</span>
+            Horizonte<span className="text-[#0EA5E9]">.</span>
           </div>
-          <div className="hidden md:flex gap-8 text-sm text-stone-600">
-            <a href="#imoveis" className="hover:text-stone-900">Imóveis</a>
-            <a className="hover:text-stone-900">Para alugar</a>
-            <a className="hover:text-stone-900">Vender</a>
+          <div className="hidden md:flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
+            <a href="#imoveis" className="hover:text-white">Imóveis</a>
+            <a className="hover:text-white">Alugar</a>
+            <a className="hover:text-white">Vender</a>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1 text-sm text-stone-600">
+            <button className="flex items-center gap-1 text-xs text-white/60 font-black">
               <Heart size={14} className={favoritos.size > 0 ? 'fill-rose-500 text-rose-500' : ''} />
               {favoritos.size}
             </button>
-            <a className="text-sm font-bold border-b-2 border-stone-900 pb-0.5">
+            <a className="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-[#0EA5E9] text-white rounded-full">
               Agendar visita
             </a>
           </div>
@@ -108,22 +115,24 @@ export function ImobiliariaTemplate() {
       </nav>
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-16 items-center">
+      <section className="relative overflow-hidden z-10">
+        <div className="max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-amber-700 text-xs uppercase tracking-[0.3em] font-bold mb-6">Horizonte Imóveis · Desde 1998</p>
-            <h1 className="text-5xl md:text-7xl font-black leading-[0.95] tracking-tight mb-6">
-              Encontre o <span className="italic font-light">lar</span><br />que você sempre quis.
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0EA5E9]/10 border border-[#0EA5E9]/30 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9] animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0EA5E9]">Horizonte · Desde 1998</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[0.9] tracking-tighter mb-6">
+              Encontre o <span className="bg-gradient-to-r from-[#0EA5E9] to-indigo-400 bg-clip-text text-transparent">lar</span> que você sempre quis.
             </h1>
-            <p className="text-stone-600 text-lg mb-6 max-w-md">
+            <p className="text-white/50 text-lg font-bold mb-8 max-w-md">
               Mais de 2.000 imóveis em São Paulo. Teste nossa busca com filtros em tempo real.
             </p>
-
-            <a href="#imoveis" className="inline-flex items-center gap-2 px-6 py-3 bg-stone-900 text-white font-bold rounded-full">
-              <Search size={14} /> Começar busca
+            <a href="#imoveis" className="group inline-flex items-center gap-2 px-7 py-4 bg-[#0EA5E9] text-white font-black uppercase tracking-widest text-xs rounded-full hover:gap-3 transition-all shadow-[0_0_40px_rgba(14,165,233,0.4)]">
+              <Search size={14} /> Começar busca <ArrowRight size={14} />
             </a>
           </div>
-          <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(14,165,233,0.3)] border border-white/10">
             <img
               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000&auto=format&fit=crop"
               alt="Casa"
@@ -133,24 +142,27 @@ export function ImobiliariaTemplate() {
         </div>
       </section>
 
-      {/* BUSCA COM FILTROS DINÂMICOS */}
-      <section id="imoveis" className="max-w-6xl mx-auto px-6 py-16">
+      {/* BUSCA */}
+      <section id="imoveis" className="max-w-6xl mx-auto px-6 py-20 relative z-10">
         <div className="flex items-end justify-between mb-6 gap-4 flex-wrap">
           <div>
-            <p className="text-amber-700 text-sm uppercase tracking-widest font-bold mb-2">Catálogo</p>
-            <h2 className="text-4xl font-black tracking-tight">Imóveis à venda</h2>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70">Catálogo</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">
+              Imóveis <span className="text-[#0EA5E9]">à venda.</span>
+            </h2>
           </div>
           <button
             onClick={() => setShowFilters((s) => !s)}
-            className="md:hidden flex items-center gap-2 px-4 py-2 bg-stone-900 text-white rounded-full text-sm font-bold"
+            className="md:hidden flex items-center gap-2 px-4 py-2 bg-[#0EA5E9] text-white rounded-full text-[10px] font-black uppercase tracking-widest"
           >
             <SlidersHorizontal size={14} /> Filtros
           </button>
         </div>
 
-        {/* Filtros */}
         <div className={`${showFilters ? 'block' : 'hidden'} md:block mb-6`}>
-          <div className="p-5 bg-white rounded-2xl border border-stone-200 shadow-sm">
+          <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
             <div className="grid md:grid-cols-4 gap-4">
               <SelectField label="Tipo" value={tipo} onChange={setTipo} options={TIPOS.map((t) => ({ v: t, l: t === 'Todos' ? 'Todos os tipos' : t.charAt(0).toUpperCase() + t.slice(1) }))} />
               <SelectField label="Bairro" value={bairro} onChange={setBairro} options={NEIGHBORHOODS.map((n) => ({ v: n, l: n }))} />
@@ -161,14 +173,14 @@ export function ImobiliariaTemplate() {
                 options={PRICES.map((p, i) => ({ v: String(i), l: p.label }))}
               />
               <div>
-                <label className="block text-[10px] uppercase tracking-widest text-stone-500 font-bold mb-2">Mín. quartos</label>
+                <label className="block text-[10px] uppercase tracking-widest text-white/50 font-black mb-2">Mín. quartos</label>
                 <div className="flex gap-1">
                   {QUARTOS.map((q) => (
                     <button
                       key={q}
                       onClick={() => setMinQuartos(q)}
-                      className={`flex-1 py-2.5 text-sm font-bold rounded-lg border transition ${
-                        minQuartos === q ? 'bg-stone-900 text-white border-stone-900' : 'bg-white border-stone-200 hover:border-stone-400'
+                      className={`flex-1 py-2.5 text-sm font-black rounded-lg border transition ${
+                        minQuartos === q ? 'bg-[#0EA5E9] text-white border-[#0EA5E9]' : 'bg-white/5 border-white/10 text-white hover:border-white/30'
                       }`}
                     >
                       {q === 0 ? '—' : q === 4 ? '4+' : q}
@@ -180,7 +192,7 @@ export function ImobiliariaTemplate() {
             {hasFilters && (
               <button
                 onClick={clearFilters}
-                className="mt-4 text-xs text-amber-700 font-bold hover:underline"
+                className="mt-4 text-xs text-[#0EA5E9] font-black hover:underline"
               >
                 × Limpar filtros
               </button>
@@ -188,10 +200,9 @@ export function ImobiliariaTemplate() {
           </div>
         </div>
 
-        {/* Contador de resultados */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-stone-600 text-sm">
-            <b className="text-stone-900 text-lg">{resultados.length}</b> imóve{resultados.length === 1 ? 'l' : 'is'} encontrado{resultados.length === 1 ? '' : 's'}
+          <p className="text-white/60 text-sm font-medium">
+            <b className="text-white text-lg">{resultados.length}</b> imóve{resultados.length === 1 ? 'l' : 'is'} encontrado{resultados.length === 1 ? '' : 's'}
           </p>
           {hasFilters && (
             <div className="flex gap-2 text-xs flex-wrap">
@@ -203,11 +214,10 @@ export function ImobiliariaTemplate() {
           )}
         </div>
 
-        {/* Grid */}
         {resultados.length === 0 ? (
           <div className="py-20 text-center">
-            <p className="text-stone-500 mb-4">Nenhum imóvel encontrado com estes filtros.</p>
-            <button onClick={clearFilters} className="px-6 py-3 bg-stone-900 text-white rounded-full font-bold text-sm">
+            <p className="text-white/50 mb-4 font-bold">Nenhum imóvel encontrado com estes filtros.</p>
+            <button onClick={clearFilters} className="px-6 py-3 bg-[#0EA5E9] text-white rounded-full font-black uppercase tracking-widest text-xs">
               Limpar filtros
             </button>
           </div>
@@ -215,30 +225,30 @@ export function ImobiliariaTemplate() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resultados.map((im) => (
               <article key={im.id} className="group cursor-pointer">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 border border-white/10">
                   <img src={`https://images.unsplash.com/${im.img}?w=800&auto=format&fit=crop`} alt={im.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   {im.tag && (
-                    <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest">
+                    <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#0EA5E9] text-white text-[10px] font-black uppercase tracking-widest">
                       {im.tag}
                     </span>
                   )}
                   <button
                     onClick={() => toggleFav(im.id)}
-                    className="absolute top-4 right-4 w-9 h-9 bg-white/95 rounded-full flex items-center justify-center text-stone-700 hover:text-rose-500"
+                    className="absolute top-4 right-4 w-9 h-9 bg-black/60 backdrop-blur rounded-full flex items-center justify-center text-white/70 hover:text-rose-500"
                   >
                     <Heart size={14} className={favoritos.has(im.id) ? 'fill-rose-500 text-rose-500' : ''} />
                   </button>
                 </div>
                 <h3 className="font-black text-lg">{im.title}</h3>
-                <p className="text-stone-500 text-sm flex items-center gap-1 mt-1">
+                <p className="text-white/50 text-sm flex items-center gap-1 mt-1 font-medium">
                   <MapPin size={12} /> {im.neighborhood} · SP
                 </p>
-                <div className="flex items-center gap-4 mt-3 text-xs text-stone-600">
+                <div className="flex items-center gap-4 mt-3 text-xs text-white/60 font-medium">
                   <span className="flex items-center gap-1"><Bed size={14} /> {im.bedrooms}</span>
                   <span className="flex items-center gap-1"><Bath size={14} /> {im.bathrooms}</span>
                   <span className="flex items-center gap-1"><Maximize2 size={14} /> {im.size}m²</span>
                 </div>
-                <div className="mt-3 font-black text-xl text-amber-700">{formatPrice(im.price)}</div>
+                <div className="mt-3 font-black text-xl italic text-[#0EA5E9]">{formatPrice(im.price)}</div>
               </article>
             ))}
           </div>
@@ -246,22 +256,22 @@ export function ImobiliariaTemplate() {
       </section>
 
       {/* CTA */}
-      <section className="bg-stone-900 text-white py-24 mt-16">
+      <section className="py-24 mt-16 relative z-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-5xl font-black mb-6 tracking-tight">
-            Quer <span className="italic font-light">vender</span> seu imóvel?
+          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none mb-6">
+            Quer <span className="text-[#0EA5E9]">vender</span> seu imóvel?
           </h2>
-          <p className="text-stone-300 mb-10 text-lg">
+          <p className="text-white/50 font-bold mb-10 text-lg">
             Avaliação gratuita, fotos profissionais e divulgação em todos os portais.
           </p>
-          <a className="inline-block px-10 py-5 bg-amber-600 text-white font-bold rounded-full hover:bg-amber-500">
-            Falar com um consultor
+          <a className="group inline-flex items-center gap-2 px-10 py-5 bg-[#0EA5E9] text-white font-black uppercase tracking-widest text-xs rounded-full hover:gap-3 transition-all shadow-[0_0_60px_rgba(14,165,233,0.5)]">
+            Falar com um consultor <ArrowRight size={14} />
           </a>
         </div>
       </section>
 
-      <footer className="border-t border-stone-200 py-8 text-center text-stone-500 text-sm">
-        © Horizonte Imóveis · <Link href="/encomendar/imobiliaria" className="text-amber-700 font-bold hover:underline">Quero este site</Link>
+      <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
+        © Horizonte Imóveis · <Link href="/encomendar/imobiliaria" className="text-[#0EA5E9] hover:underline">Quero este site</Link>
       </footer>
     </main>
   );
@@ -270,13 +280,13 @@ export function ImobiliariaTemplate() {
 function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: { v: string; l: string }[] }) {
   return (
     <label className="block">
-      <span className="block text-[10px] uppercase tracking-widest text-stone-500 font-bold mb-2">{label}</span>
+      <span className="block text-[10px] uppercase tracking-widest text-white/50 font-black mb-2">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-2.5 border border-stone-200 rounded-xl text-sm bg-white focus:border-amber-600 outline-none"
+        className="w-full px-4 py-2.5 border border-white/10 rounded-xl text-sm bg-white/5 text-white focus:border-[#0EA5E9] outline-none"
       >
-        {options.map((o) => <option key={o.v} value={o.v}>{o.l}</option>)}
+        {options.map((o) => <option key={o.v} value={o.v} className="bg-[#0A0A0F]">{o.l}</option>)}
       </select>
     </label>
   );
@@ -284,9 +294,9 @@ function SelectField({ label, value, onChange, options }: { label: string; value
 
 function Pill({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-900 rounded-full font-bold">
+    <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#0EA5E9]/20 text-[#0EA5E9] rounded-full font-black">
       {children}
-      <button onClick={onRemove} className="hover:text-amber-700">×</button>
+      <button onClick={onRemove} className="hover:text-white">×</button>
     </span>
   );
 }

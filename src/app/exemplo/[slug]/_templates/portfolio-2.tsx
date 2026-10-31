@@ -30,10 +30,13 @@ export function Portfolio2Template() {
       <section className="max-w-6xl mx-auto px-6 py-32 relative">
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#00ff88]/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-[120px]" />
-        <p className="text-[#00ff88] text-xs uppercase tracking-[0.4em] mb-8 relative">Designer & Developer · Baseado em SP</p>
-        <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-10 relative">
-          Interfaces que <span className="italic text-[#00ff88]">vivem.</span><br />
-          Códigos que <span className="italic text-fuchsia-400">respiram.</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00ff88]/10 border border-[#00ff88]/30 mb-8 relative">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00ff88]">Designer & Developer · Baseado em SP</span>
+        </div>
+        <h1 className="text-6xl md:text-8xl font-black italic uppercase leading-[0.85] tracking-tighter mb-10 relative">
+          Interfaces que <span className="bg-gradient-to-r from-[#00ff88] to-emerald-300 bg-clip-text text-transparent">vivem.</span><br />
+          Códigos que <span className="bg-gradient-to-r from-fuchsia-400 to-pink-300 bg-clip-text text-transparent">respiram.</span>
         </h1>
         <p className="text-white/60 text-xl max-w-2xl relative">
           Produto digital de ponta a ponta: pesquisa, design, prototipagem, código e lançamento.

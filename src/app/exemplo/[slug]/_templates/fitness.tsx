@@ -40,8 +40,11 @@ export function FitnessTemplate() {
   })();
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      <nav className="sticky top-10 z-40 bg-black/80 backdrop-blur border-b border-white/5">
+    <main className="min-h-screen bg-[#0A0A0F] text-white overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-lime-400/15 rounded-full blur-[120px]" />
+      </div>
+      <nav className="sticky top-10 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="font-black text-2xl italic tracking-tighter">
             FORGE<span className="text-lime-400">.</span>
@@ -64,9 +67,12 @@ export function FitnessTemplate() {
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
         </div>
         <div className="relative max-w-6xl mx-auto px-6 py-32">
-          <p className="text-lime-400 text-xs uppercase tracking-[0.4em] font-black mb-6">A mais nova de SP</p>
-          <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-8 max-w-3xl">
-            Sua melhor versão <span className="text-lime-400">começa hoje.</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime-400/10 border border-lime-400/30 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-lime-400">A mais nova de SP</span>
+          </div>
+          <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-[0.85] mb-8 max-w-3xl">
+            Sua melhor versão <span className="bg-gradient-to-r from-lime-400 to-emerald-300 bg-clip-text text-transparent">começa hoje.</span>
           </h1>
           <p className="text-white/70 text-lg max-w-xl mb-10">
             Academia completa, aulas em grupo, musculação, acompanhamento personalizado.
@@ -102,9 +108,12 @@ export function FitnessTemplate() {
 
       {/* CALCULADORA DE TREINO */}
       <section id="calculadora" className="max-w-5xl mx-auto px-6 py-24">
-        <p className="text-lime-400 text-xs uppercase tracking-[0.4em] font-black mb-4">Calculadora personalizada</p>
-        <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-6">
-          Qual plano<br />combina com você?
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime-400/10 border border-lime-400/30 mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-lime-400">Calculadora personalizada</span>
+        </div>
+        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-[0.9] mb-6">
+          Qual plano <span className="text-lime-400">combina</span> com você?
         </h2>
         <p className="text-white/60 mb-10 max-w-xl">
           Responda 3 perguntas e a gente monta o plano ideal pros seus objetivos. Em 10 segundos.
@@ -255,8 +264,12 @@ export function FitnessTemplate() {
 
       {/* Aulas */}
       <section id="aulas" className="max-w-6xl mx-auto px-6 py-24">
-        <p className="text-lime-400 text-xs uppercase tracking-[0.4em] font-black mb-4">Grade de aulas</p>
-        <h2 className="text-5xl font-black uppercase tracking-tight mb-12">O que rola aqui</h2>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime-400/10 border border-lime-400/30 mb-6">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-lime-400">Grade de aulas</span>
+        </div>
+        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none mb-12">
+          O que <span className="text-lime-400">rola aqui.</span>
+        </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {AULAS.map((a) => (
             <div key={a.name} className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
@@ -274,7 +287,9 @@ export function FitnessTemplate() {
 
       {/* Planos */}
       <section id="planos" className="max-w-5xl mx-auto px-6 py-24">
-        <h2 className="text-5xl font-black uppercase tracking-tight text-center mb-12">Planos</h2>
+        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-center leading-none mb-12">
+          <span className="text-lime-400">Planos.</span>
+        </h2>
         <div className="grid md:grid-cols-3 gap-5">
           {[
             { name: 'Mensal', price: '149', desc: 'Flexível, sem fidelidade.' },
