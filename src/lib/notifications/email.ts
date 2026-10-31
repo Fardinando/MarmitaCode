@@ -183,7 +183,7 @@ export async function sendOrderEmails(order: Order) {
   if (!resend) return { skipped: true, reason: 'RESEND_API_KEY ausente' };
 
   const to = process.env.ORDER_EMAIL_TO;
-  const from = process.env.ORDER_EMAIL_FROM ?? 'onboarding@resend.dev';
+  const from = process.env.ORDER_EMAIL_FROM ?? 'MarmitaCode <contato@marmitacode.dev.br>';
   const templateLabel = order.template_slug ?? 'Personalizado';
 
   const results = await Promise.allSettled([
