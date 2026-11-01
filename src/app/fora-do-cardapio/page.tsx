@@ -158,13 +158,11 @@ export default function ForaDoCardapioPage() {
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-5">
-            Cada projeto <span className="text-[#FF8C00]">tem um escopo.</span>
+            Investimento <span className="text-[#FF8C00]">sob consulta.</span>
           </h2>
           <p className="text-white/60 font-bold max-w-2xl mx-auto leading-relaxed">
-            Não dá pra cravar preço sem entender o problema. Projetos sob encomenda começam
-            geralmente em <b className="text-white">R$ 2.500</b> e crescem conforme a complexidade.
-            A primeira conversa é pra entender o que você precisa, propor um escopo e um orçamento
-            justo — sem compromisso.
+            Cada projeto tem seu escopo e sua complexidade. A primeira conversa é pra entender
+            o que você precisa, montar uma proposta clara e um orçamento justo — sem compromisso.
           </p>
         </div>
       </section>
