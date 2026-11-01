@@ -17,6 +17,7 @@ export function SiteFooter() {
         <FooterCol title="Produto">
           <FooterLink href="/templates">Templates</FooterLink>
           <FooterLink href="/cases">Cases</FooterLink>
+          <FooterLink href="/fora-do-cardapio">Fora do Cardápio</FooterLink>
           <FooterLink href="/planos">Planos</FooterLink>
           <FooterLink href="/#como-funciona">Como funciona</FooterLink>
           <FooterLink href="/#dominio">Domínio</FooterLink>

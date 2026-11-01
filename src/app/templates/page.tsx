@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, ChefHat } from 'lucide-react';
 import { getTemplates } from '@/lib/data';
 import { TemplateCard } from '@/components/TemplateCard';
 
@@ -58,6 +58,36 @@ export default async function TemplatesPage({
                 className="shrink-0 inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-[#FF8C00] text-black text-xs font-black uppercase tracking-widest hover:bg-[#FFD700] transition-colors whitespace-nowrap"
               >
                 Começar do zero <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* FORA DO CARDÁPIO — solução que não é site */}
+        <section className="mb-16">
+          <div className="relative p-8 md:p-10 rounded-[2.5rem] bg-gradient-to-br from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/30 overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-72 h-72 bg-emerald-500/20 rounded-full blur-[100px]" />
+            <div className="relative grid md:grid-cols-[1fr_auto] gap-6 items-center">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <ChefHat size={18} className="text-emerald-400" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">
+                    Fora do Cardápio · Sob encomenda
+                  </span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter leading-none mb-4">
+                  Não é <span className="text-emerald-400">site</span>?
+                </h2>
+                <p className="text-white/60 text-sm md:text-base font-bold max-w-xl leading-relaxed">
+                  Sistema de estoque, bot de WhatsApp, automação, app mobile, software desktop —
+                  a gente também cozinha o que não está no menu.
+                </p>
+              </div>
+              <Link
+                href="/fora-do-cardapio"
+                className="shrink-0 inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-emerald-500 text-black text-xs font-black uppercase tracking-widest hover:bg-emerald-400 transition-colors whitespace-nowrap"
+              >
+                Conhecer <ArrowRight size={14} />
               </Link>
             </div>
           </div>
