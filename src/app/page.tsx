@@ -108,7 +108,7 @@ export default function Home() {
             Templates prontos ou projetos sob medida — do briefing ao ar.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 flex-wrap justify-center">
             <Link
               href="/templates"
               className="px-10 py-5 rounded-full bg-[#FF8C00] text-black text-[11px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all flex items-center gap-3 justify-center"
@@ -120,6 +120,12 @@ export default function Home() {
               className="px-10 py-5 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
             >
               Quero do zero
+            </Link>
+            <Link
+              href="/fora-do-cardapio"
+              className="px-10 py-5 rounded-full bg-emerald-500 text-black text-[11px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all flex items-center gap-3 justify-center shadow-[0_0_40px_rgba(16,185,129,0.5)]"
+            >
+              Fora do Cardápio <ArrowRight size={16} />
             </Link>
           </div>
         </motion.div>
@@ -166,6 +172,59 @@ export default function Home() {
             <Link href="/planos" className="text-[11px] font-black uppercase tracking-widest text-[#FF8C00] hover:underline">
               Comparar planos em detalhe →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FORA DO CARDÁPIO — destaque grande */}
+      <section className="relative py-28 px-6 z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative overflow-hidden rounded-[2.5rem] md:rounded-[3rem] border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-emerald-500/5 to-black p-10 md:p-16">
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/30 rounded-full blur-[120px]" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-400/15 rounded-full blur-[120px]" />
+            <div className="relative grid md:grid-cols-[1.5fr_1fr] gap-10 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/40 mb-6">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300">
+                    Fora do Cardápio
+                  </span>
+                </div>
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black italic uppercase tracking-tighter leading-[0.9] mb-6">
+                  Não é site? <span className="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">A gente faz também.</span>
+                </h2>
+                <p className="text-white/70 text-base md:text-lg font-bold leading-relaxed mb-8 max-w-xl">
+                  Sistema de estoque, bot de WhatsApp, automação, app mobile, software desktop,
+                  dashboard administrativo — se dá pra programar, está no menu.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {['Sistema de estoque', 'Bot WhatsApp', 'App Mobile', 'Software Desktop', 'Automação', 'Dashboard'].map((t) => (
+                    <span key={t} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/70">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  href="/fora-do-cardapio"
+                  className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-emerald-500 text-black text-xs font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-[0_0_60px_rgba(16,185,129,0.5)]"
+                >
+                  Conhecer Fora do Cardápio <ArrowRight size={14} />
+                </Link>
+              </div>
+              <div className="relative hidden md:block">
+                <div className="aspect-square rounded-[2rem] bg-gradient-to-br from-emerald-500/20 to-transparent border border-emerald-500/20 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-7xl mb-4">🍲</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300">
+                      Prato especial
+                    </div>
+                    <div className="text-3xl font-black italic uppercase tracking-tighter mt-2 text-white">
+                      Sob encomenda
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

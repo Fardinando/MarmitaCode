@@ -16,7 +16,13 @@ export async function SiteHeader() {
         <nav className="hidden lg:flex items-center gap-6 text-[11px] font-black uppercase tracking-widest text-white/50">
           <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
           <Link href="/cases" className="hover:text-white transition-colors">Cases</Link>
-          <Link href="/fora-do-cardapio" className="hover:text-emerald-400 transition-colors">Fora do Cardápio</Link>
+          <Link
+            href="/fora-do-cardapio"
+            className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Fora do Cardápio
+          </Link>
           <Link href="/planos" className="hover:text-white transition-colors">Planos</Link>
         </nav>
 
