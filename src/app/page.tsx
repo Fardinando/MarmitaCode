@@ -15,6 +15,8 @@ import {
   Lock,
   UtensilsCrossed,
   ChefHat,
+  Shield,
+  Gift,
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
@@ -29,6 +31,7 @@ const TIERS = [
     price: 'R$ 97',
     icon: Layers,
     desc: 'O básico bem feito: pegue um dos nossos templates e troque cores, marca, fontes e textos. Pronto pra servir.',
+    bonus: '+ Integração com WhatsApp grátis',
   },
   {
     key: 'intermediario',
@@ -36,6 +39,7 @@ const TIERS = [
     price: 'R$ 197',
     icon: UtensilsCrossed,
     desc: 'Template com mais liberdade: mude o fluxo, adicione ou tire funcionalidades, ajuste seções. Ainda é marmita, só que turbinada.',
+    bonus: '+ 1 mês de ajustes ilimitados',
   },
   {
     key: 'premium',
@@ -43,6 +47,7 @@ const TIERS = [
     price: 'R$ 397',
     icon: ChefHat,
     desc: 'Site 100% personalizado, desenvolvido do zero a partir do seu prompt. Nada de template — o chef prepara exclusivo pra você.',
+    bonus: '+ 3 meses de ajustes ilimitados',
   },
 ];
 
@@ -51,6 +56,37 @@ const STEPS = [
   { icon: Palette, title: 'Briefing', desc: 'Responda o questionário: cores, layout, conteúdo.' },
   { icon: Rocket, title: 'Produção', desc: 'Criamos seu site com engenharia de alta performance.' },
   { icon: Globe, title: 'Domínio', desc: 'Cuidamos do registro e apontamento do seu domínio.' },
+];
+
+const FAQ = [
+  {
+    q: 'Isso funciona de verdade?',
+    a: 'Já colocamos sites no ar com usuários reais pagando (ApexEnem, AgoraMed). Não é demo nem portfólio: é site em produção, com domínio, SSL e suporte.',
+  },
+  {
+    q: 'Funciona pro meu negócio?',
+    a: 'Se você é um pequeno negócio que precisa de presença profissional online — barbearia, clínica, restaurante, loja, prestador de serviço — funciona. Temos template pro seu nicho ou fazemos do zero.',
+  },
+  {
+    q: 'Vou conseguir usar sem entender de código?',
+    a: 'Você não mexe em código. Responde um briefing simples (cores, textos, imagens) e entregamos o site pronto. Mudanças depois é só nos chamar no WhatsApp.',
+  },
+  {
+    q: 'Vale o preço comparado a uma agência?',
+    a: 'Agência cobra R$ 3.000 a R$ 10.000 e leva 2 a 3 meses. Freelancer é roleta russa. Construtor drag-and-drop te prende numa plataforma cara. A gente entrega em 7 dias a partir de R$ 97.',
+  },
+  {
+    q: 'E se eu não gostar?',
+    a: 'Garantia de 7 dias. Se não aprovar o site, devolvemos 100% do valor pago. Sem letrinha miúda.',
+  },
+  {
+    q: 'Por que começar agora?',
+    a: 'Cada dia sem site é um cliente pesquisando no Google e achando seu concorrente. Em 7 dias o seu está no ar.',
+  },
+  {
+    q: 'Por que MarmitaCode e não outro?',
+    a: 'Dev solo, atendimento direto comigo no WhatsApp (nada de "fulano saiu da agência"), código enxuto e performático, e um processo de "cozinha industrial" que entrega em 7 dias sem perder qualidade.',
+  },
 ];
 
 export default function Home() {
@@ -98,40 +134,106 @@ export default function Home() {
             <Logo />
           </div>
 
-          <h1 className="text-[11vw] md:text-[7.5rem] font-black tracking-tighter leading-[0.85] uppercase italic mb-8">
-            Sites que <span className="text-[#FF8C00]">vendem.</span>
+          <h1 className="text-[9vw] md:text-[5.5rem] font-black tracking-tighter leading-[0.9] uppercase italic mb-6 max-w-5xl">
+            Seu site profissional no ar em <span className="text-[#FF8C00]">7 dias</span>.
           </h1>
-          <p className="text-white/60 text-lg md:text-2xl font-bold italic max-w-3xl mb-6 min-h-[2.5em]">
+          <p className="text-white/70 text-lg md:text-2xl font-bold max-w-3xl mb-4 leading-snug">
+            Do briefing ao domínio, entregue quentinho. Templates a partir de <b className="text-white">R$ 97</b> ou projetos sob medida — para pequenos negócios que precisam vender online sem virar refém de agência.
+          </p>
+          <p className="text-white/40 text-xs md:text-sm font-black uppercase tracking-[0.3em] max-w-2xl mb-10 italic">
             {slogan}
           </p>
-          <p className="text-white/30 text-xs md:text-sm font-black uppercase tracking-[0.3em] max-w-2xl mb-14">
-            Templates prontos ou projetos sob medida — do briefing ao ar.
-          </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 flex-wrap justify-center">
+          <div className="flex flex-col items-center gap-5">
             <Link
               href="/templates"
-              className="px-10 py-5 rounded-full bg-[#FF8C00] text-black text-[11px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all flex items-center gap-3 justify-center"
+              className="px-14 py-6 rounded-full bg-[#FF8C00] text-black text-sm font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all flex items-center gap-3 justify-center shadow-[0_0_60px_rgba(255,140,0,0.5)]"
             >
-              Ver templates <ArrowRight size={16} />
+              Ver templates e começar <ArrowRight size={18} />
             </Link>
             <Link
               href="/encomendar/personalizado?tier=personalizado"
-              className="px-10 py-5 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+              className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white underline underline-offset-4"
             >
-              Quero do zero
+              ou quero um site 100% do zero →
             </Link>
-            <Link
-              href="/fora-do-cardapio"
-              className="px-10 py-5 rounded-full bg-emerald-500 text-black text-[11px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all flex items-center gap-3 justify-center shadow-[0_0_40px_rgba(16,185,129,0.5)]"
-            >
-              Fora do Cardápio <ArrowRight size={16} />
-            </Link>
+          </div>
+
+          {/* Selo de garantia */}
+          <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+            <Shield size={14} className="text-emerald-400" />
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-300">
+              Garantia de 7 dias · Não aprovou? Devolvemos 100%
+            </span>
+          </div>
+
+          {/* Prova social acima da dobra */}
+          <div className="mt-14 flex flex-col items-center gap-4">
+            <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.35em] text-white/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Sites nossos no ar agora
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+              <Link href="/cases#apexenem" className="text-lg md:text-xl font-black italic uppercase tracking-tight bg-gradient-to-r from-white/80 to-[#5B6CFF]/80 bg-clip-text text-transparent hover:from-white hover:to-[#5B6CFF] transition-all">
+                ApexEnem
+              </Link>
+              <span className="text-white/20">·</span>
+              <Link href="/cases#agoramed" className="text-lg md:text-xl font-black italic uppercase tracking-tight bg-gradient-to-r from-white/80 to-[#2DD4BF]/80 bg-clip-text text-transparent hover:from-white hover:to-[#2DD4BF] transition-all">
+                AgoraMed
+              </Link>
+              <span className="text-white/20">·</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
+                +negócios no ar
+              </span>
+            </div>
           </div>
         </motion.div>
 
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#FF8C00]/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]" />
+      </section>
+
+      {/* PAS — Problema / Agitação / Solução */}
+      <section className="relative py-32 px-6 z-10 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="inline-block text-[10px] font-black uppercase tracking-[0.35em] text-[#FF8C00] mb-5">
+              Por que a marmita existe
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-[0.95]">
+              Site não precisa ser <span className="text-[#FF8C00]">drama.</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-8 rounded-3xl bg-red-500/5 border border-red-500/20">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400 mb-4">
+                O problema
+              </div>
+              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
+                Agência cobra <b className="text-white">R$ 5.000</b> e some no meio do projeto. Freelancer é roleta russa. Construtor drag-and-drop te prende numa plataforma cara que fica lenta.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-amber-500/5 border border-amber-500/20">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400 mb-4">
+                O que acontece enquanto isso
+              </div>
+              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
+                Enquanto você espera o site ficar pronto, <b className="text-white">seu concorrente está pegando os clientes</b> que pesquisam no Google agora. Cada semana sem site é faturamento perdido.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-[#FF8C00]/5 border border-[#FF8C00]/30">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF8C00] mb-4">
+                A solução marmita
+              </div>
+              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
+                Padronizamos a produção como uma <b className="text-white">cozinha industrial</b> — mesma qualidade de agência, fração do tempo. Em 7 dias no ar, com domínio, SSL e suporte no WhatsApp.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* TIERS */}
@@ -140,8 +242,8 @@ export default function Home() {
           <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-center mb-6">
             Escolha sua <span className="text-[#FF8C00]">marmita.</span>
           </h2>
-          <p className="text-center text-white/40 font-bold uppercase tracking-widest text-[11px] mb-20">
-            + Mensalidade de R$ 47,90 em todos os planos
+          <p className="text-center text-white/50 font-bold text-sm mb-20 max-w-xl mx-auto">
+            Pagamento único + manutenção mensal de R$ 47,90 (hospedagem, SSL, backups e suporte).
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TIERS.map((t, i) => {
@@ -158,17 +260,39 @@ export default function Home() {
                   }`}
                 >
                   <Icon size={34} className="text-[#FF8C00] mb-8" />
-                  <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-2">{t.name}</h3>
-                  <div className="text-[#FF8C00] font-black text-2xl mb-6">
-                    {t.price}
-                    <span className="text-white/30 text-xs ml-2 font-bold">+ mensalidade</span>
+                  <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-4">{t.name}</h3>
+                  <div className="mb-6">
+                    <div className="text-[#FF8C00] font-black text-4xl leading-none">{t.price}</div>
+                    <div className="text-white/30 text-[10px] font-bold uppercase tracking-widest mt-2">
+                      Pagamento único · depois R$ 47,90/mês
+                    </div>
                   </div>
-                  <p className="text-white/50 font-bold leading-relaxed">{t.desc}</p>
+                  <p className="text-white/50 font-bold leading-relaxed mb-5">{t.desc}</p>
+                  <div className="mt-auto flex items-start gap-2 pt-5 border-t border-white/5">
+                    <Gift size={16} className="text-[#FF8C00] mt-0.5 shrink-0" />
+                    <span className="text-xs font-black text-white/80 leading-snug">{t.bonus}</span>
+                  </div>
                 </motion.div>
               );
             })}
           </div>
-          <div className="text-center mt-12">
+
+          {/* Faixa de garantia */}
+          <div className="mt-12 max-w-3xl mx-auto p-6 rounded-3xl bg-emerald-500/5 border border-emerald-500/20 flex items-center gap-4">
+            <div className="shrink-0 w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+              <Shield size={22} className="text-emerald-400" />
+            </div>
+            <div>
+              <div className="text-sm font-black uppercase tracking-wider text-emerald-300 mb-1">
+                Garantia de 7 dias
+              </div>
+              <p className="text-white/70 text-sm font-bold leading-snug">
+                Se em 7 dias você não aprovar o site, devolvemos <b className="text-white">100% do valor pago</b>. Sem letrinha miúda.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
             <Link href="/planos" className="text-[11px] font-black uppercase tracking-widest text-[#FF8C00] hover:underline">
               Comparar planos em detalhe →
             </Link>
@@ -286,6 +410,20 @@ export default function Home() {
                 <p className="text-white/60 text-sm leading-relaxed mb-6">
                   Plataforma inteligente para o ENEM — correção de redação por IA, simulados adaptativos e acompanhamento de evolução.
                 </p>
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#5B6CFF]">7d</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">entrega</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#5B6CFF]">99,9%</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">uptime</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#5B6CFF]">IA</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">redação</div>
+                  </div>
+                </div>
                 <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#5B6CFF] group-hover:gap-3 transition-all">
                   Ver case completo <ArrowRight size={14} />
                 </span>
@@ -308,6 +446,20 @@ export default function Home() {
                 <p className="text-white/60 text-sm leading-relaxed mb-6">
                   Área de membros pra médicos residentes — cursos, trilhas e acompanhamento, com UX pensada para o ambiente de plantão.
                 </p>
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#2DD4BF]">14d</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">entrega</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#2DD4BF]">24/7</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">acesso</div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                    <div className="text-xl font-black text-[#2DD4BF]">LGPD</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">médico</div>
+                  </div>
+                </div>
                 <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#2DD4BF] group-hover:gap-3 transition-all">
                   Ver case completo <ArrowRight size={14} />
                 </span>
@@ -372,21 +524,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ — responde as 7 objeções */}
+      <section id="faq" className="relative py-32 px-6 z-10 border-t border-white/5">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="inline-block text-[10px] font-black uppercase tracking-[0.35em] text-[#FF8C00] mb-5">
+              Perguntas que a gente ouve toda semana
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-[0.95]">
+              Tira a <span className="text-[#FF8C00]">dúvida.</span>
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {FAQ.map((item) => (
+              <details
+                key={item.q}
+                className="group rounded-3xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors"
+              >
+                <summary className="cursor-pointer list-none p-6 flex items-center justify-between gap-6">
+                  <span className="text-base md:text-lg font-black text-white pr-2">{item.q}</span>
+                  <span className="shrink-0 w-8 h-8 rounded-full bg-[#FF8C00]/10 border border-[#FF8C00]/30 flex items-center justify-center text-[#FF8C00] text-xl font-black transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <div className="px-6 pb-6 text-white/60 font-bold text-[15px] leading-relaxed">
+                  {item.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="relative py-40 px-6 z-10 bg-[#050505]">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-8">
             Pronto para <span className="text-[#FF8C00]">começar?</span>
           </h2>
-          <p className="text-white/40 text-lg font-bold mb-12">
-            Escolha um template, responda o briefing e receba sua solução entregue quentinha.
+          <p className="text-white/50 text-lg font-bold mb-12 max-w-2xl mx-auto">
+            Escolha um template, responda o briefing e receba seu site no ar em 7 dias. Se não aprovar, devolvemos 100%.
           </p>
           <Link
             href="/templates"
-            className="inline-block px-12 py-6 rounded-full bg-[#FF8C00] text-black text-[12px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all"
+            className="inline-flex items-center gap-3 px-12 py-6 rounded-full bg-[#FF8C00] text-black text-[12px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all shadow-[0_0_60px_rgba(255,140,0,0.4)]"
           >
-            Ver todos os templates
+            Ver templates e começar <ArrowRight size={16} />
           </Link>
+          <div className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-400/80">
+            <Shield size={12} />
+            Garantia de 7 dias · Sem letrinha miúda
+          </div>
         </div>
       </section>
 
