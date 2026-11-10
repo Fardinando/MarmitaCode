@@ -15,11 +15,11 @@ export function applySecurityHeaders(res: NextResponse): NextResponse {
   const csp = [
     "default-src 'self'",
     // Next inline scripts, Analytics da Vercel e MP checkout.
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.vercel-insights.com https://*.vercel-analytics.com https://*.mercadopago.com https://*.mlstatic.com https://www.youtube.com https://s.ytimg.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.vercel-insights.com https://*.vercel-analytics.com https://*.mercadopago.com https://*.mlstatic.com https://www.youtube.com https://s.ytimg.com https://www.clarity.ms https://*.clarity.ms",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co https://*.mercadopago.com https://*.mlstatic.com https://i.ytimg.com https://*.ytimg.com",
     "font-src 'self' https://fonts.gstatic.com data:",
-    "connect-src 'self' https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com https://api.mercadopago.com https://api.resend.com https://sheets.googleapis.com",
+    "connect-src 'self' https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com https://api.mercadopago.com https://api.resend.com https://sheets.googleapis.com https://*.clarity.ms https://c.bing.com",
     "frame-src 'self' https://*.mercadopago.com https://www.youtube.com https://www.youtube-nocookie.com https://apexenem.com.br https://www.apexenem.com.br https://agoramed.vercel.app",
     "frame-ancestors 'none'",
     "form-action 'self' https://*.mercadopago.com",
