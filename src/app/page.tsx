@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useSyncExternalStore } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import {
@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
-import { SLOGANS } from '@/lib/site-config';
 
 const emptySubscribe = () => () => {};
 
@@ -91,14 +90,6 @@ const FAQ = [
 
 export default function Home() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
-  const [sloganIndex, setSloganIndex] = useState(0);
-  useEffect(() => {
-    // Picking the random slogan client-side avoids SSR/hydration mismatch;
-    // we only run it once per visit so the choice is stable within a session.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSloganIndex(Math.floor(Math.random() * SLOGANS.length));
-  }, []);
-  const slogan = SLOGANS[sloganIndex];
 
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
@@ -137,11 +128,8 @@ export default function Home() {
           <h1 className="text-[9vw] md:text-[5.5rem] font-black tracking-tighter leading-[0.9] uppercase italic mb-6 max-w-5xl">
             Seu site profissional no ar em <span className="text-[#FF8C00]">7 dias</span>.
           </h1>
-          <p className="text-white/70 text-lg md:text-2xl font-bold max-w-3xl mb-4 leading-snug">
+          <p className="text-white/70 text-lg md:text-2xl font-bold max-w-3xl mb-10 leading-snug">
             Do briefing ao domínio, entregue quentinho. Templates a partir de <b className="text-white">R$ 97</b> ou projetos sob medida — para pequenos negócios que precisam vender online sem virar refém de agência.
-          </p>
-          <p className="text-white/40 text-xs md:text-sm font-black uppercase tracking-[0.3em] max-w-2xl mb-10 italic">
-            {slogan}
           </p>
 
           <div className="flex flex-col items-center gap-5">
@@ -159,12 +147,20 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Selo de garantia */}
-          <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-            <Shield size={14} className="text-emerald-400" />
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-300">
-              Garantia de 7 dias · Não aprovou? Devolvemos 100%
-            </span>
+          {/* Selos: garantia + atendimento direto */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+              <Shield size={14} className="text-emerald-400" />
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-300">
+                Garantia de 7 dias · Devolvemos 100%
+              </span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#25D366]/10 border border-[#25D366]/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#25D366]">
+                Atendimento direto comigo no WhatsApp
+              </span>
+            </div>
           </div>
 
           {/* Prova social acima da dobra */}
@@ -181,10 +177,6 @@ export default function Home() {
               <Link href="/cases#agoramed" className="text-lg md:text-xl font-black italic uppercase tracking-tight bg-gradient-to-r from-white/80 to-[#2DD4BF]/80 bg-clip-text text-transparent hover:from-white hover:to-[#2DD4BF] transition-all">
                 AgoraMed
               </Link>
-              <span className="text-white/20">·</span>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">
-                +negócios no ar
-              </span>
             </div>
           </div>
         </motion.div>
@@ -242,9 +234,29 @@ export default function Home() {
           <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-center mb-6">
             Escolha sua <span className="text-[#FF8C00]">marmita.</span>
           </h2>
-          <p className="text-center text-white/50 font-bold text-sm mb-20 max-w-xl mx-auto">
+          <p className="text-center text-white/50 font-bold text-sm mb-10 max-w-xl mx-auto">
             Pagamento único + manutenção mensal de R$ 47,90 (hospedagem, SSL, backups e suporte).
           </p>
+
+          {/* Ancoragem de preço */}
+          <div className="max-w-4xl mx-auto mb-16 grid grid-cols-3 gap-3 md:gap-4">
+            <div className="p-4 md:p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
+              <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Agência</div>
+              <div className="text-xl md:text-3xl font-black text-white/50 line-through decoration-red-500/60">R$ 3–10k</div>
+              <div className="text-[10px] font-bold text-white/30 mt-2">2 a 3 meses</div>
+            </div>
+            <div className="p-4 md:p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
+              <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Freelancer</div>
+              <div className="text-xl md:text-3xl font-black text-white/50 line-through decoration-red-500/60">R$ 800–2k</div>
+              <div className="text-[10px] font-bold text-white/30 mt-2">prazo incerto</div>
+            </div>
+            <div className="p-4 md:p-6 rounded-2xl bg-[#FF8C00]/10 border border-[#FF8C00]/40 text-center">
+              <div className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00] mb-2">MarmitaCode</div>
+              <div className="text-xl md:text-3xl font-black text-[#FF8C00]">a partir de R$ 97</div>
+              <div className="text-[10px] font-bold text-white/60 mt-2">em 7 dias</div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TIERS.map((t, i) => {
               const Icon = t.icon;
@@ -314,8 +326,11 @@ export default function Home() {
                     Fora do Cardápio
                   </span>
                 </div>
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black italic uppercase tracking-tighter leading-[0.9] mb-6">
-                  Não é site? <span className="bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">A gente faz também.</span>
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black italic uppercase tracking-tighter leading-[1.05] mb-6">
+                  Não é site?{' '}
+                  <span className="inline-block pb-2 pr-2 bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">
+                    A gente faz também.
+                  </span>
                 </h2>
                 <p className="text-white/70 text-base md:text-lg font-bold leading-relaxed mb-8 max-w-xl">
                   Sistema de estoque, bot de WhatsApp, automação, app mobile, software desktop,
