@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Scissors, Clock, Check, ChevronRight, Calendar, User, MapPin, Phone, Star } from 'lucide-react';
 
 const SERVICOS = [
@@ -241,6 +242,7 @@ export function BarbeariaTemplate() {
 
       <footer className="border-t border-white/5 py-8 text-center text-white/30 text-xs uppercase tracking-widest">
         © Barber Studio · <Link href="/encomendar/barbearia" className="text-yellow-500 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal de agendamento multi-step */}

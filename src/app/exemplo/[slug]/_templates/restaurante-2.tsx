@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { ArrowRight } from 'lucide-react';
 
 const ACCENT = '#DC2626';
@@ -141,6 +142,7 @@ export function Restaurante2Template() {
 
       <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
         © Comida Sincera · <Link href="/encomendar/restaurante-2" className="text-[#DC2626] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

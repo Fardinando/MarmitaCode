@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { ShoppingBag, Plus, Check, Heart, Scissors, Stethoscope, Award, Clock, MapPin, Phone, ChevronRight, Dog } from 'lucide-react';
 
 const SERVICOS = [
@@ -246,6 +247,7 @@ export function PetshopTemplate() {
 
       <footer className="border-t-2 border-amber-200 py-8 text-center text-amber-900/50 text-xs">
         © AuAu+ · <Link href="/encomendar/petshop" className="text-orange-500 font-black hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal serviço */}

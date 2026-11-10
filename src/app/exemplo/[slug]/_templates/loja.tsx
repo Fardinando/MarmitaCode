@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { ShoppingBag, Plus, Minus, X, Check, Heart } from 'lucide-react';
 
 interface Produto {
@@ -236,6 +237,7 @@ export function LojaTemplate() {
 
       <footer className="border-t border-neutral-200 py-8 text-center text-neutral-500 text-sm">
         © boutique. · <Link href="/encomendar/loja" className="font-bold text-neutral-900 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal selecionar tamanho */}

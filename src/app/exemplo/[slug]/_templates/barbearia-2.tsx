@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Scissors, Clock, MapPin, ArrowRight } from 'lucide-react';
 
 const SERVICOS = [
@@ -146,6 +147,7 @@ export function Barbearia2Template() {
 
       <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
         © Barbearia do Seu Henrique · <Link href="/encomendar/barbearia-2" className="text-[#FF6B35] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

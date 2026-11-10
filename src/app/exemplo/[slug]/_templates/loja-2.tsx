@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Truck, ShieldCheck, RefreshCw, Plus, Minus, X, ShoppingBag, Check } from 'lucide-react';
 
 interface Produto {
@@ -225,6 +226,7 @@ export function Loja2Template() {
 
       <footer className="border-t border-neutral-200 py-8 text-center text-neutral-500 text-sm">
         © Empório · <Link href="/encomendar/loja-2" className="text-emerald-700 font-bold hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Carrinho slide-in */}

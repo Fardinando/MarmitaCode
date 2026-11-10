@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Bed, Bath, Maximize2, MapPin, Search, Heart, SlidersHorizontal, ArrowRight } from 'lucide-react';
 
 interface Imovel {
@@ -272,6 +273,7 @@ export function ImobiliariaTemplate() {
 
       <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
         © Horizonte Imóveis · <Link href="/encomendar/imobiliaria" className="text-[#0EA5E9] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

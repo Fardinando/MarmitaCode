@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import {
   Play,
   Lock,
@@ -212,6 +213,7 @@ export function CursoTemplate() {
 
       <footer className="border-t border-white/5 py-8 text-center text-white/30 text-sm">
         © Academia Online · <Link href="/encomendar/curso" className="text-indigo-400 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );
@@ -516,6 +518,7 @@ function AppView({ onLogout }: { onLogout: () => void }) {
 
       <footer className="border-t border-white/5 py-6 text-center text-white/30 text-xs">
         Demo navegável · <Link href="/encomendar/curso" className="text-indigo-400 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Calendar, Clock, MapPin, Phone, Mail, Check, Stethoscope, Award, GraduationCap, Users, Star, Heart } from 'lucide-react';
 
 const AREAS = [
@@ -274,6 +275,7 @@ export function MedicoTemplate() {
       <footer className="bg-[#1a2a3a] text-[#f8f6f3]/60 py-8 text-center text-xs" style={{ fontFamily: 'sans-serif' }}>
         © Dra. Luiza Montenegro · CRM-SP 123.456 ·{' '}
         <Link href="/encomendar/medico" className="text-[#c69749] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal agendamento */}

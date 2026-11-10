@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Flame, Clock, Trophy, Heart, Calculator, Dumbbell, ArrowRight } from 'lucide-react';
 
 const AULAS = [
@@ -313,6 +314,7 @@ export function FitnessTemplate() {
 
       <footer className="border-t border-white/5 py-8 text-center text-white/30 text-xs uppercase tracking-widest">
         © Forge · <Link href="/encomendar/fitness" className="text-lime-400 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

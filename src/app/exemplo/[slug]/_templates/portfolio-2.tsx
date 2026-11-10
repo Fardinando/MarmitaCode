@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 
 const WORKS = [
   { title: 'Nebula App', year: '2026', tag: '3D · Motion', img: 'photo-1639322537228-f710d846310a' },
@@ -103,6 +104,7 @@ export function Portfolio2Template() {
 
       <footer className="border-t border-white/5 py-8 text-center text-white/30 text-xs uppercase tracking-widest">
         © nova.dev · <Link href="/encomendar/portfolio-2" className="text-[#00ff88] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Check, Heart, Calendar, Users, Sparkles, MapPin, Phone, ArrowRight } from 'lucide-react';
 
 type TipoEvento = 'casamento' | 'formatura' | 'corporativo' | '15-anos';
@@ -276,6 +277,7 @@ export function EventosTemplate() {
 
       <footer className="border-t border-[#2b1f1a]/10 py-8 text-center text-[#2b1f1a]/50 text-xs">
         © Haut Événement · <Link href="/encomendar/eventos" className="text-rose-700 font-black hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal orçamento */}

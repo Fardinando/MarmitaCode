@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Clock, MapPin, Users, Calendar, Phone, Check, ChevronRight, Star } from 'lucide-react';
 
 type Categoria = 'entradas' | 'principais' | 'massas' | 'sobremesas' | 'vinhos';
@@ -286,6 +287,7 @@ export function RestauranteTemplate() {
 
       <footer className="border-t border-amber-900/40 py-10 text-center text-amber-100/40 text-xs">
         © Sabor della Casa · <Link href="/encomendar/restaurante" className="text-amber-300 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal de reserva */}

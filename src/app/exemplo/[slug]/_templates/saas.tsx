@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Check, Zap, Shield, Users, ArrowRight, Plus, MoreHorizontal, CheckCircle2, Circle, Clock, Flag, TrendingUp, Sparkles } from 'lucide-react';
 
 const ACCENT = '#5B6CFF';
@@ -214,6 +215,7 @@ export function SaasTemplate() {
 
       <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
         © Linear · <Link href="/encomendar/saas" className="text-[#5B6CFF] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

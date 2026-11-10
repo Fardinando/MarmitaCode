@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Play, CheckCircle2, Users, Heart, MessageCircle, ArrowRight } from 'lucide-react';
 
 const BENEFICIOS = [
@@ -134,6 +135,7 @@ export function Curso2Template() {
 
       <footer className="border-t border-white/5 py-10 text-center text-white/40 text-xs font-black uppercase tracking-widest relative z-10">
         © Mariana Lima · <Link href="/encomendar/curso-2" className="text-[#F43F5E] hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
     </main>
   );

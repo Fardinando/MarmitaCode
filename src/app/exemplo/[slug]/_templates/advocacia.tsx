@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Scale, Check, ArrowRight, Shield, Award, Users, Mail, Phone, MapPin, Clock, BookOpen, Briefcase, FileText, Heart, Home } from 'lucide-react';
 
 const AREAS = [
@@ -235,6 +236,7 @@ export function AdvocaciaTemplate() {
 
       <footer className="bg-stone-900 text-stone-500 py-8 text-center text-xs" style={{ fontFamily: 'sans-serif' }}>
         © Alves & Martins Advocacia · OAB/SP · <Link href="/encomendar/advocacia" className="text-amber-400 hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal consultoria */}

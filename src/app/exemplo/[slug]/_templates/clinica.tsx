@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MarmitaCodeCredit } from './_shared/MarmitaCodeCredit';
 import { Check, Calendar, Clock, MapPin, Phone, Stethoscope, Heart, Shield, Users, ChevronRight, Star } from 'lucide-react';
 
 const ESPECIALIDADES = [
@@ -268,6 +269,7 @@ export function ClinicaTemplate() {
 
       <footer className="border-t border-slate-200 py-8 text-center text-slate-500 text-sm">
         © Vida+ · <Link href="/encomendar/clinica" className="text-teal-600 font-bold hover:underline">Quero este site</Link>
+        <MarmitaCodeCredit />
       </footer>
 
       {/* Modal agendamento */}
