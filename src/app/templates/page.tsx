@@ -3,6 +3,8 @@ import { Sparkles, ArrowRight, ChefHat } from 'lucide-react';
 import { getTemplates } from '@/lib/data';
 import { TemplateCard } from '@/components/TemplateCard';
 
+export const revalidate = 60;
+
 export const metadata = {
   title: 'Templates | MarmitaCode',
   description: 'Escolha um template pronto ou encomende um site 100% personalizado.',

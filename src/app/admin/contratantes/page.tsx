@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminClientsPage() {
   const admin = createAdminClient();
-  const { data } = await admin.from('profiles').select('*').order('created_at', { ascending: false });
+  const { data } = await admin.from('profiles').select('*').order('created_at', { ascending: false }).limit(200);
   const profiles = (data as Profile[]) ?? [];
 
   return (

@@ -18,7 +18,7 @@ const STATUSES: OrderStatus[] = [
 
 export default async function AdminOrdersPage() {
   const admin = createAdminClient();
-  const { data } = await admin.from('orders').select('*').order('created_at', { ascending: false });
+  const { data } = await admin.from('orders').select('*').order('created_at', { ascending: false }).limit(200);
   const orders = (data as Order[]) ?? [];
 
   return (
