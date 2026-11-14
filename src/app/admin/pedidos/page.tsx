@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { STATUS_LABELS, TIER_LABELS, type Order, type OrderStatus } from '@/lib/types';
 import { updateOrderStatus } from '@/app/admin/actions';
@@ -16,17 +17,78 @@ const STATUSES: OrderStatus[] = [
   'cancelado',
 ];
 
-export default async function AdminOrdersPage() {
+const PAGE_SIZE = 25;
+
+export default async function AdminOrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; status?: string }>;
+}) {
+  const { page: pageStr, status: statusFilter } = await searchParams;
+  const page = Math.max(1, Number(pageStr) || 1);
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const admin = createAdminClient();
-  const { data } = await admin.from('orders').select('*').order('created_at', { ascending: false }).limit(200);
+  let query = admin
+    .from('orders')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false });
+
+  if (statusFilter && STATUSES.includes(statusFilter as OrderStatus)) {
+    query = query.eq('status', statusFilter);
+  }
+
+  const { data, count } = await query.range(from, to);
   const orders = (data as Order[]) ?? [];
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  const qs = (overrides: Record<string, string | number | undefined>) => {
+    const params = new URLSearchParams();
+    if (statusFilter) params.set('status', statusFilter);
+    for (const [k, v] of Object.entries(overrides)) {
+      if (v === undefined || v === '') params.delete(k);
+      else params.set(k, String(v));
+    }
+    const s = params.toString();
+    return s ? `?${s}` : '';
+  };
 
   return (
     <div>
-      <h1 className="text-4xl font-black italic uppercase tracking-tighter mb-10">Pedidos</h1>
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+        <h1 className="text-4xl font-black italic uppercase tracking-tighter">Pedidos</h1>
+        <span className="text-[11px] font-black uppercase tracking-widest text-white/40">
+          {total} total · página {page} de {totalPages}
+        </span>
+      </div>
+
+      {/* Filtros de status */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <Link
+          href={`/admin/pedidos${qs({ status: undefined, page: undefined })}`}
+          className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${
+            !statusFilter ? 'bg-[#FF8C00] text-black' : 'bg-white/5 text-white/50 hover:text-white'
+          }`}
+        >
+          Todos
+        </Link>
+        {STATUSES.map((s) => (
+          <Link
+            key={s}
+            href={`/admin/pedidos${qs({ status: s, page: undefined })}`}
+            className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${
+              statusFilter === s ? 'bg-[#FF8C00] text-black' : 'bg-white/5 text-white/50 hover:text-white'
+            }`}
+          >
+            {STATUS_LABELS[s]}
+          </Link>
+        ))}
+      </div>
 
       {orders.length === 0 ? (
-        <p className="text-white/30 font-bold">Nenhum pedido ainda.</p>
+        <p className="text-white/30 font-bold">Nenhum pedido encontrado.</p>
       ) : (
         <div className="space-y-5">
           {orders.map((o) => (
@@ -78,6 +140,31 @@ export default async function AdminOrdersPage() {
               </div>
             </details>
           ))}
+        </div>
+      )}
+
+      {/* Paginação */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-3 mt-10">
+          {page > 1 && (
+            <Link
+              href={`/admin/pedidos${qs({ page: page - 1 })}`}
+              className="px-5 py-3 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white/10"
+            >
+              ← Anterior
+            </Link>
+          )}
+          <span className="text-[11px] font-black uppercase tracking-widest text-white/40">
+            {page} / {totalPages}
+          </span>
+          {page < totalPages && (
+            <Link
+              href={`/admin/pedidos${qs({ page: page + 1 })}`}
+              className="px-5 py-3 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-widest hover:bg-white/10"
+            >
+              Próxima →
+            </Link>
+          )}
         </div>
       )}
     </div>
