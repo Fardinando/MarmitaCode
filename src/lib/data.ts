@@ -44,7 +44,7 @@ export async function getTemplates(): Promise<Template[]> {
     const supabase = await createClient();
     const { data } = await supabase
       .from('templates')
-      .select('*')
+      .select('id, slug, name, category, description, long_description, image_url, demo_url, featured, active, features, sort_order, created_at, updated_at')
       .eq('active', true)
       .order('sort_order', { ascending: true });
     return (data as Template[]) ?? [];
@@ -75,7 +75,7 @@ export async function getDomainPricing(): Promise<DomainPricing[]> {
     const supabase = await createClient();
     const { data } = await supabase
       .from('domain_pricing')
-      .select('*')
+      .select('id, years, registry_price, labor_fee, active, sort_order')
       .eq('active', true)
       .order('sort_order', { ascending: true });
 
