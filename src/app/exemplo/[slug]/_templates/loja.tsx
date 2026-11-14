@@ -251,7 +251,7 @@ export function LojaTemplate() {
             className="bg-white rounded-3xl max-w-md w-full overflow-hidden"
           >
             <div className="aspect-square">
-              <img src={`https://images.unsplash.com/${addingProduct.img}?w=800&auto=format&fit=crop`} alt={addingProduct.name} className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${addingProduct.img}?w=800&auto=format&fit=crop`} alt={addingProduct.name} className="w-full h-full object-cover" />
             </div>
             <div className="p-6">
               <h3 className="text-xl font-black mb-1">{addingProduct.name}</h3>

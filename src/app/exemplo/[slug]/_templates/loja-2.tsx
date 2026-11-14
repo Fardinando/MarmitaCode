@@ -127,7 +127,7 @@ export function Loja2Template() {
           </div>
         </div>
         <div className="aspect-square rounded-3xl overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </div>
       </section>
 
@@ -154,7 +154,7 @@ export function Loja2Template() {
           {filtered.map((p) => (
             <article key={p.id} className="group bg-white rounded-2xl overflow-hidden border border-neutral-200">
               <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                <img src={`https://images.unsplash.com/${p.img}?w=500&auto=format&fit=crop`} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${p.img}?w=500&auto=format&fit=crop`} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 {p.badge && (
                   <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
                     p.badge === 'Promo' ? 'bg-rose-500 text-white' :

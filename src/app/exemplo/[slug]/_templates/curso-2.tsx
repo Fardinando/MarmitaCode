@@ -49,7 +49,7 @@ export function Curso2Template() {
             <div className="flex items-center gap-2 text-sm">
               <div className="flex -space-x-2">
                 {['photo-1544005313-94ddf0286df2', 'photo-1534751516642-a1af1ef26a56', 'photo-1573496359142-b8d87734a5a2'].map((p) => (
-                  <img key={p} src={`https://images.unsplash.com/${p}?w=100&auto=format&fit=crop`} className="w-10 h-10 rounded-full border-2 border-[#0A0A0F] object-cover" alt="" />
+                  <img loading="lazy" decoding="async" key={p} src={`https://images.unsplash.com/${p}?w=100&auto=format&fit=crop`} className="w-10 h-10 rounded-full border-2 border-[#0A0A0F] object-cover" alt="" />
                 ))}
               </div>
               <span className="text-white/60 font-medium"><b className="text-white">+1.400 alunas</b></span>
@@ -58,7 +58,7 @@ export function Curso2Template() {
         </div>
         <div className="relative">
           <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-[0_0_80px_rgba(244,63,94,0.4)] rotate-3">
-            <img src="https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&auto=format&fit=crop" alt="Mariana" className="w-full h-full object-cover" />
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1559599101-f09722fb4948?w=600&auto=format&fit=crop" alt="Mariana" className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-6 -left-6 bg-white text-black rounded-2xl p-4 shadow-xl -rotate-6 max-w-[200px]">
             <div className="text-[10px] font-black uppercase tracking-widest text-[#F43F5E]">Última aluna faturou</div>
@@ -71,7 +71,7 @@ export function Curso2Template() {
       {/* Vídeo */}
       <section className="max-w-4xl mx-auto px-6 py-16 relative z-10">
         <div className="aspect-video rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(244,63,94,0.3)] relative group cursor-pointer bg-black">
-          <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1200&auto=format&fit=crop" alt="" className="w-full h-full object-cover opacity-60" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1200&auto=format&fit=crop" alt="" className="w-full h-full object-cover opacity-60" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 rounded-full bg-[#F43F5E] flex items-center justify-center group-hover:scale-110 transition shadow-2xl">
               <Play size={28} className="text-white ml-1" />

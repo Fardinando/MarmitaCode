@@ -10,14 +10,19 @@ export function MarmitaCodeCredit({ className = '' }: { className?: string }) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 no-underline hover:opacity-80 transition-opacity"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/marmitacode-logo.png"
-          alt="MarmitaCode"
-          width={22}
-          height={22}
-          style={{ display: 'block' }}
-        />
+        <picture>
+          <source srcSet="/marmitacode-logo.webp" type="image/webp" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/marmitacode-logo.png"
+            alt="MarmitaCode"
+            width={22}
+            height={22}
+            loading="lazy"
+            decoding="async"
+            style={{ display: 'block' }}
+          />
+        </picture>
         <span className="font-bold text-[13px] normal-case tracking-normal" style={{ color: '#F97316' }}>
           MarmitaCode
         </span>

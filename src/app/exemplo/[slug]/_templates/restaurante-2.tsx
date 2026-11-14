@@ -89,7 +89,7 @@ export function Restaurante2Template() {
           {PRATOS.map((p) => (
             <article key={p.name} className="group bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-[#DC2626]/50 hover:-translate-y-1 transition-all">
               <div className="aspect-[16/10] overflow-hidden">
-                <img src={`https://images.unsplash.com/${p.img}?w=800&auto=format&fit=crop`} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${p.img}?w=800&auto=format&fit=crop`} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="p-6">
                 <div className="flex items-baseline justify-between mb-2">
@@ -136,7 +136,7 @@ export function Restaurante2Template() {
           </ul>
         </div>
         <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(220,38,38,0.2)]">
-          <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&auto=format&fit=crop" alt="Fachada" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&auto=format&fit=crop" alt="Fachada" className="w-full h-full object-cover" />
         </div>
       </section>
 

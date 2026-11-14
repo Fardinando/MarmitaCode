@@ -178,7 +178,7 @@ export function BarbeariaTemplate() {
             {BARBEIROS.slice(0, 3).map((b) => (
               <div key={b.id} className="text-center">
                 <div className="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden ring-4 ring-yellow-500/20">
-                  <img src={`https://images.unsplash.com/${b.img}?w=600&auto=format&fit=crop`} alt={b.name} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${b.img}?w=600&auto=format&fit=crop`} alt={b.name} className="w-full h-full object-cover" />
                 </div>
                 <h3 className="font-black uppercase tracking-wide text-xl">{b.name}</h3>
                 <p className="text-white/40 text-xs uppercase tracking-widest mt-2">{b.role}</p>
@@ -327,7 +327,7 @@ export function BarbeariaTemplate() {
                       }`}
                     >
                       {b.img ? (
-                        <img src={`https://images.unsplash.com/${b.img}?w=200&auto=format&fit=crop`} alt={b.name} className="w-14 h-14 rounded-full object-cover" />
+                        <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${b.img}?w=200&auto=format&fit=crop`} alt={b.name} className="w-14 h-14 rounded-full object-cover" />
                       ) : (
                         <div className="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center">
                           <User size={20} className="text-yellow-500" />

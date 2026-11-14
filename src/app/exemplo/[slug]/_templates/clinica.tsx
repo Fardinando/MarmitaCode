@@ -117,7 +117,7 @@ export function ClinicaTemplate() {
           </div>
           <div className="relative">
             <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
-              <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&auto=format&fit=crop" alt="Clínica" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&auto=format&fit=crop" alt="Clínica" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-5 -right-5 bg-white rounded-2xl p-5 shadow-xl border border-slate-100">
               <div className="flex items-center gap-3">
@@ -182,7 +182,7 @@ export function ClinicaTemplate() {
             {MEDICOS.map((m) => (
               <article key={m.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200">
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img src={`https://images.unsplash.com/${m.foto}?w=600&auto=format&fit=crop`} alt={m.nome} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${m.foto}?w=600&auto=format&fit=crop`} alt={m.nome} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-6">
                   <h3 className="font-black text-lg">{m.nome}</h3>
@@ -262,7 +262,7 @@ export function ClinicaTemplate() {
             </Info>
           </div>
           <div className="aspect-video rounded-3xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&auto=format&fit=crop" alt="Fachada" className="w-full h-full object-cover" />
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1000&auto=format&fit=crop" alt="Fachada" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
@@ -321,7 +321,7 @@ export function ClinicaTemplate() {
                     {medicosFiltrados.map((m) => (
                       <button key={m.id} onClick={() => { setMed(m.id); setStep('horario'); }}
                         className="w-full p-4 rounded-xl border border-slate-200 hover:border-teal-400 flex items-center gap-4 text-left">
-                        <img src={`https://images.unsplash.com/${m.foto}?w=200&auto=format&fit=crop`} alt={m.nome} className="w-14 h-14 rounded-full object-cover" />
+                        <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${m.foto}?w=200&auto=format&fit=crop`} alt={m.nome} className="w-14 h-14 rounded-full object-cover" />
                         <div className="flex-1">
                           <div className="font-black text-sm">{m.nome}</div>
                           <div className="text-xs text-slate-500">CRM {m.crm} · {m.anos} anos</div>

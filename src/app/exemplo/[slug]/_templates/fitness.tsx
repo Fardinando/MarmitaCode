@@ -64,7 +64,7 @@ export function FitnessTemplate() {
       {/* Hero */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&auto=format&fit=crop" alt="" className="w-full h-full object-cover opacity-50" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&auto=format&fit=crop" alt="" className="w-full h-full object-cover opacity-50" />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
         </div>
         <div className="relative max-w-6xl mx-auto px-6 py-32">
@@ -274,7 +274,7 @@ export function FitnessTemplate() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {AULAS.map((a) => (
             <div key={a.name} className="group relative aspect-[3/4] overflow-hidden rounded-2xl">
-              <img src={`https://images.unsplash.com/${a.img}?w=600&auto=format&fit=crop`} alt={a.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${a.img}?w=600&auto=format&fit=crop`} alt={a.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <span className="text-lime-400 text-[10px] uppercase tracking-widest font-black">{a.level}</span>

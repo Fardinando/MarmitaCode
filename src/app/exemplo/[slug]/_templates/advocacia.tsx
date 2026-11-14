@@ -102,7 +102,7 @@ export function AdvocaciaTemplate() {
           </div>
           <div className="relative">
             <div className="aspect-[4/5] overflow-hidden border-4 border-stone-900 shadow-2xl">
-              <img src="https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-6 -left-6 bg-amber-400 p-5 shadow-xl">
               <div className="text-[9px] uppercase tracking-widest text-stone-900">Taxa de êxito</div>
@@ -157,7 +157,7 @@ export function AdvocaciaTemplate() {
             {ADVOGADOS.map((a) => (
               <article key={a.oab} className="bg-white">
                 <div className="aspect-[4/5] overflow-hidden">
-                  <img src={`https://images.unsplash.com/${a.foto}?w=600&auto=format&fit=crop`} alt={a.nome} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${a.foto}?w=600&auto=format&fit=crop`} alt={a.nome} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
                 </div>
                 <div className="p-6 border-l-4 border-amber-700">
                   <h3 className="font-black text-xl">{a.nome}</h3>
@@ -230,7 +230,7 @@ export function AdvocaciaTemplate() {
           </Info>
         </div>
         <div className="aspect-square overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </div>
       </section>
 

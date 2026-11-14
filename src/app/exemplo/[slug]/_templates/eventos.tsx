@@ -102,7 +102,7 @@ export function EventosTemplate() {
           </div>
           <div className="relative">
             <div className="aspect-[4/5] rounded-tl-[80px] rounded-br-[80px] overflow-hidden shadow-2xl">
-              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -top-4 -right-4 bg-rose-700 text-white p-5 rounded-full shadow-xl rotate-6" style={{ fontFamily: 'sans-serif' }}>
               <div className="text-[10px] uppercase tracking-widest opacity-80">+ de</div>
@@ -235,7 +235,7 @@ export function EventosTemplate() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {GALERIA.map((p) => (
             <div key={p} className="aspect-square overflow-hidden rounded-2xl">
-              <img src={`https://images.unsplash.com/${p}?w=700&auto=format&fit=crop`} alt="" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
+              <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${p}?w=700&auto=format&fit=crop`} alt="" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" />
             </div>
           ))}
         </div>
@@ -271,7 +271,7 @@ export function EventosTemplate() {
           </div>
         </div>
         <div className="aspect-square rounded-tr-[80px] rounded-bl-[80px] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </div>
       </section>
 

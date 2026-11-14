@@ -120,7 +120,7 @@ export function MedicoTemplate() {
           </div>
           <div className="relative">
             <div className="aspect-[4/5] rounded-tl-[80px] rounded-br-[80px] overflow-hidden shadow-2xl border-8 border-white">
-              <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&auto=format&fit=crop" alt="Dra. Luiza" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&auto=format&fit=crop" alt="Dra. Luiza" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-6 -left-6 bg-[#c69749] text-white p-5 rounded-full shadow-xl -rotate-6" style={{ fontFamily: 'sans-serif' }}>
               <div className="text-[10px] uppercase tracking-widest opacity-80">+ de</div>
@@ -147,7 +147,7 @@ export function MedicoTemplate() {
       <section id="sobre" className="max-w-5xl mx-auto px-6 py-24 grid md:grid-cols-[1fr_1.5fr] gap-16">
         <div>
           <div className="aspect-[3/4] rounded-tl-[60px] rounded-br-[60px] overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover grayscale" />
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover grayscale" />
           </div>
         </div>
         <div>
@@ -266,7 +266,7 @@ export function MedicoTemplate() {
           </div>
           <div>
             <div className="aspect-square rounded-tl-[80px] rounded-br-[80px] overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
             </div>
           </div>
         </div>

@@ -112,7 +112,7 @@ export function Barbearia2Template() {
             {BARBEIROS.map((b) => (
               <figure key={b.name} className="text-center group">
                 <div className="aspect-square overflow-hidden rounded-3xl mb-4 border border-white/10 group-hover:border-[#FF6B35]/50 transition">
-                  <img src={`https://images.unsplash.com/${b.img}?w=600&auto=format&fit=crop`} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${b.img}?w=600&auto=format&fit=crop`} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <h3 className="text-2xl font-black italic">{b.name}</h3>
                 <p className="text-[#FF6B35] text-[10px] uppercase tracking-widest mt-1 font-black">{b.years} de ofício</p>

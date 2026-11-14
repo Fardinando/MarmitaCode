@@ -112,7 +112,7 @@ export function PetshopTemplate() {
           </div>
           <div className="relative">
             <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl rotate-3">
-              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop" alt="Cachorro" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop" alt="Cachorro" className="w-full h-full object-cover" />
             </div>
             <div className="absolute -bottom-6 -left-6 bg-white rounded-3xl p-5 shadow-xl -rotate-6">
               <div className="flex items-center gap-3">
@@ -167,7 +167,7 @@ export function PetshopTemplate() {
             {PRODUTOS.map((p) => (
               <article key={p.id} className="group">
                 <div className="relative aspect-square rounded-2xl overflow-hidden bg-amber-100 mb-3">
-                  <img src={`https://images.unsplash.com/${p.img}?w=500&auto=format&fit=crop`} alt={p.nome} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${p.img}?w=500&auto=format&fit=crop`} alt={p.nome} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   {p.badge && (
                     <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
                       p.badge === 'Promo' ? 'bg-rose-500 text-white' :
@@ -241,7 +241,7 @@ export function PetshopTemplate() {
           </div>
         </div>
         <div className="aspect-square rounded-[3rem] overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1558929996-da64ba858215?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1558929996-da64ba858215?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover" />
         </div>
       </section>
 

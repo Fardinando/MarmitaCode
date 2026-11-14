@@ -160,7 +160,7 @@ export function SaasTemplate() {
             Em três meses, cortamos pela metade o tempo que o time passava em reuniões.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop" alt="CEO" className="w-14 h-14 rounded-full object-cover ring-2 ring-[#5B6CFF]" />
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop" alt="CEO" className="w-14 h-14 rounded-full object-cover ring-2 ring-[#5B6CFF]" />
             <div className="text-left">
               <div className="font-black">Mariana Oliveira</div>
               <div className="text-white/40 text-xs font-black uppercase tracking-widest">COO · Hotmart</div>

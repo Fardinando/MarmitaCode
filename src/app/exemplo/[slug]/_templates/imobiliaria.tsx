@@ -227,7 +227,7 @@ export function ImobiliariaTemplate() {
             {resultados.map((im) => (
               <article key={im.id} className="group cursor-pointer">
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 border border-white/10">
-                  <img src={`https://images.unsplash.com/${im.img}?w=800&auto=format&fit=crop`} alt={im.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${im.img}?w=800&auto=format&fit=crop`} alt={im.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   {im.tag && (
                     <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#0EA5E9] text-white text-[10px] font-black uppercase tracking-widest">
                       {im.tag}

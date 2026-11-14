@@ -180,7 +180,7 @@ export function CursoTemplate() {
               <div className="text-indigo-400 text-xl mb-4">★★★★★</div>
               <p className="text-white/80 leading-relaxed mb-6">&ldquo;{d.text}&rdquo;</p>
               <div className="flex items-center gap-3">
-                <img src={`https://images.unsplash.com/${d.img}?w=200&auto=format&fit=crop`} alt={d.name} className="w-12 h-12 rounded-full object-cover" />
+                <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${d.img}?w=200&auto=format&fit=crop`} alt={d.name} className="w-12 h-12 rounded-full object-cover" />
                 <div>
                   <div className="font-bold">{d.name}</div>
                   <div className="text-white/40 text-sm">{d.role}</div>
@@ -355,7 +355,7 @@ function AppView({ onLogout }: { onLogout: () => void }) {
               </div>
               <h1 className="text-3xl font-black mb-6">{current.title}</h1>
               <div className="aspect-video rounded-2xl overflow-hidden bg-black border border-white/10 relative group cursor-pointer mb-6">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop" alt="aula" className="w-full h-full object-cover opacity-60" />
+                <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop" alt="aula" className="w-full h-full object-cover opacity-60" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center group-hover:scale-110 transition">
                     <Play size={28} className="ml-1" />
@@ -464,7 +464,7 @@ function AppView({ onLogout }: { onLogout: () => void }) {
               {POSTS.map((p) => (
                 <article key={p.user} className="p-6 bg-white/[0.03] rounded-2xl border border-white/5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img src={`https://images.unsplash.com/${p.avatar}?w=200&auto=format&fit=crop`} className="w-10 h-10 rounded-full object-cover" alt={p.user} />
+                    <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${p.avatar}?w=200&auto=format&fit=crop`} className="w-10 h-10 rounded-full object-cover" alt={p.user} />
                     <div className="flex-1">
                       <div className="font-bold text-sm">{p.user}</div>
                       <div className="text-xs text-white/40">{p.time} atrás</div>

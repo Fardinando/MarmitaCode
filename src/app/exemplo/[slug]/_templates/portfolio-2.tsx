@@ -55,7 +55,7 @@ export function Portfolio2Template() {
           {WORKS.map((w, i) => (
             <article key={w.title} className={`grid md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? 'md:[&>*:first-child]:order-2' : ''}`}>
               <div className="aspect-[4/3] rounded-3xl overflow-hidden group cursor-pointer">
-                <img src={`https://images.unsplash.com/${w.img}?w=1000&auto=format&fit=crop`} alt={w.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <img loading="lazy" decoding="async" src={`https://images.unsplash.com/${w.img}?w=1000&auto=format&fit=crop`} alt={w.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               </div>
               <div>
                 <p className="text-[#00ff88] text-xs uppercase tracking-[0.3em] font-bold mb-4">{w.tag} · {w.year}</p>
@@ -77,7 +77,7 @@ export function Portfolio2Template() {
       <section id="about" className="bg-white/[0.02] py-24 border-y border-white/5">
         <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
           <div className="aspect-square rounded-3xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=800&auto=format&fit=crop" alt="" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
           </div>
           <div>
             <p className="text-[#00ff88] text-xs uppercase tracking-[0.3em] mb-4">Sobre</p>
