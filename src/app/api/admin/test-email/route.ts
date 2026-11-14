@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getProfile } from '@/lib/auth';
+import { withTimeout } from '@/lib/async';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,16 +41,20 @@ export async function GET(req: Request) {
   const resend = new Resend(key);
 
   try {
-    const result = await resend.emails.send({
-      from: from ?? 'MarmitaCode <contato@marmitacode.dev.br>',
-      to: target,
-      subject: '[Teste] MarmitaCode / Resend',
-      html: `<div style="font-family:sans-serif;padding:24px">
-        <h2 style="color:#FF8C00">Teste de envio OK ✓</h2>
-        <p>Se você está lendo isso, o Resend está configurado corretamente.</p>
-        <p><b>From:</b> ${from ?? 'default'}<br/><b>To:</b> ${target}</p>
-      </div>`,
-    });
+    const result = await withTimeout(
+      resend.emails.send({
+        from: from ?? 'MarmitaCode <contato@marmitacode.dev.br>',
+        to: target,
+        subject: '[Teste] MarmitaCode / Resend',
+        html: `<div style="font-family:sans-serif;padding:24px">
+          <h2 style="color:#FF8C00">Teste de envio OK ✓</h2>
+          <p>Se você está lendo isso, o Resend está configurado corretamente.</p>
+          <p><b>From:</b> ${from ?? 'default'}<br/><b>To:</b> ${target}</p>
+        </div>`,
+      }),
+      10_000,
+      'resend-test',
+    );
     diag.attempt = result;
     return NextResponse.json({ ok: true, diag });
   } catch (e: unknown) {

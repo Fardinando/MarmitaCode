@@ -3,6 +3,7 @@ import 'server-only';
 import { Resend } from 'resend';
 import type { Order } from '@/lib/types';
 import { STATUS_LABELS, TIER_LABELS } from '@/lib/types';
+import { withTimeout } from '@/lib/async';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -189,22 +190,30 @@ export async function sendOrderEmails(order: Order) {
   const results = await Promise.allSettled([
     // Admin — tudo detalhado
     to
-      ? resend.emails.send({
-          from,
-          to,
-          replyTo: order.contact_email ?? undefined,
-          subject: `[Briefing] ${order.contact_name ?? 'Cliente'} — ${templateLabel} (${TIER_LABELS[order.tier]})`,
-          html: adminHtml(order),
-        })
+      ? withTimeout(
+          resend.emails.send({
+            from,
+            to,
+            replyTo: order.contact_email ?? undefined,
+            subject: `[Briefing] ${order.contact_name ?? 'Cliente'} — ${templateLabel} (${TIER_LABELS[order.tier]})`,
+            html: adminHtml(order),
+          }),
+          10_000,
+          'resend-admin',
+        )
       : Promise.resolve({ skipped: true, reason: 'ORDER_EMAIL_TO ausente' }),
     // Cliente — agradecimento + cópia do briefing
     order.contact_email
-      ? resend.emails.send({
-          from,
-          to: order.contact_email,
-          subject: `Recebemos seu briefing — MarmitaCode`,
-          html: clientHtml(order),
-        })
+      ? withTimeout(
+          resend.emails.send({
+            from,
+            to: order.contact_email,
+            subject: `Recebemos seu briefing — MarmitaCode`,
+            html: clientHtml(order),
+          }),
+          10_000,
+          'resend-client',
+        )
       : Promise.resolve({ skipped: true, reason: 'contact_email ausente' }),
   ]);
 
