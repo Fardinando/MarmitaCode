@@ -32,8 +32,8 @@ export default async function AccountPage() {
   const supabase = await createClient();
 
   // Verifica se é admin
-  const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-  const profile = profileData as Profile | null;
+  const { data: profileData } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  const profile = profileData as Pick<Profile, 'role'> | null;
   const isAdmin = profile?.role === 'admin';
 
   // Se é admin, mostra gráficos de métricas globais em vez dos pedidos pessoais.

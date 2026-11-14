@@ -17,7 +17,11 @@ export default async function SuccessPage({
   let order: Order | null = null;
   if (orderId) {
     const admin = createAdminClient();
-    const { data } = await admin.from('orders').select('*').eq('id', orderId).single();
+    const { data } = await admin
+      .from('orders')
+      .select('id, template_slug, tier, status, setup_price, monthly_price, domain_years, domain_total, total_paid')
+      .eq('id', orderId)
+      .single();
     order = (data as Order) ?? null;
   }
 
