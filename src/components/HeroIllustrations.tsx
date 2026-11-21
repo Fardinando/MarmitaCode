@@ -148,9 +148,9 @@ export function PlanosIllustration({ className = '' }: { className?: string }) {
           R$ 197
         </text>
         {/* fitinha de "recomendado" */}
-        <g transform="translate(-35 -5) rotate(-18)">
-          <rect x="0" y="0" width="60" height="18" fill={ORANGE_DEEP} />
-          <text x="30" y="13" textAnchor="middle" fontFamily="Georgia, serif" fontSize="9" fontWeight="700" letterSpacing="1" fill={CREAM}>
+        <g transform="translate(-42 -8) rotate(-18)">
+          <rect x="0" y="0" width="92" height="20" fill={ORANGE_DEEP} />
+          <text x="46" y="14" textAnchor="middle" fontFamily="Georgia, serif" fontSize="10" fontWeight="700" letterSpacing="1" fill={CREAM}>
             RECOMENDO
           </text>
         </g>
