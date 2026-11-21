@@ -4,9 +4,6 @@ import React, { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import {
-  LayoutGrid,
-  Palette,
-  Rocket,
   Globe,
   Check,
   ArrowRight,
@@ -50,11 +47,18 @@ const TIERS = [
   },
 ];
 
-const STEPS = [
-  { icon: LayoutGrid, title: 'Escolha', desc: 'Navegue pelos templates ou vá de personalizado.' },
-  { icon: Palette, title: 'Briefing', desc: 'Responda o questionário: cores, layout, conteúdo.' },
-  { icon: Rocket, title: 'Produção', desc: 'Criamos seu site com engenharia de alta performance.' },
-  { icon: Globe, title: 'Domínio', desc: 'Cuidamos do registro e apontamento do seu domínio.' },
+const INGREDIENTES = [
+  'Um template do cardápio (ou prompt pra fazer do zero)',
+  'Briefing preenchido: cores, textos, fotos, estrutura',
+  'Domínio escolhido (registra no Registro.br)',
+  'A sua pressa — a gente respeita o prazo',
+];
+
+const PREPARO = [
+  { tempo: 'Dia 1', acao: 'Você escolhe no cardápio e preenche o briefing' },
+  { tempo: 'Dia 2–5', acao: 'Marmita no fogo: dev, revisão com você, ajustes' },
+  { tempo: 'Dia 6', acao: 'Apontamento de domínio, SSL, publicação' },
+  { tempo: 'Dia 7', acao: 'Seu site no ar. Garantia começa a contar aqui.' },
 ];
 
 const FAQ = [
@@ -368,24 +372,117 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STEPS */}
-      <section className="relative py-32 px-6 z-10 bg-white/[0.01]">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter text-center mb-20">
-            Como <span className="text-[#FF8C00]">funciona.</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {STEPS.map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <div key={s.title} className="relative">
-                  <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">0{i + 1}</span>
-                  <Icon size={30} className="text-[#FF8C00] my-6" />
-                  <h3 className="text-xl font-black uppercase tracking-tight mb-3">{s.title}</h3>
-                  <p className="text-white/40 text-sm font-bold leading-relaxed">{s.desc}</p>
+      {/* RECEITA — como funciona, em formato de cartão de receita */}
+      <section id="como-funciona-receita" className="relative py-32 px-6 z-10">
+        <div className="max-w-5xl mx-auto">
+          {/* Cartão de receita em papel pardo */}
+          <div
+            className="relative rounded-sm shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)] overflow-hidden"
+            style={{ backgroundColor: '#E8D7B8', color: '#2B1F18' }}
+          >
+            {/* Furos de fichário */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-10 hidden md:flex flex-col justify-around items-center"
+              style={{ backgroundColor: '#D4A574' }}
+              aria-hidden="true"
+            >
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <span
+                  key={i}
+                  className="block w-4 h-4 rounded-full"
+                  style={{ backgroundColor: '#2B1F18', opacity: 0.12 }}
+                />
+              ))}
+            </div>
+
+            <div className="p-8 md:p-16 md:pl-24">
+              {/* Cabeçalho do cartão — estilo receita */}
+              <div className="flex items-start justify-between gap-6 mb-10 pb-6" style={{ borderBottom: '2px solid rgba(43,31,24,0.15)' }}>
+                <div>
+                  <p className="text-xs font-bold tracking-widest" style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}>
+                    RECEITA DA CASA · Nº 001
+                  </p>
+                  <h2 className="mt-3 text-5xl md:text-7xl leading-[0.95]" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 500, fontVariationSettings: '"opsz" 144, "SOFT" 50' }}>
+                    Site publicado<br />em <em style={{ fontStyle: 'italic', color: '#C84C09' }}>7 dias.</em>
+                  </h2>
                 </div>
-              );
-            })}
+                {/* Carimbo CHEF */}
+                <div
+                  className="hidden md:flex shrink-0 w-28 h-28 items-center justify-center rounded-full rotate-[-8deg] text-center"
+                  style={{
+                    border: '3px solid #C84C09',
+                    color: '#C84C09',
+                    fontFamily: 'var(--font-fraunces)',
+                  }}
+                >
+                  <div>
+                    <div className="text-[9px] tracking-[0.2em] font-bold">APROVADO</div>
+                    <div className="text-2xl italic leading-none mt-1">chef</div>
+                    <div className="text-[9px] tracking-[0.2em] font-bold mt-1">NA COZINHA</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rende / Pronto em / Serve */}
+              <div className="grid grid-cols-3 gap-6 mb-10">
+                <Spec label="Rende" value="1 site no ar" />
+                <Spec label="Pronto em" value="7 dias" />
+                <Spec label="Serve" value="1 negócio" />
+              </div>
+
+              <div className="grid md:grid-cols-5 gap-10">
+                {/* Ingredientes */}
+                <div className="md:col-span-2">
+                  <h3 className="mb-5 text-2xl" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600 }}>
+                    Ingredientes
+                  </h3>
+                  <ul className="space-y-3" style={{ fontFamily: 'var(--font-fraunces)' }}>
+                    {INGREDIENTES.map((item) => (
+                      <li key={item} className="flex gap-3 text-[15px] leading-snug" style={{ color: '#3B2E24' }}>
+                        <span style={{ color: '#C84C09' }} aria-hidden="true">·</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Modo de preparo */}
+                <div className="md:col-span-3">
+                  <h3 className="mb-5 text-2xl" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600 }}>
+                    Modo de preparo
+                  </h3>
+                  <ol className="space-y-5" style={{ fontFamily: 'var(--font-fraunces)' }}>
+                    {PREPARO.map((p, idx) => (
+                      <li key={p.tempo} className="grid grid-cols-[auto_1fr] gap-5 items-baseline">
+                        <span
+                          className="text-xs font-bold tracking-widest whitespace-nowrap"
+                          style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}
+                        >
+                          {p.tempo}
+                        </span>
+                        <span className="text-[15px] leading-snug" style={{ color: '#3B2E24' }}>
+                          {idx + 1}. {p.acao}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+
+              {/* Observação do chef — anotação manuscrita */}
+              <p
+                className="mt-12 pt-6 text-sm leading-relaxed italic"
+                style={{
+                  fontFamily: 'var(--font-fraunces)',
+                  color: '#5A4332',
+                  borderTop: '1px dashed rgba(43,31,24,0.2)',
+                }}
+              >
+                <strong style={{ fontStyle: 'normal', fontVariationSettings: '"WONK" 1' }}>Nota do chef —</strong>{' '}
+                não gostou do prato? Devolvemos o valor em até 7 dias.
+                Sem letrinha miúda, sem conversa pra enrolar.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -625,5 +722,24 @@ export default function Home() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function Spec({ label, value }: { label: string; value: string }) {
+  return (
+    <div style={{ borderLeft: '2px solid #C84C09' }} className="pl-3">
+      <div
+        className="text-[10px] font-bold tracking-widest"
+        style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}
+      >
+        {label.toUpperCase()}
+      </div>
+      <div
+        className="text-xl md:text-2xl mt-1"
+        style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600, color: '#2B1F18' }}
+      >
+        {value}
+      </div>
+    </div>
   );
 }
