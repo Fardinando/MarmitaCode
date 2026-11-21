@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
+import { MarmitaIllustration } from '@/components/MarmitaIllustration';
 import {
   C,
   serif,
@@ -102,87 +103,120 @@ export default function Home() {
       <WhatsAppWidget />
 
       {/* HERO */}
-      <section className="relative px-6 pt-20 pb-28 md:pt-28 md:pb-36">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-14 md:mb-20">
+      <section className="relative px-6 pt-16 pb-24 md:pt-20 md:pb-32 overflow-hidden">
+        {/* ambiente de fundo: brilho laranja quente + grao de papel */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden>
+          <div
+            className="absolute top-[-10%] right-[-10%] w-[70%] h-[70%] rounded-full"
+            style={{
+              background:
+                'radial-gradient(circle, rgba(249,115,22,0.18) 0%, rgba(249,115,22,0.04) 45%, transparent 70%)',
+              filter: 'blur(40px)',
+            }}
+          />
+          <div
+            className="absolute bottom-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full"
+            style={{
+              background:
+                'radial-gradient(circle, rgba(245,200,107,0.08) 0%, transparent 65%)',
+              filter: 'blur(40px)',
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence baseFrequency=%220.8%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0.96  0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0.04 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>")',
+              opacity: 0.6,
+              mixBlendMode: 'overlay',
+            }}
+          />
+        </div>
+
+        <div className="relative max-w-6xl mx-auto">
+          <div className="mb-12 md:mb-16">
             <Logo />
           </div>
 
-          <Eyebrow>cardápio da semana · pronto em 7 dias</Eyebrow>
+          <div className="grid md:grid-cols-[1.1fr_1fr] gap-12 md:gap-8 items-center">
+            {/* COLUNA ESQUERDA: Texto */}
+            <div>
+              <Eyebrow>cardápio da semana · pronto em 7 dias</Eyebrow>
 
-          <h1
-            className="text-[12vw] md:text-[7rem] leading-[0.95] tracking-[-0.025em] max-w-5xl"
-            style={{
-              ...serif,
-              fontWeight: 400,
-              color: C.text,
-              fontVariationSettings: '"opsz" 144, "SOFT" 50',
-            }}
-          >
-            Seu site profissional,
-            <br />
-            <Emph>servido em 7 dias.</Emph>
-          </h1>
-
-          <div className="mt-10 max-w-[52ch]">
-            <Lead>
-              Do briefing ao domínio, entregue quentinho. Templates a partir de{' '}
-              <strong style={{ color: C.text, fontWeight: 600 }}>R$ 97</strong>{' '}
-              ou projeto sob medida — pra pequenos negócios que precisam vender
-              online sem virar refém de agência.
-            </Lead>
-          </div>
-
-          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <PrimaryBtn href="/templates">
-              Ver o cardápio <ArrowRight size={16} />
-            </PrimaryBtn>
-            <Link
-              href="/encomendar/personalizado?tier=personalizado"
-              className="text-base underline underline-offset-4"
-              style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
-            >
-              …ou peça um prato do zero
-            </Link>
-          </div>
-
-          <div
-            className="mt-16 pt-8 flex flex-wrap items-center gap-x-10 gap-y-4 text-sm"
-            style={{
-              borderTop: `1px solid ${C.border}`,
-              ...serif,
-              color: C.textMuted,
-            }}
-          >
-            <span className="flex items-center gap-2">
-              <Shield size={14} style={{ color: C.accent }} />
-              Garantia de 7 dias — devolvemos 100%
-            </span>
-            <span className="flex items-center gap-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: '#25D366' }}
-              />
-              Atendimento direto comigo no WhatsApp
-            </span>
-            <span style={{ color: C.textFaint, fontStyle: 'italic' }}>
-              no ar agora →{' '}
-              <Link
-                href="/cases#apexenem"
-                className="hover:text-[#F5EFE4]"
-                style={{ color: C.textMuted }}
+              <h1
+                className="text-[11vw] md:text-[5.5rem] lg:text-[6rem] leading-[0.95] tracking-[-0.025em]"
+                style={{
+                  ...serif,
+                  fontWeight: 400,
+                  color: C.text,
+                  fontVariationSettings: '"opsz" 144, "SOFT" 50',
+                }}
               >
-                ApexEnem
-              </Link>
-              ,{' '}
-              <Link
-                href="/cases#agoramed"
-                className="hover:text-[#F5EFE4]"
-                style={{ color: C.textMuted }}
+                Seu site,
+                <br />
+                <Emph>servido em 7 dias.</Emph>
+              </h1>
+
+              <div className="mt-8 max-w-[48ch]">
+                <Lead>
+                  Do briefing ao domínio, entregue quentinho. Templates a partir
+                  de{' '}
+                  <strong style={{ color: C.text, fontWeight: 600 }}>R$ 97</strong>{' '}
+                  ou projeto sob medida — pra pequenos negócios que precisam
+                  vender online sem virar refém de agência.
+                </Lead>
+              </div>
+
+              <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                <PrimaryBtn href="/templates">
+                  Ver o cardápio <ArrowRight size={16} />
+                </PrimaryBtn>
+                <Link
+                  href="/encomendar/personalizado?tier=personalizado"
+                  className="text-base underline underline-offset-4"
+                  style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
+                >
+                  …ou peça um prato do zero
+                </Link>
+              </div>
+
+              {/* linha de prova social compacta */}
+              <div
+                className="mt-12 pt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
+                style={{
+                  borderTop: `1px solid ${C.border}`,
+                  ...serif,
+                  color: C.textMuted,
+                }}
               >
-                AgoraMed
-              </Link>
-            </span>
+                <span className="flex items-center gap-2">
+                  <Shield size={14} style={{ color: C.accent }} />
+                  Garantia de 7 dias
+                </span>
+                <span className="flex items-center gap-2">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ backgroundColor: '#25D366' }}
+                  />
+                  WhatsApp direto
+                </span>
+                <span style={{ color: C.textFaint, fontStyle: 'italic' }}>
+                  no ar →{' '}
+                  <Link href="/cases#apexenem" style={{ color: C.textMuted }} className="hover:text-[#F5EFE4]">
+                    ApexEnem
+                  </Link>
+                  {', '}
+                  <Link href="/cases#agoramed" style={{ color: C.textMuted }} className="hover:text-[#F5EFE4]">
+                    AgoraMed
+                  </Link>
+                </span>
+              </div>
+            </div>
+
+            {/* COLUNA DIREITA: Ilustracao da marmita */}
+            <div className="relative order-first md:order-last">
+              <MarmitaIllustration className="w-full h-auto max-w-[480px] mx-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)]" />
+            </div>
           </div>
         </div>
       </section>

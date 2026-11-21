@@ -7,17 +7,19 @@ import type { ReactNode } from 'react';
    ────────────────────────────────────────────────────────────── */
 
 export const C = {
-  bg: '#0B0908',
-  bgElevated: '#141110',
-  bgSoft: '#1A1614',
+  bg: '#1A120E',
+  bgElevated: '#241915',
+  bgSoft: '#2D201B',
   border: 'rgba(245,239,228,0.08)',
   borderStrong: 'rgba(245,239,228,0.14)',
   text: '#F5EFE4',
-  textMuted: '#A89B8A',
-  textFaint: '#6B6253',
+  textMuted: '#B8A99A',
+  textFaint: '#80725F',
   accent: '#F97316',
   accentInk: '#C84C09',
-  accentSoft: 'rgba(249,115,22,0.10)',
+  accentSoft: 'rgba(249,115,22,0.12)',
+  amber: '#F5C86B',
+  amberSoft: 'rgba(245,200,107,0.12)',
 } as const;
 
 export const serif = {
