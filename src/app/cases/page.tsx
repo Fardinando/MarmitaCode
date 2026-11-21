@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ExternalLink, ArrowUpRight, Zap, Target, Users, GraduationCap, Stethoscope } from 'lucide-react';
 import { IframePreview } from './IframePreview';
+import { CasesIllustration } from '@/components/HeroIllustrations';
 import {
   C,
   serif,
@@ -108,17 +109,22 @@ export default function CasesPage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative px-6 pt-16 pb-12 md:pt-24 md:pb-16">
-        <div className="max-w-5xl mx-auto">
-          <Eyebrow>portfólio · sites nossos no ar</Eyebrow>
-          <Display size="xl">
-            Projetos em <Emph>produção.</Emph>
-          </Display>
-          <div className="mt-8 max-w-[52ch]">
-            <Lead>
-              A gente não só desenvolve — a gente lança. Esses são sites nossos
-              no ar agora, com usuários reais, dando lucro.
-            </Lead>
+      <section className="relative px-6 pt-16 pb-12 md:pt-20 md:pb-16">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
+          <div>
+            <Eyebrow>portfólio · sites nossos no ar</Eyebrow>
+            <Display size="xl">
+              Projetos em <Emph>produção.</Emph>
+            </Display>
+            <div className="mt-8 max-w-[48ch]">
+              <Lead>
+                A gente não só desenvolve — a gente lança. Esses são sites
+                nossos no ar agora, com usuários reais, dando lucro.
+              </Lead>
+            </div>
+          </div>
+          <div className="order-first md:order-last">
+            <CasesIllustration className="w-full h-auto max-w-[460px] mx-auto drop-shadow-[0_25px_50px_rgba(0,0,0,0.45)]" />
           </div>
         </div>
       </section>

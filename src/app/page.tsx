@@ -103,36 +103,7 @@ export default function Home() {
       <WhatsAppWidget />
 
       {/* HERO */}
-      <section className="relative px-6 pt-16 pb-24 md:pt-20 md:pb-32 overflow-hidden">
-        {/* ambiente de fundo: brilho laranja quente + grao de papel */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <div
-            className="absolute top-[-10%] right-[-10%] w-[70%] h-[70%] rounded-full"
-            style={{
-              background:
-                'radial-gradient(circle, rgba(249,115,22,0.18) 0%, rgba(249,115,22,0.04) 45%, transparent 70%)',
-              filter: 'blur(40px)',
-            }}
-          />
-          <div
-            className="absolute bottom-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full"
-            style={{
-              background:
-                'radial-gradient(circle, rgba(245,200,107,0.08) 0%, transparent 65%)',
-              filter: 'blur(40px)',
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                'url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence baseFrequency=%220.8%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0.96  0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0.04 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>")',
-              opacity: 0.6,
-              mixBlendMode: 'overlay',
-            }}
-          />
-        </div>
-
+      <section className="relative px-6 pt-16 pb-24 md:pt-20 md:pb-32">
         <div className="relative max-w-6xl mx-auto">
           <div className="mb-12 md:mb-16">
             <Logo />

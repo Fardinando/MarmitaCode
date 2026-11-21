@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Boxes, Bot, Workflow, Database, Smartphone, Monitor, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
+import { ForaIllustration } from '@/components/HeroIllustrations';
 import {
   C,
   serif,
@@ -51,40 +52,44 @@ export default function ForaDoCardapioPage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative px-6 pt-16 pb-16 md:pt-24 md:pb-20">
-        <div className="max-w-5xl mx-auto">
-          <Eyebrow>fora do cardápio · sob encomenda</Eyebrow>
-          <Display size="xl">
-            Precisa de algo que{' '}
-            <Emph>não está no menu?</Emph>
-          </Display>
-          <div className="mt-8 max-w-[56ch]">
-            <Lead>
-              Site é só uma das coisas que a gente cozinha. Software desktop pra
-              controle de estoque, bot de WhatsApp, automação, app mobile,
-              dashboard — se dá pra programar, a gente faz.
-            </Lead>
-          </div>
-          <div className="mt-12 flex flex-col sm:flex-row gap-4">
-            <a
-              href={waLink(defaultMsg)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-7 py-4 text-sm font-semibold transition-transform hover:translate-x-1 rounded-full"
-              style={{ backgroundColor: '#25D366', color: '#00140A' }}
+      <section className="relative px-6 pt-16 pb-16 md:pt-20 md:pb-20">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
+          <div>
+            <Eyebrow>fora do cardápio · sob encomenda</Eyebrow>
+            <Display size="xl">
+              Precisa de algo que <Emph>não está no menu?</Emph>
+            </Display>
+            <div className="mt-8 max-w-[52ch]">
+              <Lead>
+                Site é só uma das coisas que a gente cozinha. Software desktop
+                pra controle de estoque, bot de WhatsApp, automação, app mobile,
+                dashboard — se dá pra programar, a gente faz.
+              </Lead>
+            </div>
+            <div className="mt-10 flex flex-col sm:flex-row gap-4">
+              <a
+                href={waLink(defaultMsg)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-7 py-4 text-sm font-semibold transition-transform hover:translate-x-1 rounded-full"
+                style={{ backgroundColor: '#25D366', color: '#00140A' }}
+              >
+                <MessageSquare size={14} /> Conversar com o Chef
+              </a>
+              <GhostBtn href="#exemplos">
+                Ver o que já fizemos <ArrowRight size={14} />
+              </GhostBtn>
+            </div>
+            <p
+              className="mt-6 text-sm italic"
+              style={{ ...serif, color: C.textFaint }}
             >
-              <MessageSquare size={14} /> Conversar com o Chef
-            </a>
-            <GhostBtn href="#exemplos">
-              Ver o que já fizemos <ArrowRight size={14} />
-            </GhostBtn>
+              Resposta em até 24h · primeira conversa sem compromisso.
+            </p>
           </div>
-          <p
-            className="mt-8 text-sm italic"
-            style={{ ...serif, color: C.textFaint }}
-          >
-            Resposta em até 24h · primeira conversa sem compromisso.
-          </p>
+          <div className="order-first md:order-last">
+            <ForaIllustration className="w-full h-auto max-w-[460px] mx-auto drop-shadow-[0_25px_50px_rgba(0,0,0,0.45)]" />
+          </div>
         </div>
       </section>
 

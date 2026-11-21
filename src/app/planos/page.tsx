@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Check, Info } from 'lucide-react';
+import { PlanosIllustration } from '@/components/HeroIllustrations';
 import {
   C,
   serif,
@@ -75,17 +76,23 @@ const PLANS = [
 export default function PlanosPage() {
   return (
     <PageShell>
-      <section className="relative px-6 pt-16 pb-16 md:pt-24 md:pb-20">
-        <div className="max-w-5xl mx-auto">
-          <Eyebrow>o cardápio</Eyebrow>
-          <Display size="xl">
-            Escolha sua <Emph>marmita.</Emph>
-          </Display>
-          <div className="mt-8 max-w-[52ch]">
-            <Lead>
-              Setup único + mensalidade de manutenção. A mensalidade cobre a mão
-              de obra para manter o site no ar e as pequenas edições do dia a dia.
-            </Lead>
+      <section className="relative px-6 pt-16 pb-16 md:pt-20 md:pb-20">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
+          <div>
+            <Eyebrow>o cardápio</Eyebrow>
+            <Display size="xl">
+              Escolha sua <Emph>marmita.</Emph>
+            </Display>
+            <div className="mt-8 max-w-[48ch]">
+              <Lead>
+                Setup único + mensalidade de manutenção. A mensalidade cobre a
+                mão de obra para manter o site no ar e as pequenas edições do
+                dia a dia.
+              </Lead>
+            </div>
+          </div>
+          <div className="order-first md:order-last">
+            <PlanosIllustration className="w-full h-auto max-w-[460px] mx-auto drop-shadow-[0_25px_50px_rgba(0,0,0,0.45)]" />
           </div>
         </div>
       </section>

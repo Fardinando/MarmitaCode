@@ -36,14 +36,42 @@ export const sans = {
 export function PageShell({ children }: { children: ReactNode }) {
   return (
     <main
-      className="relative min-h-screen"
+      className="relative min-h-screen overflow-x-hidden"
       style={{
         backgroundColor: C.bg,
         color: C.text,
         ...sans,
       }}
     >
-      {children}
+      {/* Ambiente warm: glows sutis + grao de papel, igual em todas as paginas */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div
+          className="absolute top-0 right-[-10%] w-[55%] h-[75vh] rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(249,115,22,0.13) 0%, rgba(249,115,22,0.03) 45%, transparent 70%)',
+            filter: 'blur(40px)',
+          }}
+        />
+        <div
+          className="absolute top-[40vh] left-[-15%] w-[45%] h-[50vh] rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(245,200,107,0.06) 0%, transparent 65%)',
+            filter: 'blur(40px)',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22><filter id=%22n%22><feTurbulence baseFrequency=%220.8%22 numOctaves=%222%22 stitchTiles=%22stitch%22/><feColorMatrix values=%220 0 0 0 0.96  0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0.04 0%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>")',
+            opacity: 0.5,
+            mixBlendMode: 'overlay',
+          }}
+        />
+      </div>
+      <div className="relative">{children}</div>
     </main>
   );
 }
