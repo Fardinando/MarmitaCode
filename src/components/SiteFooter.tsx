@@ -1,26 +1,43 @@
 import Link from 'next/link';
 import { siteConfig } from '@/lib/site-config';
+import { C, serif, sans } from '@/components/ui';
 
 export function SiteFooter() {
   return (
-    <footer className="mt-32 border-t border-white/5 bg-black/40">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid gap-10 md:grid-cols-4">
+    <footer
+      className="mt-24"
+      style={{
+        borderTop: `1px solid ${C.border}`,
+        backgroundColor: C.bg,
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-20 grid gap-14 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
         <div>
-          <div className="font-black italic text-xl uppercase tracking-tighter">
-            Marmita<span className="text-[#FF8C00]">Code</span>
+          <div
+            className="text-2xl"
+            style={{ ...serif, fontWeight: 500, color: C.text }}
+          >
+            Marmita<em style={{ color: C.accent, fontStyle: 'italic' }}>Code</em>
           </div>
-          <p className="mt-3 text-xs text-white/50 leading-relaxed max-w-xs">
+          <p
+            className="mt-5 text-base leading-relaxed max-w-sm"
+            style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
+          >
             {siteConfig.description}
+          </p>
+          <p
+            className="mt-6 text-sm"
+            style={{ color: C.textFaint, ...sans }}
+          >
+            João Pessoa, PB · Brasil
           </p>
         </div>
 
         <FooterCol title="Produto">
           <FooterLink href="/templates">Templates</FooterLink>
           <FooterLink href="/cases">Cases</FooterLink>
-          <FooterLink href="/fora-do-cardapio">Fora do Cardápio</FooterLink>
+          <FooterLink href="/fora-do-cardapio">Fora do cardápio</FooterLink>
           <FooterLink href="/planos">Planos</FooterLink>
-          <FooterLink href="/#como-funciona">Como funciona</FooterLink>
-          <FooterLink href="/#dominio">Domínio</FooterLink>
         </FooterCol>
 
         <FooterCol title="Conta">
@@ -28,32 +45,37 @@ export function SiteFooter() {
           <FooterLink href="/conta">Minha conta</FooterLink>
         </FooterCol>
 
-        <FooterCol title="Legal & contato">
+        <FooterCol title="Contato">
           <FooterLink href="/termos">Termos de uso</FooterLink>
           <FooterLink href="/privacidade">Privacidade (LGPD)</FooterLink>
           <a
             href={`https://wa.me/${siteConfig.whatsapp}`}
             target="_blank"
             rel="noreferrer"
-            className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-[#FF8C00]"
+            className="text-base hover:opacity-100 transition-opacity"
+            style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
           >
             WhatsApp
           </a>
           <a
             href={`mailto:${siteConfig.email}`}
-            className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-[#FF8C00]"
+            className="text-base hover:opacity-100 transition-opacity"
+            style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
           >
             E-mail
           </a>
         </FooterCol>
       </div>
 
-      <div className="border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-[10px] font-black uppercase tracking-widest text-white/30">
+      <div style={{ borderTop: `1px solid ${C.border}` }}>
+        <div
+          className="max-w-7xl mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-sm"
+          style={{ ...serif, color: C.textFaint, fontStyle: 'italic' }}
+        >
           <span>
-            © {new Date().getFullYear()} {siteConfig.company.legalName}. Todos os direitos reservados.
+            © {new Date().getFullYear()} {siteConfig.company.legalName}.
           </span>
-          <span>Feito com ♥ no Brasil.</span>
+          <span>Servido direto da cozinha, com carinho.</span>
         </div>
       </div>
     </footer>
@@ -63,7 +85,10 @@ export function SiteFooter() {
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-4">
+      <div
+        className="text-xs tracking-[0.2em] uppercase mb-5"
+        style={{ color: C.textFaint, ...sans, fontWeight: 700 }}
+      >
         {title}
       </div>
       <div className="flex flex-col gap-3">{children}</div>
@@ -75,7 +100,8 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   return (
     <Link
       href={href}
-      className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-[#FF8C00]"
+      className="text-base hover:text-[#F5EFE4] transition-colors"
+      style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
     >
       {children}
     </Link>

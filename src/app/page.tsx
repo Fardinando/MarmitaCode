@@ -1,49 +1,53 @@
-'use client';
-
-import React, { useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import {
   Globe,
   Check,
   ArrowRight,
-  Layers,
-  Wrench,
   Lock,
-  UtensilsCrossed,
-  ChefHat,
   Shield,
   Gift,
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { WhatsAppWidget } from '@/components/WhatsAppWidget';
-
-const emptySubscribe = () => () => {};
+import {
+  C,
+  serif,
+  sans,
+  PageShell,
+  Section,
+  SectionHead,
+  Display,
+  Emph,
+  Lead,
+  Eyebrow,
+  PrimaryBtn,
+  GhostBtn,
+  Card,
+  Numero,
+} from '@/components/ui';
 
 const TIERS = [
   {
     key: 'basico',
-    name: 'Feijão com Arroz',
-    price: 'R$ 97',
-    icon: Layers,
+    nome: 'Feijão com Arroz',
+    preco: '97',
     desc: 'O básico bem feito: pegue um dos nossos templates e troque cores, marca, fontes e textos. Pronto pra servir.',
-    bonus: '+ Integração com WhatsApp grátis',
+    bonus: 'Integração com WhatsApp inclusa',
   },
   {
     key: 'intermediario',
-    name: 'Prato Feito',
-    price: 'R$ 197',
-    icon: UtensilsCrossed,
+    nome: 'Prato Feito',
+    preco: '197',
     desc: 'Template com mais liberdade: mude o fluxo, adicione ou tire funcionalidades, ajuste seções. Ainda é marmita, só que turbinada.',
-    bonus: '+ 1 mês de ajustes ilimitados',
+    bonus: '1 mês de ajustes ilimitados',
+    destaque: true,
   },
   {
     key: 'premium',
-    name: 'À la Carte',
-    price: 'R$ 397',
-    icon: ChefHat,
+    nome: 'À la Carte',
+    preco: '397',
     desc: 'Site 100% personalizado, desenvolvido do zero a partir do seu prompt. Nada de template — o chef prepara exclusivo pra você.',
-    bonus: '+ 3 meses de ajustes ilimitados',
+    bonus: '3 meses de ajustes ilimitados',
   },
 ];
 
@@ -93,294 +97,281 @@ const FAQ = [
 ];
 
 export default function Home() {
-  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
-
-  const mouseX = useMotionValue(-1000);
-  const mouseY = useMotionValue(-1000);
-
-  const spotlight = useMotionTemplate`radial-gradient(1000px circle at ${mouseX}px ${mouseY}px, rgba(255,140,0,0.08), transparent 65%)`;
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    mouseX.set(e.clientX);
-    mouseY.set(e.clientY);
-  };
-
   return (
-    <main
-      onMouseMove={handleMouseMove}
-      className="relative bg-black text-white min-h-screen selection:bg-[#FF8C00] selection:text-black font-sans overflow-x-hidden"
-    >
+    <PageShell>
       <WhatsAppWidget />
 
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.06]" />
-        {mounted && <motion.div className="absolute inset-0" style={{ background: spotlight }} />}
-      </div>
-
       {/* HERO */}
-      <section className="relative min-h-[88vh] flex flex-col items-center justify-center px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 flex flex-col items-center"
-        >
-          <div className="mb-16 scale-125 drop-shadow-[0_0_30px_rgba(255,140,0,0.4)]">
+      <section className="relative px-6 pt-20 pb-28 md:pt-28 md:pb-36">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14 md:mb-20">
             <Logo />
           </div>
 
-          <h1 className="text-[9vw] md:text-[5.5rem] font-black tracking-tighter leading-[0.9] uppercase italic mb-6 max-w-5xl">
-            Seu site profissional no ar em <span className="text-[#FF8C00]">7 dias</span>.
-          </h1>
-          <p className="text-white/70 text-lg md:text-2xl font-bold max-w-3xl mb-10 leading-snug">
-            Do briefing ao domínio, entregue quentinho. Templates a partir de <b className="text-white">R$ 97</b> ou projetos sob medida — para pequenos negócios que precisam vender online sem virar refém de agência.
-          </p>
+          <Eyebrow>cardápio da semana · pronto em 7 dias</Eyebrow>
 
-          <div className="flex flex-col items-center gap-5">
-            <Link
-              href="/templates"
-              className="px-14 py-6 rounded-full bg-[#FF8C00] text-black text-sm font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all flex items-center gap-3 justify-center shadow-[0_0_60px_rgba(255,140,0,0.5)]"
-            >
-              Ver templates e começar <ArrowRight size={18} />
-            </Link>
+          <h1
+            className="text-[12vw] md:text-[7rem] leading-[0.95] tracking-[-0.025em] max-w-5xl"
+            style={{
+              ...serif,
+              fontWeight: 400,
+              color: C.text,
+              fontVariationSettings: '"opsz" 144, "SOFT" 50',
+            }}
+          >
+            Seu site profissional,
+            <br />
+            <Emph>servido em 7 dias.</Emph>
+          </h1>
+
+          <div className="mt-10 max-w-[52ch]">
+            <Lead>
+              Do briefing ao domínio, entregue quentinho. Templates a partir de{' '}
+              <strong style={{ color: C.text, fontWeight: 600 }}>R$ 97</strong>{' '}
+              ou projeto sob medida — pra pequenos negócios que precisam vender
+              online sem virar refém de agência.
+            </Lead>
+          </div>
+
+          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <PrimaryBtn href="/templates">
+              Ver o cardápio <ArrowRight size={16} />
+            </PrimaryBtn>
             <Link
               href="/encomendar/personalizado?tier=personalizado"
-              className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white underline underline-offset-4"
+              className="text-base underline underline-offset-4"
+              style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
             >
-              ou quero um site 100% do zero →
+              …ou peça um prato do zero
             </Link>
           </div>
 
-          {/* Selos: garantia + atendimento direto */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-              <Shield size={14} className="text-emerald-400" />
-              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-300">
-                Garantia de 7 dias · Devolvemos 100%
-              </span>
-            </div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#25D366]/10 border border-[#25D366]/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#25D366]">
-                Atendimento direto comigo no WhatsApp
-              </span>
-            </div>
-          </div>
-
-          {/* Prova social acima da dobra */}
-          <div className="mt-14 flex flex-col items-center gap-4">
-            <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.35em] text-white/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Sites nossos no ar agora
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-              <Link href="/cases#apexenem" className="text-lg md:text-xl font-black italic uppercase tracking-tight bg-gradient-to-r from-white/80 to-[#5B6CFF]/80 bg-clip-text text-transparent hover:from-white hover:to-[#5B6CFF] transition-all">
+          <div
+            className="mt-16 pt-8 flex flex-wrap items-center gap-x-10 gap-y-4 text-sm"
+            style={{
+              borderTop: `1px solid ${C.border}`,
+              ...serif,
+              color: C.textMuted,
+            }}
+          >
+            <span className="flex items-center gap-2">
+              <Shield size={14} style={{ color: C.accent }} />
+              Garantia de 7 dias — devolvemos 100%
+            </span>
+            <span className="flex items-center gap-2">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: '#25D366' }}
+              />
+              Atendimento direto comigo no WhatsApp
+            </span>
+            <span style={{ color: C.textFaint, fontStyle: 'italic' }}>
+              no ar agora →{' '}
+              <Link
+                href="/cases#apexenem"
+                className="hover:text-[#F5EFE4]"
+                style={{ color: C.textMuted }}
+              >
                 ApexEnem
               </Link>
-              <span className="text-white/20">·</span>
-              <Link href="/cases#agoramed" className="text-lg md:text-xl font-black italic uppercase tracking-tight bg-gradient-to-r from-white/80 to-[#2DD4BF]/80 bg-clip-text text-transparent hover:from-white hover:to-[#2DD4BF] transition-all">
+              ,{' '}
+              <Link
+                href="/cases#agoramed"
+                className="hover:text-[#F5EFE4]"
+                style={{ color: C.textMuted }}
+              >
                 AgoraMed
               </Link>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#FF8C00]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]" />
-      </section>
-
-      {/* PAS — Problema / Agitação / Solução */}
-      <section className="relative py-32 px-6 z-10 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="inline-block text-[10px] font-black uppercase tracking-[0.35em] text-[#FF8C00] mb-5">
-              Por que a marmita existe
             </span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-[0.95]">
-              Site não precisa ser <span className="text-[#FF8C00]">drama.</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-8 rounded-3xl bg-red-500/5 border border-red-500/20">
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400 mb-4">
-                O problema
-              </div>
-              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
-                Agência cobra <b className="text-white">R$ 5.000</b> e some no meio do projeto. Freelancer é roleta russa. Construtor drag-and-drop te prende numa plataforma cara que fica lenta.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-amber-500/5 border border-amber-500/20">
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400 mb-4">
-                O que acontece enquanto isso
-              </div>
-              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
-                Enquanto você espera o site ficar pronto, <b className="text-white">seu concorrente está pegando os clientes</b> que pesquisam no Google agora. Cada semana sem site é faturamento perdido.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-[#FF8C00]/5 border border-[#FF8C00]/30">
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF8C00] mb-4">
-                A solução marmita
-              </div>
-              <p className="text-white/70 font-bold text-[15px] leading-relaxed">
-                Padronizamos a produção como uma <b className="text-white">cozinha industrial</b> — mesma qualidade de agência, fração do tempo. Em 7 dias no ar, com domínio, SSL e suporte no WhatsApp.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
+      {/* PAS */}
+      <Section divider>
+        <div className="max-w-5xl mx-auto">
+          <SectionHead
+            eyebrow="por que a marmita existe"
+            title={<>Site não precisa ser <Emph>drama.</Emph></>}
+            size="lg"
+          />
+
+          <div
+            className="mt-14 grid md:grid-cols-3 gap-8 text-[15px] leading-relaxed"
+            style={{ ...serif, color: C.textMuted }}
+          >
+            <PASItem n={1} label="o problema">
+              Agência cobra <strong style={{ color: C.text, fontWeight: 600 }}>R$ 5.000</strong> e some
+              no meio do projeto. Freelancer é roleta russa. Construtor drag-and-drop te prende numa
+              plataforma cara que fica lenta.
+            </PASItem>
+            <PASItem n={2} label="enquanto isso">
+              Seu concorrente está pegando os clientes que{' '}
+              <strong style={{ color: C.text, fontWeight: 600 }}>pesquisam no Google agora</strong>.
+              Cada semana sem site é faturamento perdido.
+            </PASItem>
+            <PASItem n={3} label="a marmita" highlight>
+              Padronizamos a produção como uma{' '}
+              <strong style={{ color: C.text, fontWeight: 600 }}>cozinha industrial</strong> — mesma
+              qualidade de agência, fração do tempo. Em 7 dias no ar, com domínio, SSL e suporte no
+              WhatsApp.
+            </PASItem>
+          </div>
+        </div>
+      </Section>
+
       {/* TIERS */}
-      <section id="como-funciona" className="relative py-32 px-6 z-10">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-center mb-6">
-            Escolha sua <span className="text-[#FF8C00]">marmita.</span>
-          </h2>
-          <p className="text-center text-white/50 font-bold text-sm mb-10 max-w-xl mx-auto">
-            Pagamento único + manutenção mensal de R$ 47,90 (hospedagem, SSL, backups e suporte).
-          </p>
+      <Section id="como-funciona" divider>
+        <div className="max-w-6xl mx-auto">
+          <SectionHead
+            eyebrow="o cardápio"
+            title={<>Escolha sua <Emph>marmita.</Emph></>}
+            lead={
+              <>
+                Pagamento único + manutenção mensal de R$ 47,90 — hospedagem,
+                SSL, backups e suporte.
+              </>
+            }
+          />
 
-          {/* Ancoragem de preço */}
-          <div className="max-w-4xl mx-auto mb-16 grid grid-cols-3 gap-3 md:gap-4">
-            <div className="p-4 md:p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-              <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Agência</div>
-              <div className="text-xl md:text-3xl font-black text-white/50 line-through decoration-red-500/60">R$ 3–10k</div>
-              <div className="text-[10px] font-bold text-white/30 mt-2">2 a 3 meses</div>
-            </div>
-            <div className="p-4 md:p-6 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-              <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">Freelancer</div>
-              <div className="text-xl md:text-3xl font-black text-white/50 line-through decoration-red-500/60">R$ 800–2k</div>
-              <div className="text-[10px] font-bold text-white/30 mt-2">prazo incerto</div>
-            </div>
-            <div className="p-4 md:p-6 rounded-2xl bg-[#FF8C00]/10 border border-[#FF8C00]/40 text-center">
-              <div className="text-[10px] font-black uppercase tracking-widest text-[#FF8C00] mb-2">MarmitaCode</div>
-              <div className="text-xl md:text-3xl font-black text-[#FF8C00]">a partir de R$ 97</div>
-              <div className="text-[10px] font-bold text-white/60 mt-2">em 7 dias</div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TIERS.map((t, i) => {
-              const Icon = t.icon;
-              return (
-                <motion.div
-                  key={t.key}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className={`p-10 rounded-[2.5rem] border flex flex-col ${
-                    i === 2 ? 'bg-[#FF8C00]/5 border-[#FF8C00]/30' : 'bg-white/[0.02] border-white/5'
-                  }`}
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {TIERS.map((t) => (
+              <Card key={t.key} accent={t.destaque} className="flex flex-col">
+                <div className="flex items-baseline justify-between mb-5">
+                  <h3 className="text-2xl md:text-3xl" style={{ ...serif, fontWeight: 500, color: C.text }}>
+                    {t.nome}
+                  </h3>
+                  {t.destaque && (
+                    <span
+                      className="text-xs italic"
+                      style={{ ...serif, color: C.accent }}
+                    >
+                      recomendado
+                    </span>
+                  )}
+                </div>
+                <div className="mb-5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs" style={{ color: C.textFaint, ...sans, fontWeight: 600 }}>
+                      R$
+                    </span>
+                    <span
+                      className="text-5xl md:text-6xl leading-none"
+                      style={{ ...serif, fontWeight: 500, color: C.text }}
+                    >
+                      {t.preco}
+                    </span>
+                  </div>
+                  <div className="text-sm mt-2 italic" style={{ ...serif, color: C.textFaint }}>
+                    único · depois R$ 47,90/mês
+                  </div>
+                </div>
+                <p
+                  className="text-[15px] leading-relaxed mb-6 flex-1"
+                  style={{ color: C.textMuted, ...serif }}
                 >
-                  <Icon size={34} className="text-[#FF8C00] mb-8" />
-                  <h3 className="text-3xl font-black uppercase italic tracking-tighter mb-4">{t.name}</h3>
-                  <div className="mb-6">
-                    <div className="text-[#FF8C00] font-black text-4xl leading-none">{t.price}</div>
-                    <div className="text-white/30 text-[10px] font-bold uppercase tracking-widest mt-2">
-                      Pagamento único · depois R$ 47,90/mês
-                    </div>
-                  </div>
-                  <p className="text-white/50 font-bold leading-relaxed mb-5">{t.desc}</p>
-                  <div className="mt-auto flex items-start gap-2 pt-5 border-t border-white/5">
-                    <Gift size={16} className="text-[#FF8C00] mt-0.5 shrink-0" />
-                    <span className="text-xs font-black text-white/80 leading-snug">{t.bonus}</span>
-                  </div>
-                </motion.div>
-              );
-            })}
+                  {t.desc}
+                </p>
+                <div
+                  className="flex items-start gap-2 pt-5 text-sm"
+                  style={{ borderTop: `1px solid ${C.border}`, ...serif, color: C.text }}
+                >
+                  <Gift size={14} style={{ color: C.accent, marginTop: 3 }} className="shrink-0" />
+                  <span style={{ fontStyle: 'italic' }}>{t.bonus}</span>
+                </div>
+              </Card>
+            ))}
           </div>
 
-          {/* Faixa de garantia */}
-          <div className="mt-12 max-w-3xl mx-auto p-6 rounded-3xl bg-emerald-500/5 border border-emerald-500/20 flex items-center gap-4">
-            <div className="shrink-0 w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-              <Shield size={22} className="text-emerald-400" />
-            </div>
-            <div>
-              <div className="text-sm font-black uppercase tracking-wider text-emerald-300 mb-1">
-                Garantia de 7 dias
-              </div>
-              <p className="text-white/70 text-sm font-bold leading-snug">
-                Se em 7 dias você não aprovar o site, devolvemos <b className="text-white">100% do valor pago</b>. Sem letrinha miúda.
-              </p>
-            </div>
+          <div
+            className="mt-12 max-w-3xl mx-auto p-6 rounded-3xl flex items-start gap-4"
+            style={{
+              backgroundColor: 'rgba(16,185,129,0.06)',
+              border: '1px solid rgba(16,185,129,0.25)',
+            }}
+          >
+            <Shield size={22} className="shrink-0 mt-1" style={{ color: '#34D399' }} />
+            <p className="text-[15px] leading-relaxed" style={{ color: C.textMuted, ...serif }}>
+              <strong style={{ color: '#34D399', fontStyle: 'normal', fontWeight: 600 }}>
+                Garantia de 7 dias.
+              </strong>{' '}
+              Se não aprovar o site, devolvemos{' '}
+              <strong style={{ color: C.text, fontWeight: 600 }}>100% do valor pago</strong>. Sem
+              letrinha miúda.
+            </p>
           </div>
 
           <div className="text-center mt-10">
-            <Link href="/planos" className="text-[11px] font-black uppercase tracking-widest text-[#FF8C00] hover:underline">
-              Comparar planos em detalhe →
+            <Link
+              href="/planos"
+              className="text-base underline underline-offset-4"
+              style={{ color: C.accent, ...serif, fontStyle: 'italic' }}
+            >
+              comparar planos em detalhe →
             </Link>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* FORA DO CARDÁPIO — destaque grande */}
-      <section className="relative py-28 px-6 z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="relative overflow-hidden rounded-[2.5rem] md:rounded-[3rem] border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-emerald-500/5 to-black p-10 md:p-16">
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/30 rounded-full blur-[120px]" />
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-400/15 rounded-full blur-[120px]" />
-            <div className="relative grid md:grid-cols-[1.5fr_1fr] gap-10 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/40 mb-6">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300">
-                    Fora do Cardápio
-                  </span>
-                </div>
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black italic uppercase tracking-tighter leading-[1.05] mb-6">
-                  Não é site?{' '}
-                  <span className="inline-block pb-2 pr-2 bg-gradient-to-r from-emerald-400 to-lime-300 bg-clip-text text-transparent">
-                    A gente faz também.
-                  </span>
-                </h2>
-                <p className="text-white/70 text-base md:text-lg font-bold leading-relaxed mb-8 max-w-xl">
-                  Sistema de estoque, bot de WhatsApp, automação, app mobile, software desktop,
-                  dashboard administrativo — se dá pra programar, está no menu.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {['Sistema de estoque', 'Bot WhatsApp', 'App Mobile', 'Software Desktop', 'Automação', 'Dashboard'].map((t) => (
-                    <span key={t} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/70">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  href="/fora-do-cardapio"
-                  className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-emerald-500 text-black text-xs font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-[0_0_60px_rgba(16,185,129,0.5)]"
-                >
-                  Conhecer Fora do Cardápio <ArrowRight size={14} />
-                </Link>
-              </div>
-              <div className="relative hidden md:block">
-                <div className="aspect-square rounded-[2rem] bg-gradient-to-br from-emerald-500/20 to-transparent border border-emerald-500/20 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-7xl mb-4">🍲</div>
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300">
-                      Prato especial
-                    </div>
-                    <div className="text-3xl font-black italic uppercase tracking-tighter mt-2 text-white">
-                      Sob encomenda
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* RECEITA — como funciona, em formato de cartão de receita */}
-      <section id="como-funciona-receita" className="relative py-32 px-6 z-10">
+      {/* FORA DO CARDÁPIO — teaser */}
+      <Section>
         <div className="max-w-5xl mx-auto">
-          {/* Cartão de receita em papel pardo */}
+          <Card className="md:p-14">
+            <div className="grid md:grid-cols-[1.4fr_1fr] gap-10 items-center">
+              <div>
+                <Eyebrow>fora do cardápio</Eyebrow>
+                <Display size="md">
+                  Não é site? <Emph>A gente faz também.</Emph>
+                </Display>
+                <p
+                  className="mt-5 text-base leading-relaxed max-w-[48ch]"
+                  style={{ color: C.textMuted, ...serif }}
+                >
+                  Sistema de estoque, bot de WhatsApp, automação, app mobile,
+                  software desktop, dashboard — se dá pra programar, está no menu.
+                </p>
+                <div className="mt-8">
+                  <PrimaryBtn href="/fora-do-cardapio">
+                    Conhecer <ArrowRight size={14} />
+                  </PrimaryBtn>
+                </div>
+              </div>
+              <ul
+                className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm md:pl-10"
+                style={{
+                  ...serif,
+                  color: C.textMuted,
+                  borderLeft: `1px dashed ${C.border}`,
+                }}
+              >
+                {[
+                  'Sistema de estoque',
+                  'Bot WhatsApp',
+                  'App mobile',
+                  'Software desktop',
+                  'Automação',
+                  'Dashboard',
+                ].map((t, i) => (
+                  <li key={t} className="flex gap-2">
+                    <span style={{ color: C.accent, ...sans, fontWeight: 600 }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      {/* CARTÃO DE RECEITA */}
+      <Section>
+        <div className="max-w-5xl mx-auto">
           <div
-            className="relative rounded-sm shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)] overflow-hidden"
+            className="relative rounded-sm shadow-[0_30px_60px_-20px_rgba(0,0,0,0.6)] overflow-hidden"
             style={{ backgroundColor: '#E8D7B8', color: '#2B1F18' }}
           >
-            {/* Furos de fichário */}
             <div
               className="absolute left-0 top-0 bottom-0 w-10 hidden md:flex flex-col justify-around items-center"
               style={{ backgroundColor: '#D4A574' }}
@@ -396,23 +387,35 @@ export default function Home() {
             </div>
 
             <div className="p-8 md:p-16 md:pl-24">
-              {/* Cabeçalho do cartão — estilo receita */}
-              <div className="flex items-start justify-between gap-6 mb-10 pb-6" style={{ borderBottom: '2px solid rgba(43,31,24,0.15)' }}>
+              <div
+                className="flex items-start justify-between gap-6 mb-10 pb-6"
+                style={{ borderBottom: '2px solid rgba(43,31,24,0.15)' }}
+              >
                 <div>
-                  <p className="text-xs font-bold tracking-widest" style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}>
+                  <p
+                    className="text-xs font-bold tracking-widest"
+                    style={{ color: '#8B5A2B', ...sans }}
+                  >
                     RECEITA DA CASA · Nº 001
                   </p>
-                  <h2 className="mt-3 text-5xl md:text-7xl leading-[0.95]" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 500, fontVariationSettings: '"opsz" 144, "SOFT" 50' }}>
-                    Site publicado<br />em <em style={{ fontStyle: 'italic', color: '#C84C09' }}>7 dias.</em>
+                  <h2
+                    className="mt-3 text-5xl md:text-7xl leading-[0.95]"
+                    style={{
+                      ...serif,
+                      fontWeight: 500,
+                      fontVariationSettings: '"opsz" 144, "SOFT" 50',
+                    }}
+                  >
+                    Site publicado<br />em{' '}
+                    <em style={{ fontStyle: 'italic', color: '#C84C09' }}>7 dias.</em>
                   </h2>
                 </div>
-                {/* Carimbo CHEF */}
                 <div
                   className="hidden md:flex shrink-0 w-28 h-28 items-center justify-center rounded-full rotate-[-8deg] text-center"
                   style={{
                     border: '3px solid #C84C09',
                     color: '#C84C09',
-                    fontFamily: 'var(--font-fraunces)',
+                    ...serif,
                   }}
                 >
                   <div>
@@ -423,7 +426,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Rende / Pronto em / Serve */}
               <div className="grid grid-cols-3 gap-6 mb-10">
                 <Spec label="Rende" value="1 site no ar" />
                 <Spec label="Pronto em" value="7 dias" />
@@ -431,12 +433,9 @@ export default function Home() {
               </div>
 
               <div className="grid md:grid-cols-5 gap-10">
-                {/* Ingredientes */}
                 <div className="md:col-span-2">
-                  <h3 className="mb-5 text-2xl" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600 }}>
-                    Ingredientes
-                  </h3>
-                  <ul className="space-y-3" style={{ fontFamily: 'var(--font-fraunces)' }}>
+                  <h3 className="mb-5 text-2xl" style={{ ...serif, fontWeight: 600 }}>Ingredientes</h3>
+                  <ul className="space-y-3" style={serif}>
                     {INGREDIENTES.map((item) => (
                       <li key={item} className="flex gap-3 text-[15px] leading-snug" style={{ color: '#3B2E24' }}>
                         <span style={{ color: '#C84C09' }} aria-hidden="true">·</span>
@@ -445,18 +444,14 @@ export default function Home() {
                     ))}
                   </ul>
                 </div>
-
-                {/* Modo de preparo */}
                 <div className="md:col-span-3">
-                  <h3 className="mb-5 text-2xl" style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600 }}>
-                    Modo de preparo
-                  </h3>
-                  <ol className="space-y-5" style={{ fontFamily: 'var(--font-fraunces)' }}>
+                  <h3 className="mb-5 text-2xl" style={{ ...serif, fontWeight: 600 }}>Modo de preparo</h3>
+                  <ol className="space-y-5" style={serif}>
                     {PREPARO.map((p, idx) => (
                       <li key={p.tempo} className="grid grid-cols-[auto_1fr] gap-5 items-baseline">
                         <span
                           className="text-xs font-bold tracking-widest whitespace-nowrap"
-                          style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}
+                          style={{ color: '#8B5A2B', ...sans }}
                         >
                           {p.tempo}
                         </span>
@@ -469,259 +464,187 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Observação do chef — anotação manuscrita */}
               <p
                 className="mt-12 pt-6 text-sm leading-relaxed italic"
                 style={{
-                  fontFamily: 'var(--font-fraunces)',
+                  ...serif,
                   color: '#5A4332',
                   borderTop: '1px dashed rgba(43,31,24,0.2)',
                 }}
               >
-                <strong style={{ fontStyle: 'normal', fontVariationSettings: '"WONK" 1' }}>Nota do chef —</strong>{' '}
-                não gostou do prato? Devolvemos o valor em até 7 dias.
-                Sem letrinha miúda, sem conversa pra enrolar.
+                <strong style={{ fontStyle: 'normal', fontVariationSettings: '"WONK" 1' }}>
+                  Nota do chef —
+                </strong>{' '}
+                não gostou do prato? Devolvemos o valor em até 7 dias. Sem letrinha miúda, sem conversa pra enrolar.
               </p>
             </div>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* CASES — sites reais */}
-      <section className="relative py-32 px-6 z-10">
+      {/* CASES */}
+      <Section divider>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70">
-                Sites nossos no ar agora
-              </span>
-            </div>
-            <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-6">
-              Trabalhos <span className="text-[#FF8C00]">em produção.</span>
-            </h2>
-            <p className="text-white/50 text-lg font-bold max-w-2xl mx-auto">
-              Não é só template bonito — a gente lança e mantém sites no ar com usuários reais.
-            </p>
-          </div>
+          <SectionHead
+            eyebrow="sites nossos no ar agora"
+            title={<>O que já saiu da <Emph>cozinha.</Emph></>}
+            lead="Não é portfólio bonito — é site em produção, com usuários reais pagando, código nosso e manutenção contínua."
+          />
 
-          <div className="grid md:grid-cols-2 gap-6 mb-10">
-            <Link
+          <div className="mt-14 grid md:grid-cols-2 gap-6">
+            <CaseCard
               href="/cases#apexenem"
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#5B6CFF]/20 to-black p-10 hover:border-[#5B6CFF]/50 transition-all"
-            >
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#5B6CFF]/20 rounded-full blur-[80px]" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#5B6CFF] mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5B6CFF] animate-pulse" />
-                  No ar · EdTech
-                </div>
-                <h3 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-3 bg-gradient-to-r from-white to-[#5B6CFF] bg-clip-text text-transparent">
-                  ApexEnem
-                </h3>
-                <p className="text-white/60 text-sm leading-relaxed mb-6">
-                  Plataforma inteligente para o ENEM — correção de redação por IA, simulados adaptativos e acompanhamento de evolução.
-                </p>
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#5B6CFF]">7d</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">entrega</div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#5B6CFF]">99,9%</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">uptime</div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#5B6CFF]">IA</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">redação</div>
-                  </div>
-                </div>
-                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#5B6CFF] group-hover:gap-3 transition-all">
-                  Ver case completo <ArrowRight size={14} />
-                </span>
-              </div>
-            </Link>
-
-            <Link
+              nicho="EdTech, no ar"
+              nome="ApexEnem"
+              accent="#5B6CFF"
+              resumo="Plataforma para o ENEM — correção de redação por IA, simulados adaptativos, acompanhamento de evolução."
+              stats={[['7d', 'entrega'], ['99,9%', 'uptime'], ['IA', 'redação']]}
+            />
+            <CaseCard
               href="/cases#agoramed"
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#2DD4BF]/20 to-black p-10 hover:border-[#2DD4BF]/50 transition-all"
-            >
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#2DD4BF]/20 rounded-full blur-[80px]" />
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2DD4BF] mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
-                  No ar · Área de membros
-                </div>
-                <h3 className="text-4xl font-black italic uppercase tracking-tighter leading-none mb-3 bg-gradient-to-r from-white to-[#2DD4BF] bg-clip-text text-transparent">
-                  AgoraMed
-                </h3>
-                <p className="text-white/60 text-sm leading-relaxed mb-6">
-                  Área de membros pra médicos residentes — cursos, trilhas e acompanhamento, com UX pensada para o ambiente de plantão.
-                </p>
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#2DD4BF]">14d</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">entrega</div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#2DD4BF]">24/7</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">acesso</div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
-                    <div className="text-xl font-black text-[#2DD4BF]">LGPD</div>
-                    <div className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">médico</div>
-                  </div>
-                </div>
-                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#2DD4BF] group-hover:gap-3 transition-all">
-                  Ver case completo <ArrowRight size={14} />
-                </span>
-              </div>
-            </Link>
+              nicho="Área de membros, no ar"
+              nome="AgoraMed"
+              accent="#2DD4BF"
+              resumo="Área de membros pra médicos residentes — trilhas, cursos, acompanhamento. UX pensada pro turno de plantão."
+              stats={[['14d', 'entrega'], ['24/7', 'acesso'], ['LGPD', 'médico']]}
+            />
           </div>
 
-          <div className="text-center">
+          <div className="mt-10">
             <Link
               href="/cases"
-              className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white/60 hover:text-white"
+              className="text-base underline underline-offset-4"
+              style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
             >
-              Todos os cases <ArrowRight size={14} />
+              …todos os cases
             </Link>
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* DOMAIN */}
-      <section id="dominio" className="relative py-32 px-6 z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      {/* DOMÍNIO */}
+      <Section id="dominio" divider>
+        <div className="max-w-5xl mx-auto grid md:grid-cols-[1.2fr_1fr] gap-12 items-start">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF8C00]/10 border border-[#FF8C00]/20 text-[#FF8C00] text-[10px] font-black uppercase tracking-[0.2em] mb-8">
-              <Globe size={14} /> Domínio próprio
-            </span>
-            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter leading-none mb-8">
-              Seu site, seu <span className="text-[#FF8C00]">domínio.</span>
-            </h2>
-            <p className="text-white/50 text-lg font-bold leading-relaxed mb-8">
-              Você registra o seu domínio direto no <b className="text-white">Registro.br</b> — simples e rápido. Enviamos
-              um <b className="text-white">tutorial passo a passo</b> depois do pedido, e cuidamos de toda a configuração
+            <Eyebrow><Globe size={14} /> domínio próprio</Eyebrow>
+            <Display size="md">
+              Seu site, <Emph>seu domínio.</Emph>
+            </Display>
+            <p className="mt-6 text-lg leading-relaxed max-w-[52ch]" style={{ ...serif, color: C.textMuted }}>
+              Você registra o seu domínio direto no{' '}
+              <strong style={{ color: C.text, fontWeight: 600 }}>Registro.br</strong> — simples e
+              rápido. Enviamos tutorial passo a passo depois do pedido, e cuidamos de toda a parte
               técnica (DNS, apontamento, SSL).
             </p>
-            <ul className="space-y-4 mb-10">
-              <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Check size={18} className="text-[#FF8C00]" /> Você escolhe e registra no Registro.br
-              </li>
-              <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Check size={18} className="text-[#FF8C00]" /> Tutorial completo enviado por e-mail
-              </li>
-              <li className="flex items-center gap-3 text-sm font-bold text-white/70">
-                <Lock size={18} className="text-[#FF8C00]" /> Nós fazemos toda a configuração técnica
-              </li>
-            </ul>
-            <Link
-              href="/templates"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white text-black text-[11px] font-black uppercase tracking-widest hover:bg-[#FF8C00] transition-all"
-            >
-              Começar agora <ArrowRight size={16} />
-            </Link>
           </div>
-
-          <div className="relative">
-            <div className="absolute -inset-10 bg-[#FF8C00]/10 blur-[100px] rounded-full" />
-            <div className="relative bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 flex items-center justify-center">
-              <div className="text-center">
-                <Wrench size={60} className="text-[#FF8C00] mx-auto mb-6" />
-                <p className="text-white/40 font-bold">Você compra o domínio direto no Registro.br. A gente faz a configuração técnica.</p>
-              </div>
-            </div>
-          </div>
+          <ul className="space-y-4" style={{ ...serif, color: C.textMuted }}>
+            {[
+              [Check, 'Você escolhe e registra no Registro.br'],
+              [Check, 'Tutorial completo enviado por e-mail'],
+              [Lock, 'Nós fazemos toda a configuração técnica'],
+            ].map(([Icon, t], i) => (
+              <li key={i} className="flex items-start gap-3 text-[15px]">
+                <Icon size={18} style={{ color: C.accent, marginTop: 3 }} />
+                <span>{t as string}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </section>
+      </Section>
 
-      {/* FAQ — responde as 7 objeções */}
-      <section id="faq" className="relative py-32 px-6 z-10 border-t border-white/5">
+      {/* FAQ */}
+      <Section id="faq" divider>
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="inline-block text-[10px] font-black uppercase tracking-[0.35em] text-[#FF8C00] mb-5">
-              Perguntas que a gente ouve toda semana
-            </span>
-            <h2 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-[0.95]">
-              Tira a <span className="text-[#FF8C00]">dúvida.</span>
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {FAQ.map((item) => (
+          <SectionHead
+            eyebrow="perguntas que ouvimos toda semana"
+            title={<>Tira a <Emph>dúvida.</Emph></>}
+            size="lg"
+          />
+          <div className="mt-12 space-y-0">
+            {FAQ.map((item, i) => (
               <details
                 key={item.q}
-                className="group rounded-3xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors"
+                className="group"
+                style={{
+                  borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                  borderBottom: `1px solid ${C.border}`,
+                }}
               >
-                <summary className="cursor-pointer list-none p-6 flex items-center justify-between gap-6">
-                  <span className="text-base md:text-lg font-black text-white pr-2">{item.q}</span>
-                  <span className="shrink-0 w-8 h-8 rounded-full bg-[#FF8C00]/10 border border-[#FF8C00]/30 flex items-center justify-center text-[#FF8C00] text-xl font-black transition-transform group-open:rotate-45">
+                <summary
+                  className="cursor-pointer list-none py-6 flex items-center justify-between gap-6"
+                  style={{ ...serif, color: C.text }}
+                >
+                  <span className="text-lg md:text-xl">{item.q}</span>
+                  <span
+                    className="shrink-0 text-2xl leading-none transition-transform group-open:rotate-45"
+                    style={{ color: C.accent, ...serif }}
+                  >
                     +
                   </span>
                 </summary>
-                <div className="px-6 pb-6 text-white/60 font-bold text-[15px] leading-relaxed">
+                <div
+                  className="pb-6 pr-10 text-[15px] leading-relaxed"
+                  style={{ ...serif, color: C.textMuted }}
+                >
                   {item.a}
                 </div>
               </details>
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* CTA */}
-      <section className="relative py-40 px-6 z-10 bg-[#050505]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none mb-8">
-            Pronto para <span className="text-[#FF8C00]">começar?</span>
-          </h2>
-          <p className="text-white/50 text-lg font-bold mb-12 max-w-2xl mx-auto">
-            Escolha um template, responda o briefing e receba seu site no ar em 7 dias. Se não aprovar, devolvemos 100%.
-          </p>
-          <Link
-            href="/templates"
-            className="inline-flex items-center gap-3 px-12 py-6 rounded-full bg-[#FF8C00] text-black text-[12px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-all shadow-[0_0_60px_rgba(255,140,0,0.4)]"
-          >
-            Ver templates e começar <ArrowRight size={16} />
-          </Link>
-          <div className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-emerald-400/80">
-            <Shield size={12} />
-            Garantia de 7 dias · Sem letrinha miúda
+      {/* CTA FINAL */}
+      <Section>
+        <div className="max-w-4xl mx-auto">
+          <Display size="xl">
+            O fogão tá aceso. <Emph>Qual é o pedido?</Emph>
+          </Display>
+          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <PrimaryBtn href="/templates">
+              Ver o cardápio <ArrowRight size={16} />
+            </PrimaryBtn>
+            <GhostBtn href="/encomendar/personalizado?tier=personalizado">
+              Peça um prato do zero
+            </GhostBtn>
+            <span className="text-base italic" style={{ ...serif, color: C.textFaint }}>
+              — Fernando, chef da casa.
+            </span>
           </div>
         </div>
-      </section>
+      </Section>
+    </PageShell>
+  );
+}
 
-      {/* FOOTER */}
-      <footer className="relative py-24 px-6 z-10 border-t border-white/5 bg-black">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-16">
-          <Logo className="scale-125 grayscale brightness-50 hover:grayscale-0 hover:brightness-100 transition-all duration-1000" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 w-full pt-16 border-t border-white/5">
-            <div className="md:col-span-2 space-y-6">
-              <h4 className="text-xs font-black tracking-[0.4em] uppercase text-[#FF8C00]">MarmitaCode • Sede Brasil</h4>
-              <p className="text-white/30 text-lg font-medium italic max-w-sm">
-                “Sua empresa inquebrável através de engenharia digital de alta performance.”
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-xs font-black tracking-widest uppercase text-white/20">Contato</h4>
-              <span className="block text-lg font-black">Fernando Sousa</span>
-              <span className="block text-white/40 font-bold">+55 (83) 99653-2203</span>
-            </div>
-            <div className="space-y-4">
-              <h4 className="text-xs font-black tracking-widest uppercase text-white/20">Plataforma</h4>
-              <div className="flex flex-col gap-2 font-bold text-sm text-[#FF8C00]">
-                <Link href="/templates" className="hover:underline">Templates</Link>
-                <Link href="/planos" className="hover:underline">Planos</Link>
-                <Link href="/conta" className="hover:underline">Minha conta</Link>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-black uppercase tracking-[0.5em] text-white/10">
-            <span>SOLUÇÃO ENTREGUE QUENTINHA © 2026</span>
-            <span className="text-blue-500/30">NEXTJS ENGINE</span>
-          </div>
-        </div>
-      </footer>
-    </main>
+function PASItem({
+  n,
+  label,
+  highlight,
+  children,
+}: {
+  n: number;
+  label: string;
+  highlight?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={highlight ? 'md:pl-10' : ''}
+      style={highlight ? { borderLeft: `1px dashed ${C.accentInk}66` } : undefined}
+    >
+      <div
+        className="mb-3 text-xs tracking-widest uppercase"
+        style={{
+          color: highlight ? C.accent : C.textFaint,
+          ...sans,
+          fontWeight: 700,
+        }}
+      >
+        {n}. {label}
+      </div>
+      <p style={{ color: highlight ? C.text : C.textMuted }}>{children}</p>
+    </div>
   );
 }
 
@@ -729,17 +652,85 @@ function Spec({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ borderLeft: '2px solid #C84C09' }} className="pl-3">
       <div
-        className="text-[10px] font-bold tracking-widest"
-        style={{ color: '#8B5A2B', fontFamily: 'var(--font-plus-jakarta)' }}
+        className="text-[10px] font-bold tracking-widest uppercase"
+        style={{ color: '#8B5A2B', ...sans }}
       >
-        {label.toUpperCase()}
+        {label}
       </div>
-      <div
-        className="text-xl md:text-2xl mt-1"
-        style={{ fontFamily: 'var(--font-fraunces)', fontWeight: 600, color: '#2B1F18' }}
-      >
+      <div className="text-xl md:text-2xl mt-1" style={{ ...serif, fontWeight: 600, color: '#2B1F18' }}>
         {value}
       </div>
     </div>
+  );
+}
+
+function CaseCard({
+  href,
+  nicho,
+  nome,
+  accent,
+  resumo,
+  stats,
+}: {
+  href: string;
+  nicho: string;
+  nome: string;
+  accent: string;
+  resumo: string;
+  stats: [string, string][];
+}) {
+  return (
+    <Link
+      href={href}
+      className="group block rounded-3xl p-8 transition-colors"
+      style={{
+        backgroundColor: C.bgElevated,
+        border: `1px solid ${C.border}`,
+      }}
+    >
+      <div
+        className="text-xs tracking-[0.2em] uppercase mb-5 flex items-center gap-2"
+        style={{ color: accent, ...sans, fontWeight: 700 }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accent }} />
+        {nicho}
+      </div>
+      <h3
+        className="text-4xl md:text-5xl leading-none"
+        style={{ ...serif, fontWeight: 500, color: C.text }}
+      >
+        {nome}
+      </h3>
+      <p
+        className="mt-5 text-[15px] leading-relaxed max-w-[48ch]"
+        style={{ color: C.textMuted, ...serif }}
+      >
+        {resumo}
+      </p>
+      <div className="mt-8 flex gap-10 text-sm" style={{ ...serif }}>
+        {stats.map(([n, l]) => (
+          <div key={l}>
+            <div
+              className="text-2xl md:text-3xl leading-none"
+              style={{ ...serif, fontWeight: 600, color: accent }}
+            >
+              {n}
+            </div>
+            <div
+              className="text-[11px] uppercase tracking-widest mt-2"
+              style={{ ...sans, fontWeight: 700, color: C.textFaint }}
+            >
+              {l}
+            </div>
+          </div>
+        ))}
+      </div>
+      <span
+        className="mt-8 inline-flex items-center gap-2 text-base underline underline-offset-4 group-hover:gap-3 transition-all"
+        style={{ color: accent, ...serif, fontStyle: 'italic' }}
+      >
+        ver o case →
+      </span>
+    </Link>
   );
 }

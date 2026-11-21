@@ -2,50 +2,70 @@ import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { getProfile } from '@/lib/auth';
 import { signOut } from '@/app/login/actions';
+import { C, serif } from '@/components/ui';
 
 export async function SiteHeader() {
   const profile = await getProfile();
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between gap-3">
-        <Link href="/" className="origin-left shrink min-w-0">
+    <header
+      className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl"
+      style={{
+        backgroundColor: 'rgba(11,9,8,0.72)',
+        borderBottom: `1px solid ${C.border}`,
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-5 md:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
+        <Link href="/" className="shrink min-w-0">
           <Logo />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 text-[11px] font-black uppercase tracking-widest text-white/50">
-          <Link href="/templates" className="hover:text-white transition-colors">Templates</Link>
-          <Link href="/cases" className="hover:text-white transition-colors">Cases</Link>
+        <nav
+          className="hidden lg:flex items-center gap-8 text-sm"
+          style={{ ...serif, color: C.textMuted, fontStyle: 'italic' }}
+        >
+          <Link href="/templates" className="hover:text-[#F5EFE4] transition-colors">Templates</Link>
+          <Link href="/cases" className="hover:text-[#F5EFE4] transition-colors">Cases</Link>
+          <Link href="/planos" className="hover:text-[#F5EFE4] transition-colors">Planos</Link>
           <Link
             href="/fora-do-cardapio"
-            className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5"
+            className="hover:text-[#F5EFE4] transition-colors"
+            style={{ color: C.accent }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Fora do Cardápio
+            Fora do cardápio
           </Link>
-          <Link href="/planos" className="hover:text-white transition-colors">Planos</Link>
         </nav>
 
-        <div className="flex items-center gap-2 md:gap-4 shrink-0">
+        <div className="flex items-center gap-3 md:gap-5 shrink-0">
           {profile ? (
             <>
               {profile.role === 'admin' && (
                 <Link
                   href="/admin"
-                  className="hidden sm:inline text-[11px] font-black uppercase tracking-widest text-[#FF8C00] hover:underline"
+                  className="hidden sm:inline text-xs tracking-wide"
+                  style={{ color: C.accent, ...serif, fontStyle: 'italic' }}
                 >
-                  Admin
+                  admin
                 </Link>
               )}
               <Link
                 href="/conta"
-                className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-white/60 hover:text-white"
+                className="text-sm hover:text-[#F5EFE4] transition-colors"
+                style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
               >
-                Minha conta
+                minha conta
               </Link>
               <form action={signOut}>
-                <button className="px-3 py-2 md:px-5 md:py-2.5 rounded-full bg-white/5 border border-white/10 text-[10px] md:text-[11px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors">
-                  Sair
+                <button
+                  className="px-4 py-2 text-xs transition-colors rounded-full"
+                  style={{
+                    color: C.text,
+                    border: `1px solid ${C.border}`,
+                    ...serif,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  sair
                 </button>
               </form>
             </>
@@ -53,13 +73,19 @@ export async function SiteHeader() {
             <>
               <Link
                 href="/login"
-                className="hidden sm:inline text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white"
+                className="hidden sm:inline text-sm hover:text-[#F5EFE4] transition-colors"
+                style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
               >
-                Entrar
+                entrar
               </Link>
               <Link
                 href="/templates"
-                className="px-4 py-2.5 md:px-6 md:py-3 rounded-full bg-[#FF8C00] text-black text-[10px] md:text-[11px] font-black uppercase tracking-widest hover:bg-[#FFD700] transition-colors whitespace-nowrap"
+                className="px-5 py-2.5 text-xs font-semibold whitespace-nowrap transition-transform hover:translate-x-0.5 rounded-full"
+                style={{
+                  backgroundColor: C.accent,
+                  color: '#1A0E00',
+                  letterSpacing: '0.01em',
+                }}
               >
                 Encomendar
               </Link>

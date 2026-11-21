@@ -1,7 +1,22 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Sparkles, ExternalLink, ArrowUpRight, Zap, Target, Users, GraduationCap, Stethoscope } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, Zap, Target, Users, GraduationCap, Stethoscope } from 'lucide-react';
 import { IframePreview } from './IframePreview';
+import {
+  C,
+  serif,
+  sans,
+  PageShell,
+  Section,
+  SectionHead,
+  Display,
+  Emph,
+  Lead,
+  Eyebrow,
+  PrimaryBtn,
+  GhostBtn,
+  Numero,
+} from '@/components/ui';
 
 export const metadata: Metadata = {
   title: 'Cases · Sites reais que a gente fez',
@@ -24,7 +39,6 @@ interface Case {
   stack: string[];
   colors: { primary: string; glow: string };
   features: { icon: React.ReactNode; label: string; desc: string }[];
-  /** Se definido, mostra screenshot estático em vez do iframe. */
   previewImage?: string;
 }
 
@@ -53,10 +67,10 @@ const CASES: Case[] = [
     colors: { primary: '#5B6CFF', glow: 'rgba(91,108,255,0.4)' },
     previewImage: '/cases/apexenem.png',
     features: [
-      { icon: <Target size={18} />, label: 'Correção por IA', desc: 'Feedback nas 5 competências em segundos' },
-      { icon: <Zap size={18} />, label: 'Simulados adaptativos', desc: 'Prioriza seus pontos fracos' },
-      { icon: <Users size={18} />, label: 'Acompanhamento', desc: 'Gráficos de evolução ao vivo' },
-      { icon: <GraduationCap size={18} />, label: 'Questões inéditas', desc: 'Banco próprio no estilo ENEM' },
+      { icon: <Target size={16} />, label: 'Correção por IA', desc: 'Feedback nas 5 competências em segundos' },
+      { icon: <Zap size={16} />, label: 'Simulados adaptativos', desc: 'Prioriza seus pontos fracos' },
+      { icon: <Users size={16} />, label: 'Acompanhamento', desc: 'Gráficos de evolução ao vivo' },
+      { icon: <GraduationCap size={16} />, label: 'Questões inéditas', desc: 'Banco próprio no estilo ENEM' },
     ],
   },
   {
@@ -82,147 +96,153 @@ const CASES: Case[] = [
     stack: ['Next.js', 'Supabase Auth', 'TailwindCSS', 'Vercel'],
     colors: { primary: '#2DD4BF', glow: 'rgba(45,212,191,0.4)' },
     features: [
-      { icon: <Stethoscope size={18} />, label: 'UX médica', desc: 'Pensada pro ambiente de plantão' },
-      { icon: <Users size={18} />, label: 'Área do aluno', desc: 'Login seguro, cursos e progresso' },
-      { icon: <Target size={18} />, label: 'Trilhas práticas', desc: 'Conteúdo organizado por especialidade' },
-      { icon: <Zap size={18} />, label: 'Acesso rápido', desc: 'Otimizado pra uso entre turnos' },
+      { icon: <Stethoscope size={16} />, label: 'UX médica', desc: 'Pensada pro ambiente de plantão' },
+      { icon: <Users size={16} />, label: 'Área do aluno', desc: 'Login seguro, cursos e progresso' },
+      { icon: <Target size={16} />, label: 'Trilhas práticas', desc: 'Conteúdo organizado por especialidade' },
+      { icon: <Zap size={16} />, label: 'Acesso rápido', desc: 'Otimizado pra uso entre turnos' },
     ],
   },
 ];
 
 export default function CasesPage() {
   return (
-    <main className="min-h-screen bg-black text-white overflow-x-hidden">
+    <PageShell>
       {/* HERO */}
-      <section className="relative px-6 pt-20 pb-24">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,140,0,0.15),transparent_60%)]" />
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-10">
-            <Sparkles size={14} className="text-[#FF8C00]" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/80">
-              Portfólio
-            </span>
+      <section className="relative px-6 pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="max-w-5xl mx-auto">
+          <Eyebrow>portfólio · sites nossos no ar</Eyebrow>
+          <Display size="xl">
+            Projetos em <Emph>produção.</Emph>
+          </Display>
+          <div className="mt-8 max-w-[52ch]">
+            <Lead>
+              A gente não só desenvolve — a gente lança. Esses são sites nossos
+              no ar agora, com usuários reais, dando lucro.
+            </Lead>
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black italic uppercase tracking-tighter leading-[0.9] mb-8">
-            Projetos em{' '}
-            <span className="bg-gradient-to-r from-[#FF8C00] via-[#FFD700] to-[#FF8C00] bg-clip-text text-transparent">
-              produção
-            </span>
-          </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            A gente não só desenvolve — a gente <b className="text-white">lança</b>. Esses são
-            sites nossos no ar agora, com usuários reais, dando lucro.
-          </p>
         </div>
       </section>
 
       {/* CASES */}
-      <section className="px-6 pb-32">
+      <Section>
         <div className="max-w-6xl mx-auto space-y-24">
           {CASES.map((c, i) => (
-            <CaseBlock key={c.slug} caseItem={c} reverse={i % 2 === 1} />
+            <CaseBlock key={c.slug} caseItem={c} index={i + 1} reverse={i % 2 === 1} />
           ))}
         </div>
-      </section>
+      </Section>
 
       {/* CTA FINAL */}
-      <section className="relative px-6 py-32 border-t border-white/5">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(255,140,0,0.1),transparent_60%)]" />
-        <div className="relative max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-6">
-            Seu site <span className="text-[#FF8C00]">pode ser o próximo.</span>
-          </h2>
-          <p className="text-white/60 text-lg mb-10">
-            Mesma qualidade, mesmo cuidado — do briefing ao ar.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link
-              href="/templates"
-              className="inline-flex items-center gap-2 px-10 py-5 bg-[#FF8C00] text-black text-xs font-black uppercase tracking-widest rounded-full hover:bg-[#FFD700]"
-            >
+      <Section divider>
+        <div className="max-w-4xl mx-auto">
+          <Display size="xl">
+            Seu site pode ser o <Emph>próximo.</Emph>
+          </Display>
+          <div className="mt-6 max-w-[52ch]">
+            <Lead>Mesma qualidade, mesmo cuidado — do briefing ao ar.</Lead>
+          </div>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <PrimaryBtn href="/templates">
               Ver templates <ArrowUpRight size={14} />
-            </Link>
-            <Link
-              href="/encomendar/personalizado?tier=premium"
-              className="inline-flex items-center gap-2 px-10 py-5 border border-white/10 bg-white/5 text-xs font-black uppercase tracking-widest rounded-full hover:bg-white/10"
-            >
+            </PrimaryBtn>
+            <GhostBtn href="/encomendar/personalizado?tier=premium">
               Faça do zero
-            </Link>
+            </GhostBtn>
           </div>
         </div>
-      </section>
-    </main>
+      </Section>
+    </PageShell>
   );
 }
 
-function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean }) {
+function CaseBlock({ caseItem: c, index, reverse }: { caseItem: Case; index: number; reverse: boolean }) {
   return (
     <article id={c.slug} className="relative scroll-mt-24">
-      {/* Glow de fundo */}
       <div
-        className="absolute inset-0 blur-[120px] opacity-30 rounded-[3rem]"
-        style={{ backgroundColor: c.colors.primary }}
-        aria-hidden
-      />
-
-      <div className="relative rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/[0.03] to-transparent">
+        className="relative rounded-3xl overflow-hidden"
+        style={{
+          backgroundColor: C.bgElevated,
+          border: `1px solid ${C.border}`,
+        }}
+      >
         {/* Header do case */}
-        <div
-          className="relative p-8 md:p-12 border-b border-white/5"
-          style={{
-            background: `linear-gradient(135deg, ${c.colors.primary}22 0%, transparent 70%)`,
-          }}
-        >
-          <div className="flex items-start justify-between gap-4 flex-wrap mb-8">
+        <div className="relative p-8 md:p-12">
+          <div className="flex items-start justify-between gap-6 flex-wrap mb-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-5">
+              <div className="flex items-center gap-3 mb-5">
+                <Numero n={index} />
                 <span
-                  className="w-2 h-2 rounded-full animate-pulse"
+                  className="w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: c.colors.primary }}
                 />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white/70">
-                  No ar · {c.category}
+                <span
+                  className="text-sm italic"
+                  style={{ ...serif, color: c.colors.primary }}
+                >
+                  no ar · {c.category}
                 </span>
               </div>
               <h2
-                className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none mb-3"
+                className="text-5xl md:text-7xl leading-[0.95] mb-3"
                 style={{
-                  background: `linear-gradient(135deg, #fff 0%, ${c.colors.primary} 100%)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  ...serif,
+                  fontWeight: 500,
+                  color: C.text,
+                  fontVariationSettings: '"opsz" 144, "SOFT" 40',
                 }}
               >
                 {c.title}
               </h2>
-              <p className="text-white/60 text-lg font-bold">{c.tagline}</p>
+              <p
+                className="text-lg italic"
+                style={{ ...serif, color: C.textMuted }}
+              >
+                {c.tagline}
+              </p>
             </div>
             <a
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-black text-xs font-black uppercase tracking-widest shrink-0"
-              style={{ backgroundColor: c.colors.primary }}
+              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold shrink-0 transition-transform hover:translate-x-1"
+              style={{ backgroundColor: c.colors.primary, color: '#0A0A0A' }}
             >
               Visitar site
-              <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ExternalLink size={14} />
             </a>
           </div>
 
           {/* Mockup browser frame */}
-          <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl">
-            <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/5">
-              <span className="w-3 h-3 rounded-full bg-red-500/60" />
-              <span className="w-3 h-3 rounded-full bg-amber-400/60" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/60" />
+          <div
+            className="relative rounded-2xl overflow-hidden shadow-2xl"
+            style={{
+              border: `1px solid ${C.border}`,
+              backgroundColor: C.bg,
+            }}
+          >
+            <div
+              className="flex items-center gap-2 px-4 py-3"
+              style={{ borderBottom: `1px solid ${C.border}`, backgroundColor: C.bgSoft }}
+            >
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: 'rgba(239,68,68,0.6)' }} />
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: 'rgba(251,191,36,0.6)' }} />
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: 'rgba(16,185,129,0.6)' }} />
               <div className="flex-1 flex justify-center">
-                <span className="px-4 py-1 rounded-full bg-white/[0.03] border border-white/10 text-[10px] font-mono text-white/40">
+                <span
+                  className="px-4 py-1 rounded-full text-[11px]"
+                  style={{
+                    border: `1px solid ${C.border}`,
+                    color: C.textFaint,
+                    fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+                  }}
+                >
                   {c.url.replace(/^https?:\/\//, '')}
                 </span>
               </div>
             </div>
-            <div className="relative aspect-video bg-gradient-to-br from-white/[0.03] to-black overflow-hidden">
+            <div className="relative aspect-video overflow-hidden" style={{ backgroundColor: C.bg }}>
               {c.previewImage ? (
-                // Screenshot estático (quando o site não renderiza bem em iframe)
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={c.previewImage}
                   alt={`Preview ${c.title}`}
@@ -230,47 +250,37 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
                   loading="lazy"
                 />
               ) : (
-                // iframe desktop (1440x900) escalado pro container via ResizeObserver
                 <IframePreview url={c.url} title={`Preview ${c.title}`} />
               )}
-              {/* Mobile: nada de iframe — placeholder bonito com nome do case */}
               <div className="sm:hidden absolute inset-0 flex items-center justify-center overflow-hidden">
-                <div
-                  className="absolute inset-0 opacity-70"
-                  style={{
-                    background: `radial-gradient(ellipse at center, ${c.colors.primary}55, transparent 70%)`,
-                  }}
-                />
                 <div className="relative text-center px-6">
                   <div
-                    className="text-5xl font-black italic uppercase tracking-tighter mb-2"
-                    style={{
-                      background: `linear-gradient(135deg, #fff 0%, ${c.colors.primary} 100%)`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
+                    className="text-5xl mb-2"
+                    style={{ ...serif, fontWeight: 500, color: c.colors.primary }}
                   >
                     {c.title}
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
+                  <div
+                    className="text-xs tracking-widest"
+                    style={{ ...sans, color: C.textFaint, fontFamily: 'ui-monospace, monospace' }}
+                  >
                     {c.url.replace(/^https?:\/\//, '')}
                   </div>
                 </div>
               </div>
-              {/* Overlay clicável sempre — abre em nova aba */}
               <a
                 href={c.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Abrir ${c.title}`}
-                className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent hover:from-black/80 transition-colors flex items-end justify-center p-6 group"
+                className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent hover:from-black/80 transition-colors flex items-end justify-center p-6 group"
               >
                 <span
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-black text-xs font-black uppercase tracking-widest shadow-2xl group-hover:scale-105 transition-transform"
-                  style={{ backgroundColor: c.colors.primary }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold shadow-xl group-hover:scale-105 transition-transform"
+                  style={{ backgroundColor: c.colors.primary, color: '#0A0A0A' }}
                 >
                   Abrir {c.title.toLowerCase()} em nova aba
-                  <ExternalLink size={14} />
+                  <ExternalLink size={12} />
                 </span>
               </a>
             </div>
@@ -278,41 +288,77 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
         </div>
 
         {/* Conteúdo */}
-        <div className={`grid md:grid-cols-[1fr_1.3fr] gap-10 md:gap-16 p-8 md:p-12 ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}>
-          {/* Esquerda: features */}
+        <div
+          className={`grid md:grid-cols-[1fr_1.3fr] gap-10 md:gap-16 p-8 md:p-12 ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}
+          style={{ borderTop: `1px solid ${C.border}` }}
+        >
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-5" style={{ color: c.colors.primary }}>
+            <div
+              className="text-xs tracking-[0.2em] uppercase mb-5"
+              style={{ color: c.colors.primary, ...sans, fontWeight: 700 }}
+            >
               Destaques
-            </p>
+            </div>
             <div className="space-y-3">
               {c.features.map((f) => (
-                <div key={f.label} className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                <div
+                  key={f.label}
+                  className="flex items-start gap-4 p-4 rounded-2xl"
+                  style={{
+                    backgroundColor: C.bgSoft,
+                    border: `1px solid ${C.border}`,
+                  }}
+                >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                     style={{
-                      backgroundColor: `${c.colors.primary}22`,
+                      backgroundColor: `${c.colors.primary}18`,
                       color: c.colors.primary,
                     }}
                   >
                     {f.icon}
                   </div>
                   <div>
-                    <div className="font-black text-sm">{f.label}</div>
-                    <div className="text-white/50 text-xs mt-0.5 leading-relaxed">{f.desc}</div>
+                    <div className="text-sm" style={{ ...serif, fontWeight: 600, color: C.text }}>
+                      {f.label}
+                    </div>
+                    <div
+                      className="text-sm mt-1 leading-relaxed"
+                      style={{ color: C.textMuted, ...serif, fontStyle: 'italic' }}
+                    >
+                      {f.desc}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Meta */}
-            <div className="mt-8 pt-6 border-t border-white/5 space-y-3 text-xs">
+            <div
+              className="mt-8 pt-6 space-y-3 text-sm"
+              style={{ borderTop: `1px solid ${C.border}` }}
+            >
               <MetaRow label="Cliente" value={c.cliente} />
               <MetaRow label="Ano" value={c.ano} />
               <div>
-                <div className="text-white/40 font-black uppercase tracking-widest text-[10px] mb-2">Stack</div>
+                <div
+                  className="text-xs uppercase tracking-widest mb-2"
+                  style={{ color: C.textFaint, ...sans, fontWeight: 700 }}
+                >
+                  Stack
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {c.stack.map((s) => (
-                    <span key={s} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/70">
+                    <span
+                      key={s}
+                      className="px-2.5 py-1 rounded-full text-xs"
+                      style={{
+                        backgroundColor: C.bgSoft,
+                        border: `1px solid ${C.border}`,
+                        color: C.textMuted,
+                        ...sans,
+                        fontWeight: 500,
+                      }}
+                    >
                       {s}
                     </span>
                   ))}
@@ -321,24 +367,30 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
             </div>
           </div>
 
-          {/* Direita: narrativa */}
           <div className="space-y-8">
-            <TextBlock label="Sobre o projeto" title="O que é">
+            <TextBlock label="Sobre o projeto" title="O que é" accent={c.colors.primary}>
               {c.about}
             </TextBlock>
-            <TextBlock label="O desafio" title="O problema">
+            <TextBlock label="O desafio" title="O problema" accent={c.colors.primary}>
               {c.problem}
             </TextBlock>
-            <TextBlock label="A proposta" title="A solução">
+            <TextBlock label="A proposta" title="A solução" accent={c.colors.primary}>
               {c.solution}
             </TextBlock>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-4" style={{ color: c.colors.primary }}>
+              <div
+                className="text-xs tracking-[0.2em] uppercase mb-4"
+                style={{ color: c.colors.primary, ...sans, fontWeight: 700 }}
+              >
                 Resultados
-              </p>
+              </div>
               <ul className="space-y-2">
                 {c.result.map((r) => (
-                  <li key={r} className="flex items-start gap-3 text-white/70 text-sm leading-relaxed">
+                  <li
+                    key={r}
+                    className="flex items-start gap-3 text-[15px] leading-relaxed"
+                    style={{ color: C.textMuted, ...serif }}
+                  >
                     <span
                       className="w-1.5 h-1.5 rounded-full mt-2 shrink-0"
                       style={{ backgroundColor: c.colors.primary }}
@@ -355,12 +407,37 @@ function CaseBlock({ caseItem: c, reverse }: { caseItem: Case; reverse: boolean 
   );
 }
 
-function TextBlock({ label, title, children }: { label: string; title: string; children: React.ReactNode }) {
+function TextBlock({
+  label,
+  title,
+  children,
+  accent,
+}: {
+  label: string;
+  title: string;
+  children: React.ReactNode;
+  accent: string;
+}) {
   return (
     <div>
-      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-2">{label}</p>
-      <h3 className="font-black text-xl mb-3">{title}</h3>
-      <p className="text-white/60 leading-relaxed text-sm">{children}</p>
+      <div
+        className="text-xs tracking-[0.2em] uppercase mb-2"
+        style={{ color: accent, ...sans, fontWeight: 700 }}
+      >
+        {label}
+      </div>
+      <h3
+        className="text-2xl mb-3"
+        style={{ ...serif, fontWeight: 500, color: C.text }}
+      >
+        {title}
+      </h3>
+      <p
+        className="text-[15px] leading-relaxed"
+        style={{ color: C.textMuted, ...serif }}
+      >
+        {children}
+      </p>
     </div>
   );
 }
@@ -368,8 +445,18 @@ function TextBlock({ label, title, children }: { label: string; title: string; c
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-3">
-      <span className="text-white/40 font-black uppercase tracking-widest text-[10px]">{label}</span>
-      <span className="font-bold text-white/80 text-right">{value}</span>
+      <span
+        className="text-xs uppercase tracking-widest"
+        style={{ color: C.textFaint, ...sans, fontWeight: 700 }}
+      >
+        {label}
+      </span>
+      <span
+        className="text-sm text-right"
+        style={{ ...serif, color: C.text, fontStyle: 'italic' }}
+      >
+        {value}
+      </span>
     </div>
   );
 }
