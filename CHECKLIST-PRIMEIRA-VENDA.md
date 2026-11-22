@@ -30,12 +30,18 @@ Auditoria do sistema completo (2026-11-21). Siga essa lista antes de divulgar o 
 
 ## Passos pra ativar o cron antes da primeira venda
 
-1. **Rodar a migration** em Supabase (SQL Editor):
+1. **Rodar as migrations** em Supabase (SQL Editor, na ordem):
    ```sql
-   -- veja supabase/migrations/20261121_monthly_reminders.sql
+   -- supabase/migrations/20261121_monthly_reminders.sql
    alter table public.site_projects
      add column if not exists last_reminder_due_date date;
+
+   -- supabase/migrations/20261121_fix_tier_prices.sql
+   update public.template_tiers set setup_price = 97,  monthly_price = 47.90 where tier = 'basico';
+   update public.template_tiers set setup_price = 197, monthly_price = 47.90 where tier = 'intermediario';
+   update public.template_tiers set setup_price = 397, monthly_price = 47.90 where tier = 'premium';
    ```
+   Depois rode `GET /api/setup/seed` (precisa de admin logado) pra garantir os templates e features atualizados.
 
 2. **Setar env vars na Vercel** (Settings -> Environment Variables):
    - `CRON_SECRET` -> rode `openssl rand -hex 32` e cole o resultado

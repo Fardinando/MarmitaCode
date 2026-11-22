@@ -226,15 +226,19 @@ on conflict (slug) do update set
   sort_order = excluded.sort_order,
   updated_at = now();
 
+-- Precos da tabela de planos: 97 / 197 / 397 setup, todos com 47,90/mes.
 insert into public.template_tiers (template_id, tier, setup_price, monthly_price, features)
 select t.id, tiers.tier, tiers.setup, tiers.monthly, tiers.features
 from public.templates t
 cross join (values
-  ('basico', 300, 75, '["Troca de logomarca","Troca de cores","Troca de textos"]'::jsonb),
-  ('intermediario', 500, 100, '["Tudo do Básico","Animações personalizadas","Reordenação de seções","Ajuste de fluxos"]'::jsonb),
-  ('premium', 900, 125, '["Tudo do Intermediário","Design exclusivo","Lógica sob medida","Baseado ou não em template"]'::jsonb)
+  ('basico', 97, 47.90, '["Template do catálogo","Troca de logomarca","Troca de cores","Troca de fontes","Troca de textos"]'::jsonb),
+  ('intermediario', 197, 47.90, '["Tudo do Feijão com Arroz","Mudança no fluxo de ações","Adicionar ou remover funcionalidades","Reordenação de seções","Animações personalizadas"]'::jsonb),
+  ('premium', 397, 47.90, '["Projeto 100% personalizado","Desenvolvido do zero a partir do seu prompt","Design exclusivo","Lógica frontend sob medida"]'::jsonb)
 ) as tiers(tier, setup, monthly, features)
-on conflict (template_id, tier) do nothing;
+on conflict (template_id, tier) do update set
+  setup_price = excluded.setup_price,
+  monthly_price = excluded.monthly_price,
+  features = excluded.features;
 
 insert into public.domain_pricing (years, registry_price, labor_fee, sort_order) values
   (1, 40, 10, 1),
