@@ -64,6 +64,52 @@ export async function POST(req: Request) {
     }
 
     const admin = createAdminClient();
+
+    // ========== RENOVACAO / ANTECIPACAO DE MENSALIDADE ==========
+    if (externalRef.startsWith('renew:')) {
+      const projectId = externalRef.slice('renew:'.length);
+      if (!PAID_STATUSES.has(mpStatus)) {
+        return NextResponse.json({ ok: true, renewPending: true });
+      }
+      const { data: already } = await admin
+        .from('site_renewals')
+        .select('id')
+        .eq('payment_id', paymentId)
+        .maybeSingle();
+      if (already) return NextResponse.json({ ok: true, renewDuplicate: true });
+
+      const { data: project } = await admin
+        .from('site_projects')
+        .select('id, next_due_date')
+        .eq('id', projectId)
+        .single();
+      if (!project) return NextResponse.json({ ok: true, renewNoProject: true });
+
+      const base = project.next_due_date
+        ? new Date(project.next_due_date + 'T00:00:00Z')
+        : new Date();
+      base.setUTCDate(base.getUTCDate() + 30);
+      const newDue = base.toISOString().slice(0, 10);
+
+      await admin.from('site_renewals').insert({
+        project_id: projectId,
+        payment_id: paymentId,
+        amount: Number(payment.transaction_amount ?? 0),
+        previous_due_date: project.next_due_date,
+        new_due_date: newDue,
+      });
+
+      await admin
+        .from('site_projects')
+        .update({
+          next_due_date: newDue,
+          monthly_status: 'ativo',
+          last_reminder_due_date: null,
+        })
+        .eq('id', projectId);
+
+      return NextResponse.json({ ok: true, renewed: true, new_due_date: newDue });
+    }
     const { data: existing } = await admin
       .from('orders')
       .select('*')

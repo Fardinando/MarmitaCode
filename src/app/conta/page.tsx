@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ClipboardList, Globe, Rocket, Clock, ChefHat } from 'lucide-react';
+import { RenewButton } from '@/components/RenewButton';
 import { requireUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -258,11 +259,47 @@ export default async function AccountPage() {
                   ) : (
                     <p className="text-white/30 text-xs font-bold">URL ainda não definida</p>
                   )}
-                  {p.next_due_date && (
-                    <p className="text-white/40 text-xs font-bold mt-4">
-                      Próxima mensalidade: {new Date(p.next_due_date).toLocaleDateString('pt-BR')}
-                    </p>
-                  )}
+                  {p.next_due_date && (() => {
+                    const due = new Date(p.next_due_date + 'T00:00:00');
+                    const today = new Date(); today.setHours(0, 0, 0, 0);
+                    const daysLeft = Math.round((due.getTime() - today.getTime()) / 86400000);
+                    const canRenew = daysLeft <= 10 && p.monthly_status !== 'cancelado';
+                    const nextIfRenew = new Date(due); nextIfRenew.setDate(nextIfRenew.getDate() + 30);
+                    const statusColor =
+                      daysLeft < 0 ? 'text-red-400' :
+                      daysLeft <= 10 ? 'text-[#FF8C00]' :
+                      'text-white/60';
+                    return (
+                      <div className="mt-4 pt-4 border-t border-white/5">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-white/30">
+                          Próxima mensalidade
+                        </p>
+                        <p className="font-black text-sm mt-1">
+                          {due.toLocaleDateString('pt-BR')}{' '}
+                          <span className={`text-xs font-bold ${statusColor}`}>
+                            ·{' '}
+                            {daysLeft < 0
+                              ? `atrasada ${-daysLeft} dia${-daysLeft === 1 ? '' : 's'}`
+                              : daysLeft === 0
+                                ? 'vence hoje'
+                                : `vence em ${daysLeft} dia${daysLeft === 1 ? '' : 's'}`}
+                          </span>
+                        </p>
+                        {canRenew && (
+                          <>
+                            <p className="text-[11px] text-white/50 font-bold mt-2">
+                              Pagando agora, o próximo vencimento vai para{' '}
+                              <span className="text-white">
+                                {nextIfRenew.toLocaleDateString('pt-BR')}
+                              </span>
+                              .
+                            </p>
+                            <RenewButton projectId={p.id} />
+                          </>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>

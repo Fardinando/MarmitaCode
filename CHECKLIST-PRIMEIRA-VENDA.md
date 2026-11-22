@@ -40,6 +40,9 @@ Auditoria do sistema completo (2026-11-21). Siga essa lista antes de divulgar o 
    update public.template_tiers set setup_price = 97,  monthly_price = 47.90 where tier = 'basico';
    update public.template_tiers set setup_price = 197, monthly_price = 47.90 where tier = 'intermediario';
    update public.template_tiers set setup_price = 397, monthly_price = 47.90 where tier = 'premium';
+
+   -- supabase/migrations/20261121_site_renewals.sql
+   -- (cria tabela site_renewals pra antecipacao de mensalidade)
    ```
    Depois rode `GET /api/setup/seed` (precisa de admin logado) pra garantir os templates e features atualizados.
 
