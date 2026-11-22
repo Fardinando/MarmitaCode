@@ -43,7 +43,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'assinatura cancelada' }, { status: 400 });
     }
 
-    const daysLeft = daysBetween(project.next_due_date);
+    const { data: order } = await admin
+      .from('orders')
+      .select('monthly_price, contact_email, contact_name, created_at, status')
+      .eq('id', project.order_id)
+      .single();
+
+    // Vencimento efetivo: se o webhook nao gravou, deriva de created_at + 30d.
+    let effectiveDue = project.next_due_date;
+    if (!effectiveDue && order?.created_at) {
+      const base = new Date(order.created_at);
+      base.setDate(base.getDate() + 30);
+      effectiveDue = base.toISOString().slice(0, 10);
+      // Backfill no banco pra manter a UI e o cron coerentes.
+      await admin
+        .from('site_projects')
+        .update({ next_due_date: effectiveDue, monthly_status: 'ativo' })
+        .eq('id', project_id);
+    }
+
+    const daysLeft = daysBetween(effectiveDue);
     if (daysLeft > RENEW_WINDOW_DAYS) {
       return NextResponse.json(
         { error: `Antecipacao disponivel so a partir de ${RENEW_WINDOW_DAYS} dias antes do vencimento.` },
@@ -51,18 +70,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const { data: order } = await admin
-      .from('orders')
-      .select('monthly_price, contact_email, contact_name')
-      .eq('id', project.order_id)
-      .single();
-
     const amount = Number(order?.monthly_price ?? 47.9) || 47.9;
 
     if (!mpEnabled()) {
       // Modo dev / sem MP: estende direto e retorna URL fake.
-      const base = project.next_due_date
-        ? new Date(project.next_due_date + 'T00:00:00Z')
+      const base = effectiveDue
+        ? new Date(effectiveDue + 'T00:00:00Z')
         : new Date();
       base.setUTCDate(base.getUTCDate() + 30);
       const newDue = base.toISOString().slice(0, 10);

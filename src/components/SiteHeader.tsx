@@ -21,16 +21,37 @@ export async function SiteHeader() {
         </Link>
 
         <nav
-          className="hidden lg:flex items-center gap-8 text-sm"
+          className="hidden lg:flex items-center gap-7 text-sm"
           style={{ ...serif, color: C.textMuted, fontStyle: 'italic' }}
         >
           <Link href="/templates" className="hover:text-[#F5EFE4] transition-colors">Templates</Link>
           <Link href="/cases" className="hover:text-[#F5EFE4] transition-colors">Cases</Link>
-          <Link href="/planos" className="hover:text-[#F5EFE4] transition-colors">Planos</Link>
+          <Link
+            href="/planos"
+            className="group relative inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all"
+            style={{
+              backgroundColor: 'rgba(249,115,22,0.12)',
+              border: `1px solid ${C.accent}`,
+              color: C.text,
+              fontStyle: 'italic',
+              boxShadow: '0 6px 24px -10px rgba(249,115,22,0.6)',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: C.accent, boxShadow: `0 0 10px ${C.accent}` }}
+            />
+            Planos
+            <span
+              className="text-[9px] not-italic font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: C.accent, color: '#1A0E00' }}
+            >
+              comprar
+            </span>
+          </Link>
           <Link
             href="/fora-do-cardapio"
             className="hover:text-[#F5EFE4] transition-colors"
-            style={{ color: C.accent }}
           >
             Fora do cardápio
           </Link>
@@ -79,15 +100,15 @@ export async function SiteHeader() {
                 entrar
               </Link>
               <Link
-                href="/templates"
-                className="px-5 py-2.5 text-xs font-semibold whitespace-nowrap transition-transform hover:translate-x-0.5 rounded-full"
+                href="/planos"
+                className="lg:hidden px-5 py-2.5 text-xs font-semibold whitespace-nowrap transition-transform hover:translate-x-0.5 rounded-full"
                 style={{
                   backgroundColor: C.accent,
                   color: '#1A0E00',
                   letterSpacing: '0.01em',
                 }}
               >
-                Encomendar
+                Ver planos
               </Link>
             </>
           )}

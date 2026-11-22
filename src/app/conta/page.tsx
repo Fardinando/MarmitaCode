@@ -234,13 +234,27 @@ export default async function AccountPage() {
         </section>
 
         {/* Meus sites publicados */}
-        {projectList.length > 0 && (
+        {projectList.length > 0 && (() => {
+          // Vencimento efetivo: se o banco ainda nao tem (webhook nao rodou),
+          // calcula a partir do created_at do pedido correspondente + 30 dias.
+          const orderByProject = new Map(orderList.map((o) => [o.id, o]));
+          const projectsWithDue = projectList.map((p) => {
+            const order = orderByProject.get(p.order_id);
+            let effectiveDue = p.next_due_date;
+            if (!effectiveDue && order && PAID_STATUSES.includes(order.status)) {
+              const base = new Date(order.created_at);
+              base.setDate(base.getDate() + 30);
+              effectiveDue = base.toISOString().slice(0, 10);
+            }
+            return { p, effectiveDue };
+          });
+          return (
           <section>
             <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#FF8C00] mb-6">
               Meus sites
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {projectList.map((p) => (
+              {projectsWithDue.map(({ p, effectiveDue }) => (
                 <div key={p.id} className="p-7 rounded-3xl bg-white/[0.02] border border-white/5">
                   <div className="flex justify-between items-start mb-5">
                     <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
@@ -259,8 +273,8 @@ export default async function AccountPage() {
                   ) : (
                     <p className="text-white/30 text-xs font-bold">URL ainda não definida</p>
                   )}
-                  {p.next_due_date && (() => {
-                    const due = new Date(p.next_due_date + 'T00:00:00');
+                  {effectiveDue && (() => {
+                    const due = new Date(effectiveDue + 'T00:00:00');
                     const today = new Date(); today.setHours(0, 0, 0, 0);
                     const daysLeft = Math.round((due.getTime() - today.getTime()) / 86400000);
                     const canRenew = daysLeft <= 10 && p.monthly_status !== 'cancelado';
@@ -304,7 +318,8 @@ export default async function AccountPage() {
               ))}
             </div>
           </section>
-        )}
+          );
+        })()}
 
         <div className="mt-16 flex flex-col items-center gap-4">
           <Link
