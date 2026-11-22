@@ -95,9 +95,19 @@ export async function POST(req: Request) {
       .single();
 
     if (order && nowPaid && !wasPaidBefore) {
+      // Primeira mensalidade vence 30 dias apos o pagamento inicial.
+      // O setup cobre o primeiro mes.
+      const nextDue = new Date();
+      nextDue.setUTCDate(nextDue.getUTCDate() + 30);
+      const nextDueDate = nextDue.toISOString().slice(0, 10);
+
       await admin
         .from('site_projects')
-        .update({ status: 'em_producao' })
+        .update({
+          status: 'em_producao',
+          monthly_status: 'ativo',
+          next_due_date: nextDueDate,
+        })
         .eq('order_id', order.id);
 
       await Promise.allSettled([
